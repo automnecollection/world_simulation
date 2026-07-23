@@ -1,0 +1,21 @@
+# France
+0,8000000,French,Catholic_Christianity,None
+# Iran
+1,5000000,Iranian,Shia_Islam,None
+# Transjordan
+# West_Bank - 764,900 people in 1950
+2,688000,Palestinian,Sunni_Islam,None
+2,76000,Palestinian,Orthodox_Christianity,None
+# China
+3,554000000,Chinese,Buddhism,None
+# India
+4,376000000,Indian,Buddhism,None
+# Russia - Total population of Russia 103.39 mil, 10 mil in siberia
+# Mainland Russia
+5,93390000,Russian,Orthodox_Christianity,None
+# Siberia
+6,10000000,Siberian,Orthodox_Christianity,None
+# United_Kingdom
+7,50120000,English,Protestant_Christianity,None
+# Japan
+8,86440000,Japanese,Buddhism,None

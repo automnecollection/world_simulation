@@ -1,0 +1,12 @@
+France=FRA,1
+Iran=IRA,1
+Transjordan=TRJ,1
+China=CHI,1
+India=IND,1
+Russia=RUS,1
+United_Kingdom=UNK,1
+Japan=JAP,1
+Israel=ISR,1
+Egypt=EGY,1
+United_States_of_America=USA,1
+Syria=SYR,1

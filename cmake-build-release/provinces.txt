@@ -1,0 +1,19 @@
+Paris=0,Flat,Grassland,None
+China=3,Hills,Grassland,None
+India=4,Hills,Tropical,None
+# Total population of Russia 103.39 mil, 10 mil in siberia
+Russia=5,Flat,Grassland,None
+Siberia=5,Flat,Subarctic,None
+United_Kingdom=6,Flat,Temperate_Grassland,None
+Japan=7,Mountains,Grassland,None
+Brittany=0,Flat,Grassland,None
+# Middle East
+Tehran=1,Hills,Arid,None
+# Jordan
+West_Bank=2,Hills,Plains,None
+# Israel
+Israel=8,Flat,Plains,None
+# Egypt
+Gaza=9,Flat,Arid,None
+# Syria
+Syria=11,Flat,Arid,None
