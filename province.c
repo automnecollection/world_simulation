@@ -2,10 +2,11 @@
 #include <string.h>
 #include <stdlib.h>
 #include "province.h"
+#include "population.h"
 
 struct ProvinceList initialise_provinces(FILE * file) {
     int capacity = 8;
-    char c_line[100];
+    char c_line[200];
 
     struct ProvinceList province_list;
     province_list.provinces = malloc(capacity * sizeof *province_list.provinces);
@@ -38,7 +39,7 @@ struct ProvinceList initialise_provinces(FILE * file) {
     return province_list;
 }
 
-struct Province *read_province(char *line, const int id) {
+void *read_province(char *line, const int id) {
     if (strstr(line, "#") != NULL) {
         return NULL;
     }
@@ -73,9 +74,12 @@ struct Province *read_province(char *line, const int id) {
         };
     };
 
-    free(name);
-    free(terrain);
-    free(climate);
+    if (new_province == NULL) {
+        free(name);
+        free(terrain);
+        free(climate);
+        return NULL;
+    }
 
     return new_province;
 }
@@ -85,7 +89,9 @@ void print_province_data(struct Province const prov) {
     printf("COUNTRY OWNER ID: %d, ", prov.owner_country_id);
     printf("COUNTRY OWNER TAG: %s, ", prov.owner_country_tag);
     printf("TERRAIN: %s, ", prov.terrain);
-    printf("CLIMATE: %s\n", prov.climate);
+    printf("CLIMATE: %s", prov.climate);
+    printf("TOTAL POPULATION: %d", prov.total_population_int);
+    printf("\n");
 
     // printf("pops num %d", prov.populations_num);
     // for (int i = 0; i < prov.populations_num; i++) {
@@ -93,12 +99,20 @@ void print_province_data(struct Province const prov) {
     // }
 }
 
-void calculate_total_population(struct Province *prov) {
-    prov->total_population = 0;
+void calculate_total_population(struct Province *prov, struct Population populations[], int populations_num) {
+    float total_population = 0;
+    for (int i = 0; i < populations_num; i++) {
+        // printf("size: %f", populations[i]->p_size);
+        if (populations[i].province_id == prov->id) {
+            total_population += populations[i].p_size;
+        }
+    }
+    prov->total_population = total_population;
+    prov->total_population_int = (int)total_population;
 }
 
-void update_province(struct Province *prov) {
-    calculate_total_population(prov);
+void update_province(struct Province *prov, struct Population populations[], int populations_num) {
+    calculate_total_population(prov, populations, populations_num);
     // increase_province_populations(prov);
 }
 
@@ -115,10 +129,13 @@ void update_province(struct Province *prov) {
 //     }
 // }
 
-void free_provinces(struct Province provinces[], const int provinces_num) {
+void free_provinces(struct Province provinces[], const int provinces_num, struct ProvinceList *province_list) {
     for (int i = 0; i < provinces_num; i++) {
         free(provinces[i].name);
         free(provinces[i].terrain);
         free(provinces[i].climate);
     }
+    free(province_list->provinces);
+    province_list->provinces = NULL;
+    province_list->provinces_num = 0;
 }

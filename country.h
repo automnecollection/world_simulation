@@ -17,6 +17,6 @@ struct CountryList {
 
 struct CountryList initialise_countries(FILE * file);
 struct Country read_country(char * line, int id);
-void free_countries(struct Country countries[], int countries_num);
+void free_countries(struct Country countries[], int countries_num, struct CountryList *country_list);
 
 #endif

@@ -5,7 +5,7 @@
 
 struct PopulationList initialise_populations(FILE * file) {
     int capacity = 8;
-    char c_line[100];
+    char c_line[200];
 
     struct PopulationList population_list;
     population_list.populations = malloc(capacity * sizeof *population_list.populations);
@@ -26,6 +26,8 @@ struct PopulationList initialise_populations(FILE * file) {
                 population_list.populations[provinces_num] = *population;
                 provinces_num += 1;
             }
+
+            free((void*)population);
         }
         population_list.populations_num = provinces_num;
     }
@@ -69,9 +71,6 @@ struct Population *read_population(char *line, const int id) {
         };
     }
 
-    free(culture);
-    free(religion);
-
     return new_population;
 }
 
@@ -81,11 +80,14 @@ void increase_pop_size(struct Population *pop) {
     pop->p_size_int = (int)new_pop_size;
 }
 
-void free_populations(struct Population populations[], const int populations_num) {
+void free_populations(struct Population populations[], const int populations_num, struct PopulationList *population_list) {
     for (int i = 0; i < populations_num; i++) {
         free(populations[i].culture);
         free(populations[i].religion);
     }
+    free(population_list->populations);
+    population_list->populations = NULL;
+    population_list->populations_num = 0;
 }
 
 void print_populations_for_province(struct Population populations[], const int populations_num, const int province_id) {

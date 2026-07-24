@@ -13,10 +13,6 @@ add_executable(
         population.c
         world_functions.h
         world_functions.c
-        buildings.txt
-        countries.txt
-        provinces.txt
-        populations.txt
 )
 
 # Request assembly output generation (-S) and use readable Intel syntax

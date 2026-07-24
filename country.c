@@ -5,7 +5,7 @@
 
 struct CountryList initialise_countries(FILE *file) {
     int capacity = 8;
-    char c_line[100];
+    char c_line[200];
 
     struct CountryList country_list;
     country_list.countries = malloc(capacity * sizeof *country_list.countries);
@@ -50,9 +50,12 @@ struct Country read_country(char * line, int id) {
     return new_country;
 }
 
-void free_countries(struct Country countries[], const int countries_num) {
+void free_countries(struct Country countries[], const int countries_num, struct CountryList *country_list) {
     for (int i = 0; i < countries_num; i++) {
         free(countries[i].name);
         free(countries[i].tag);
     }
+    free(country_list->countries);
+    country_list->countries = NULL;
+    country_list->countries_num = 0;
 }

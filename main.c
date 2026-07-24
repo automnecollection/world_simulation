@@ -80,9 +80,9 @@ int main() {
     for (int j = 0; j < populations_num; j++) {
       increase_pop_size(&populations[j]);
     }
-    // for (int j = 0; j < provinces_num; j++) {
-      // update_province(&provinces[j]);
-    // }
+    for (int j = 0; j < provinces_num; j++) {
+      update_province(&provinces[j], populations, populations_num);
+    }
     advance_time(&world_time);
   }
 
@@ -95,9 +95,9 @@ int main() {
     print_populations_for_province(populations, populations_num, i);
   }
 
-  free_countries(countries, countries_num);
-  free_provinces(provinces, provinces_num);
-  free_populations(populations, populations_num);
+  free_countries(countries, countries_num, &country_list);
+  free_provinces(provinces, provinces_num, &province_list);
+  free_populations(populations, populations_num, &populations_list);
 
   getchar();
 
