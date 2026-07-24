@@ -5,12 +5,15 @@
 #include "province.h"
 #include "country.h"
 #include "population.h"
+#include "natural_resources.h"
+#include "building.h"
 
 // Get-ChildItem -Recurse -Include *.c,*.h | ForEach-Object { "{0}: {1}" -f $_.Name, (Get-Content $_).Count }
 
 #define DAY 1
 #define YEAR 1950
 #define SIM_DAYS 1000
+#define BASE_BIRTH_RATE 1.000041
 
 int main() {
   struct WorldTime world_time;
@@ -63,6 +66,32 @@ int main() {
     }
   }
 
+  // Initialise buildings
+  const char * buildings_loc = "buildings.txt";
+  FILE *buildings_file = fopen(buildings_loc, "r");
+
+  const struct BuildingTypesList b_types_list = initialise_buildings(buildings_file);
+  struct Building *building_types = b_types_list.building_types;
+  int building_types_num = b_types_list.building_types_num;
+
+  for (int i = 0; i < building_types_num; i++) {
+    printf("BUILDING_TYPE-%d - NAME: %s, BASE_PRODUCTION: %d\n",
+      building_types[i].id, building_types[i].name, building_types[i].base_production);
+  }
+
+  // Initialise natural resources (nr)
+  const char * natural_resources_loc = "natural_resources.txt";
+  FILE *natural_resources_file = fopen(natural_resources_loc, "r");
+
+  const struct NaturalResourcesList nr_list = initialise_nr(natural_resources_file);
+  struct NaturalResource *nr_types = nr_list.natural_resources;
+  int nr_types_num = nr_list.natural_resources_num;
+
+  for (int i = 0; i < nr_types_num; i++) {
+    printf("NATURAL_RESOURCE-%d - NAME: %s, BASE_PRICE: %f\n",
+      nr_types[i].id, nr_types[i].name, nr_types[i].base_price);
+  }
+
   for (int i = 0; i < countries_num; i++) {
     printf("COUNTRY-%s - ID: %d, NAME: %s\n", countries[i].tag, countries[i].id, countries[i].name);
   }
@@ -78,7 +107,7 @@ int main() {
   const int sim_days = SIM_DAYS;
   for (int i = 0; i < sim_days; i++) {
     for (int j = 0; j < populations_num; j++) {
-      increase_pop_size(&populations[j]);
+      increase_pop_size(&populations[j], BASE_BIRTH_RATE);
     }
     for (int j = 0; j < provinces_num; j++) {
       update_province(&provinces[j], populations, populations_num);

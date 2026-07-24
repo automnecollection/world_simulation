@@ -13,6 +13,10 @@ add_executable(
         population.c
         world_functions.h
         world_functions.c
+        natural_resources.c
+        natural_resources.h
+        building.c
+        building.h
 )
 
 # Request assembly output generation (-S) and use readable Intel syntax

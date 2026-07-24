@@ -88,8 +88,9 @@ void print_province_data(struct Province const prov) {
     printf("PROVINCE-%d: %s, ", prov.id, prov.name);
     printf("COUNTRY OWNER ID: %d, ", prov.owner_country_id);
     printf("COUNTRY OWNER TAG: %s, ", prov.owner_country_tag);
+    printf("\n");
     printf("TERRAIN: %s, ", prov.terrain);
-    printf("CLIMATE: %s", prov.climate);
+    printf("CLIMATE: %s, ", prov.climate);
     printf("TOTAL POPULATION: %d", prov.total_population_int);
     printf("\n");
 

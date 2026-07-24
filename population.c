@@ -74,8 +74,8 @@ struct Population *read_population(char *line, const int id) {
     return new_population;
 }
 
-void increase_pop_size(struct Population *pop) {
-    const float new_pop_size = pop->p_size * 1.000041f;
+void increase_pop_size(struct Population *pop, const float rate) {
+    const float new_pop_size = pop->p_size * rate;
     pop->p_size = new_pop_size;
     pop->p_size_int = (int)new_pop_size;
 }
@@ -97,4 +97,5 @@ void print_populations_for_province(struct Population populations[], const int p
             printf("    %s, %s - %d\n", populations[j].culture, populations[j].religion, populations[j].p_size_int);
         }
     }
+    printf("\n");
 }
