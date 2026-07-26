@@ -1,21 +1,27 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
+#include "world.h"
 #include "world_functions.h"
 #include "province.h"
 #include "country.h"
 #include "population.h"
-#include "natural_resources.h"
+#include "natural_resource.h"
 #include "building.h"
+#include "item.h"
 
 // Get-ChildItem -Recurse -Include *.c,*.h | ForEach-Object { "{0}: {1}" -f $_.Name, (Get-Content $_).Count }
 
 #define DAY 1
 #define YEAR 1950
-#define SIM_DAYS 1000
+// 18250 = 50 years
+// 27740 = 76 years (2026)
+#define SIM_DAYS 27740 // 50 years
 #define BASE_BIRTH_RATE 1.000041
 
 int main() {
+  struct World world;
   struct WorldTime world_time;
 
   world_time.day = DAY;
@@ -28,6 +34,10 @@ int main() {
   const struct CountryList country_list = initialise_countries(countries_file);
   struct Country *countries = country_list.countries;
   int countries_num = country_list.countries_num;
+
+  for (int i = 0; i < countries_num; i++) {
+    printf("COUNTRY-%s - ID: %d, NAME: %s\n", countries[i].tag, countries[i].id, countries[i].name);
+  }
 
   // Initialise provinces
   const char * provinces_file_loc = "provinces.txt";
@@ -49,6 +59,8 @@ int main() {
     }
   }
 
+  printf("\n");
+
   // Initialise populations
   const char * populations_file_loc = "populations.txt";
   FILE *populations_file = fopen(populations_file_loc, "r");
@@ -64,6 +76,11 @@ int main() {
       provinces[i].populations[provinces[i].populations_num] = populations[populations_num].id;
       provinces[i].populations_num += 1;
     }
+  }
+
+  for (int i = 0; i < provinces_num; i++) {
+    print_province_data(provinces[i]);
+    print_populations_for_province(populations, populations_num, i);
   }
 
   // Initialise buildings
@@ -92,17 +109,22 @@ int main() {
       nr_types[i].id, nr_types[i].name, nr_types[i].base_price);
   }
 
-  for (int i = 0; i < countries_num; i++) {
-    printf("COUNTRY-%s - ID: %d, NAME: %s\n", countries[i].tag, countries[i].id, countries[i].name);
+  assign_items_to_provinces(provinces, provinces_num, nr_types, nr_types_num);
+
+  for (int i = 0; i < provinces_num; i++) {
+    printf("PROVINCE %s ITEMS:\n",
+        provinces[i].name);
+    for (int j = 0; j < provinces[i].items_num; j++) {
+      printf("  ITEMS-%d - NAME: %s\n",
+        provinces[i].items[j].item_id, provinces[i].items[j].name);
+    }
   }
 
   printf("\n");
 
   printf("Day %d, year %d.\n", world_time.day, world_time.year);
-  for (int i = 0; i < provinces_num; i++) {
-    print_province_data(provinces[i]);
-    print_populations_for_province(populations, populations_num, i);
-  }
+
+  clock_t begin = clock();
 
   const int sim_days = SIM_DAYS;
   for (int i = 0; i < sim_days; i++) {
@@ -114,6 +136,9 @@ int main() {
     }
     advance_time(&world_time);
   }
+
+  clock_t end = clock();
+  double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
 
   printf("\n");
 
@@ -129,6 +154,8 @@ int main() {
   free_populations(populations, populations_num, &populations_list);
 
   getchar();
+
+  printf("simulation time_spent: %f", time_spent);
 
   return 0;
 }

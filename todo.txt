@@ -2,23 +2,26 @@
     Loading and parsing files
     Instantiating data
     World struct ownership with arrays
+    Population sizes
 
 // WORKING ON
-    Population sizes
     Province adjacency
     Date and time
     Simulation loop
+    Items and services
+            Food
+            Water
+    Buildings
 
 // TO DO
     Game data output to json or txt
-    Items and services
-        Food
-        Water
     Population stats and events
         Standard of living
         Demand for items and services
         Immigration
-    Buildings
     Simulation functions
 
     Research 1950 starting date
+
+    Check for memory leaks
+	Make a generic struct list loader

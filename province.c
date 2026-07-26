@@ -3,6 +3,8 @@
 #include <stdlib.h>
 #include "province.h"
 #include "population.h"
+#include "natural_resource.h"
+#include "item.h"
 
 struct ProvinceList initialise_provinces(FILE * file) {
     int capacity = 8;
@@ -129,6 +131,28 @@ void update_province(struct Province *prov, struct Population populations[], int
 //         }
 //     }
 // }
+
+void assign_items_to_provinces(struct Province provinces[], int provinces_num, struct NaturalResource natural_resources[], int nr_types_num) {
+    for (int i = 0; i < provinces_num; i++) {
+        struct Item *items = calloc(nr_types_num, sizeof(struct Item));
+        int items_num = 0;
+        for (int j = 0; j < nr_types_num; j++) {
+            const struct Item item = {
+                .item_id=natural_resources[j].id,
+                .name=natural_resources[j].name,
+                .demand_amount=0,
+                .supply_amount=0,
+                .has_deposits=natural_resources[j].has_deposits,
+                .deposits_amount=0
+            };
+            items[items_num] = item;
+            items_num++;
+        }
+
+        provinces[i].items = items;
+        provinces[i].items_num = items_num;
+    }
+}
 
 void free_provinces(struct Province provinces[], const int provinces_num, struct ProvinceList *province_list) {
     for (int i = 0; i < provinces_num; i++) {

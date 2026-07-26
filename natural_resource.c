@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include "natural_resources.h"
+#include "natural_resource.h"
 
 struct NaturalResourcesList initialise_nr(FILE * file) {
     int capacity = 8;

@@ -2,6 +2,8 @@
 #define PROVINCE_H
 
 #include "population.h"
+#include "natural_resource.h"
+#include "item.h"
 
 struct Province {
     int id;
@@ -13,6 +15,8 @@ struct Province {
     float total_population;
     int total_population_int;
     int populations_num;
+    struct Item *items;
+    int items_num;
 
     char populations[];
 };
@@ -27,6 +31,7 @@ struct ProvinceList initialise_provinces(FILE * file);
 void *read_province(char *line, int id);
 void print_province_data(struct Province prov);
 void print_province_population(struct Province prov);
+void assign_items_to_provinces(struct Province provinces[], int provinces_num, struct NaturalResource natural_resources[], int nr_types_num);
 void calculate_total_population(struct Province *prov, struct Population populations[], int populations_num);
 void update_province(struct Province *prov, struct Population populations[], int populations_num);
 void increase_population(struct Province *prov);

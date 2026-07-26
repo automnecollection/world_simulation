@@ -1,9 +1,12 @@
 #ifndef WORLD_SIM_NATURAL_RESOURCES_H
 #define WORLD_SIM_NATURAL_RESOURCES_H
 
+#include <stdbool.h>
+
 struct NaturalResource {
     int id;
     char *name;
+    bool has_deposits;
     float base_price;
     float price;
     int deposits_amount;
