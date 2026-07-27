@@ -13,14 +13,14 @@
 
 // Get-ChildItem -Recurse -Include *.c,*.h | ForEach-Object { "{0}: {1}" -f $_.Name, (Get-Content $_).Count }
 
-#define DAY 1
-#define YEAR 1950
-// 18250 = 50 years
-// 27740 = 76 years (2026)
-#define SIM_DAYS 27740 // 50 years
-#define BASE_BIRTH_RATE 1.000041
+#define DAY 1                       // Starting day of year (1-365)
+#define YEAR 1950                   // Starting year
+#define SIM_DAYS 27740              // How many days the simulation will run for, 27740 = 76 years (runs to 2026)
+#define BASE_BIRTH_RATE 1.000041    // The base birth rate for population groups
 
 int main() {
+  const clock_t load_begin = clock();
+
   struct World world;
   struct WorldTime world_time;
 
@@ -91,11 +91,6 @@ int main() {
   struct Building *building_types = b_types_list.building_types;
   int building_types_num = b_types_list.building_types_num;
 
-  for (int i = 0; i < building_types_num; i++) {
-    printf("BUILDING_TYPE-%d - NAME: %s, BASE_PRODUCTION: %d\n",
-      building_types[i].id, building_types[i].name, building_types[i].base_production);
-  }
-
   // Initialise natural resources (nr)
   const char * natural_resources_loc = "natural_resources.txt";
   FILE *natural_resources_file = fopen(natural_resources_loc, "r");
@@ -107,6 +102,17 @@ int main() {
   for (int i = 0; i < nr_types_num; i++) {
     printf("NATURAL_RESOURCE-%d - NAME: %s, BASE_PRICE: %f\n",
       nr_types[i].id, nr_types[i].name, nr_types[i].base_price);
+  }
+
+  for (int i = 0; i < building_types_num; i++) {
+    const int type_id = get_item_type(building_types[i].production_type, nr_types, nr_types_num);
+    printf("type_id - %d\n", type_id);
+    building_types[i].production_type_id = type_id;
+  }
+
+  for (int i = 0; i < building_types_num; i++) {
+    printf("BUILDING_TYPE-%d - NAME: %s, BASE_PRODUCTION: %s (%d) - %d per day.\n",
+      building_types[i].id, building_types[i].name, building_types[i].production_type, building_types[i].production_type_id, building_types[i].base_production);
   }
 
   assign_items_to_provinces(provinces, provinces_num, nr_types, nr_types_num);
@@ -124,7 +130,10 @@ int main() {
 
   printf("Day %d, year %d.\n", world_time.day, world_time.year);
 
-  clock_t begin = clock();
+  const clock_t load_end = clock();
+  const double load_time_spent = (double)(load_end - load_begin) / CLOCKS_PER_SEC;
+
+  const clock_t begin = clock();
 
   const int sim_days = SIM_DAYS;
   for (int i = 0; i < sim_days; i++) {
@@ -137,8 +146,8 @@ int main() {
     advance_time(&world_time);
   }
 
-  clock_t end = clock();
-  double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
+  const clock_t end = clock();
+  const double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
 
   printf("\n");
 
@@ -155,7 +164,8 @@ int main() {
 
   getchar();
 
-  printf("simulation time_spent: %f", time_spent);
+  printf("load time_spent: %f\n", load_time_spent);
+  printf("simulation time_spent: %f\n", time_spent);
 
   return 0;
 }

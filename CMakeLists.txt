@@ -20,6 +20,7 @@ add_executable(
         world.c
         world.h
         item.h
+        item.c
 )
 
 # Request assembly output generation (-S) and use readable Intel syntax

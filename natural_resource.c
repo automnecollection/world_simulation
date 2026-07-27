@@ -9,7 +9,6 @@ struct NaturalResourcesList initialise_nr(FILE * file) {
 
     struct NaturalResourcesList nr_list;
     nr_list.natural_resources = malloc(capacity * sizeof *nr_list.natural_resources);
-    nr_list.natural_resources_num = 0;
 
     if (file != NULL) {
         int nr_num = 0;

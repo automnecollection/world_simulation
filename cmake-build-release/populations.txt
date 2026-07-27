@@ -21,3 +21,39 @@
 6,86440000,Japanese,Buddhism,None
 # Syria
 12,3612000,Syrian,Sunni_Islam,None
+# Victoria 
+# 2.04 million
+# 	- 0.1% Indigenous
+13,2037960,Australian,Protestant_Christianity,None
+13,2040,Aboriginal,Protestant_Christianity,None
+# New_South_Wales
+# 2.76 million
+# 	- 1% Indigenous
+14,2732400,Australian,Protestant_Christianity,None
+14,27600,Aboriginal,Protestant_Christianity,None
+# Queensland
+# 1.50 million
+# 	- 4% Indigenous
+15,1440000,Australian,Protestant_Christianity,None
+15,60000,Aboriginal,Protestant_Christianity,None
+# Western_Australia
+# 0.79 million
+# 	- 4% Indigenous
+16,758400,Australian,Protestant_Christianity,None
+16,31600,Aboriginal,Protestant_Christianity,None
+# South_Australia_Mediterranean
+# 80% population of south aus (random number) = 528,000
+# 528,000
+# 	- 1% Indigenous
+17,522720,Australian,Protestant_Christianity,None
+17,5280,Aboriginal,Protestant_Christianity,None
+# South_Australia_Desert
+# 132,000
+# 	- 1% Indigenous
+18,130680,Australian,Protestant_Christianity,None
+18,1320,Aboriginal,Protestant_Christianity,None
+# Tasmania
+# 0.21 million
+# 	- 0.1% Indigenous
+19,209790,Australian,Protestant_Christianity,None
+19,210,Aboriginal,Protestant_Christianity,None
