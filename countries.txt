@@ -10,3 +10,4 @@ Israel=ISR,1
 Egypt=EGY,1
 United_States_of_America=USA,1
 Syria=SYR,1
+Australia=AUS,1
