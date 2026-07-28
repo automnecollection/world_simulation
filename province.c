@@ -132,7 +132,8 @@ void update_province(struct Province *prov, struct Population populations[], int
 //     }
 // }
 
-void assign_items_to_provinces(struct Province provinces[], int provinces_num, struct NaturalResource natural_resources[], int nr_types_num) {
+void assign_items_to_provinces(struct Province provinces[], int provinces_num,
+    struct NaturalResource natural_resources[], int nr_types_num) {
     for (int i = 0; i < provinces_num; i++) {
         struct Item *items = calloc(nr_types_num, sizeof(struct Item));
         int items_num = 0;
