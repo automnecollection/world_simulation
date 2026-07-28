@@ -74,8 +74,8 @@ struct Population *read_population(char *line, const int id) {
     return new_population;
 }
 
-void increase_pop_size(struct Population *pop, const float rate) {
-    const float new_pop_size = pop->p_size * rate;
+void increase_pop_size(struct Population *pop, const float BASE_BIRTH_RATE) {
+    const float new_pop_size = pop->p_size * BASE_BIRTH_RATE;
     pop->p_size = new_pop_size;
     pop->p_size_int = (int)new_pop_size;
 }

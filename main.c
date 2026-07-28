@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include "string.h"
 
 #include "world.h"
 #include "world_functions.h"
@@ -10,6 +11,7 @@
 #include "natural_resource.h"
 #include "building.h"
 #include "item.h"
+#include "create_save.h"
 
 // Get-ChildItem -Recurse -Include *.c,*.h | ForEach-Object { "{0}: {1}" -f $_.Name, (Get-Content $_).Count }
 
@@ -17,6 +19,11 @@
 #define YEAR 1950                   // Starting year
 #define SIM_DAYS 27740              // How many days the simulation will run for, 27740 = 76 years (runs to 2026)
 #define BASE_BIRTH_RATE 1.000041    // The base birth rate for population groups
+#define LOAD_FROM_RESULTS false
+#define FILE_TYPE ".txt"
+#define COUNTRIES_FILE "countries"
+#define PROVINCES_FILE "provinces"
+#define POPULATIONS_FILE "populations.txt"
 
 int main() {
   const clock_t load_begin = clock();
@@ -28,7 +35,13 @@ int main() {
   world_time.year = YEAR;
 
   // Initialise countries
-  const char * countries_file_loc = "countries.txt";
+  char countries_file_loc[] = COUNTRIES_FILE;
+  if (LOAD_FROM_RESULTS == true) {
+    strcat(countries_file_loc, "_result");
+    printf("countries_file_loc: %s\n", countries_file_loc);
+  }
+  strcat(countries_file_loc, FILE_TYPE);
+  printf("countries_file_loc: %s\n", countries_file_loc);
   FILE *countries_file = fopen(countries_file_loc, "r");
 
   const struct CountryList country_list = initialise_countries(countries_file);
@@ -40,7 +53,13 @@ int main() {
   }
 
   // Initialise provinces
-  const char * provinces_file_loc = "provinces.txt";
+  char provinces_file_loc[] = PROVINCES_FILE;
+  if (LOAD_FROM_RESULTS == true) {
+    strcat(provinces_file_loc, "_result");
+    printf("provinces_file_loc: %s\n", provinces_file_loc);
+  }
+  strcat(provinces_file_loc, FILE_TYPE);
+  printf("provinces_file_loc: %s\n", provinces_file_loc);
   FILE *provinces_file = fopen(provinces_file_loc, "r");
 
   const struct ProvinceList province_list = initialise_provinces(provinces_file);
@@ -62,7 +81,10 @@ int main() {
   printf("\n");
 
   // Initialise populations
-  const char * populations_file_loc = "populations.txt";
+  const char * populations_file_loc = POPULATIONS_FILE;
+  // if (LOAD_FROM_RESULTS == true) {
+  //   populations_file_loc = strcat("result_", populations_file_loc);
+  // }
   FILE *populations_file = fopen(populations_file_loc, "r");
 
   const struct PopulationList populations_list = initialise_populations(populations_file);
@@ -133,7 +155,7 @@ int main() {
   const clock_t load_end = clock();
   const double load_time_spent = (double)(load_end - load_begin) / CLOCKS_PER_SEC;
 
-  const clock_t begin = clock();
+  const clock_t sim_begin = clock();
 
   const int sim_days = SIM_DAYS;
   for (int i = 0; i < sim_days; i++) {
@@ -146,8 +168,8 @@ int main() {
     advance_time(&world_time);
   }
 
-  const clock_t end = clock();
-  const double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
+  const clock_t sim_end = clock();
+  const double sim_time_spent = (double)(sim_end - sim_begin) / CLOCKS_PER_SEC;
 
   printf("\n");
 
@@ -158,14 +180,30 @@ int main() {
     print_populations_for_province(populations, populations_num, i);
   }
 
+  const clock_t save_begin = clock();
+
+  save_world(
+    countries, countries_num,
+    provinces, provinces_num,
+    populations, populations_num,
+    building_types, building_types_num,
+    nr_types, nr_types_num
+    );
+
+  const clock_t save_end = clock();
+  const double save_time_spent = (double)(save_end - save_begin) / CLOCKS_PER_SEC;
+
   free_countries(countries, countries_num, &country_list);
   free_provinces(provinces, provinces_num, &province_list);
   free_populations(populations, populations_num, &populations_list);
 
   getchar();
 
-  printf("load time_spent: %f\n", load_time_spent);
-  printf("simulation time_spent: %f\n", time_spent);
+  printf("load_time_spent: %f\n", load_time_spent);
+  printf("simulation_time_spent: %f\n", sim_time_spent);
+  printf("save_time_spent: %f\n", save_time_spent);
+
+  getchar();
 
   return 0;
 }
