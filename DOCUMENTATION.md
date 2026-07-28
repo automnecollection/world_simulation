@@ -54,6 +54,21 @@ void assign_items_to_provinces(struct Province provinces[], int provinces_num,
 
 ## **Simulation**
 
+##### `main.c`
+
+```c
+const int sim_days = SIM_DAYS;
+  for (int i = 0; i < sim_days; i++) {
+    for (int j = 0; j < populations_num; j++) {
+      increase_pop_size(&populations[j], BASE_BIRTH_RATE);
+    }
+    for (int j = 0; j < provinces_num; j++) {
+      update_province(&provinces[j], populations, populations_num);
+    }
+    advance_time(&world_time);
+  }
+```
+
 ### **Weekly Tick**
 
 ### **Monthly Tick**
@@ -61,17 +76,6 @@ void assign_items_to_provinces(struct Province provinces[], int provinces_num,
 #### Population size increase (births)
 
 Calculate the population increase of all population groups
-
-##### `main.c`
-
-```c
-const int sim_days = SIM_DAYS;
-    for (int i = 0; i < sim_days; i++) {
-        for (int j = 0; j < populations_num; j++) {
-            if (new_month == true) {
-                increase_pop_size(&populations[j], BASE_BIRTH_RATE, month_days);
-            }
-```
 
 ##### `population.c`
 
