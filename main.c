@@ -20,7 +20,7 @@
 #define SIM_DAYS 27740              // How many days the simulation will run for, 27740 = 76 years (runs to 2026)
 #define BASE_BIRTH_RATE 1.000041    // The base birth rate for population groups
 #define LOAD_FROM_RESULTS false
-#define FILE_TYPE ".txt"
+#define FILE_TYPE ".wrld"
 #define COUNTRIES_FILE "countries"
 #define PROVINCES_FILE "provinces"
 #define POPULATIONS_FILE "populations.txt"
