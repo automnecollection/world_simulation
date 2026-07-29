@@ -10,6 +10,7 @@ struct Building {
     int production_type_id;
     int base_production;
 
+    int level;
     int item_input_ids;
     int item_input_ids_size;
     int item_input_amounts;

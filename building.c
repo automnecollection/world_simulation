@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include "building.h"
 #include "natural_resource.h"
+#include "item.h"
 
 struct BuildingTypesList initialise_buildings(FILE * file) {
     int capacity = 8;
@@ -95,6 +96,9 @@ int get_item_type(const char *type, struct NaturalResource natural_resources[], 
     return -1;
 }
 
-void update_buildings(struct Building buildings[], const int buildings_num) {
-
+void update_buildings(struct Building buildings[], const int buildings_num, struct Item items[], int items_num) {
+    for (int i = 0; i < buildings_num; i++) {
+        const int production_amount = buildings[i].base_production * buildings[i].level;
+        items[buildings[i].production_type_id].supply_amount += production_amount;
+    }
 }

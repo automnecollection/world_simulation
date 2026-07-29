@@ -31,3 +31,5 @@ South_Australia_Mediterranean=12,Flat,Mediterranean,None
 South_Australia_Desert=12,Flat,Desert,None
 Tasmania=12,Hills,Grassland,None
 Northern_Territory=12,Flat,Desert,None
+# Iraq
+Iraq=13,Flat,Desert,None

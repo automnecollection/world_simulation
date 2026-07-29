@@ -25,7 +25,7 @@
 
 Assign items to all provinces (provinces.items)
 
-##### `provinces.c` 
+`provinces.c` 
 
 ```c
 void assign_items_to_provinces(struct Province provinces[], int provinces_num,
@@ -54,7 +54,7 @@ void assign_items_to_provinces(struct Province provinces[], int provinces_num,
 
 ## **Simulation**
 
-##### `main.c`
+`main.c`
 
 ```c
 const int sim_days = SIM_DAYS;
@@ -77,7 +77,7 @@ const int sim_days = SIM_DAYS;
 
 Calculate the population increase of all population groups
 
-##### `population.c`
+`population.c`
 
 ```c
 void increase_pop_size(struct Population *pop, const float BASE_BIRTH_RATE, const int month_days) {
@@ -91,7 +91,7 @@ void increase_pop_size(struct Population *pop, const float BASE_BIRTH_RATE, cons
 
 Calculate the total population of all provinces.
 
-##### `province.c`
+`province.c`
 
 ```c
 void calculate_total_population(struct Province *prov, struct Population populations[], int populations_num) {

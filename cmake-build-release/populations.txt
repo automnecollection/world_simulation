@@ -52,8 +52,12 @@
 # 	- 1% Indigenous
 18,130680,Australian,Protestant_Christianity,None
 18,1320,Aboriginal,Protestant_Christianity,None
-# Tasmania
+# Tasmania - 19
 # 0.21 million
 # 	- 0.1% Indigenous
 19,209790,Australian,Protestant_Christianity,None
 19,210,Aboriginal,Protestant_Christianity,None
+# Northern Territory - 20
+# Iraq - 21
+# 5,653,350 population in 1950
+21,5653350,Iraqi,Shia_Islam,None

@@ -23,7 +23,7 @@
 #define FILE_TYPE ".wrld"
 #define COUNTRIES_FILE "countries"
 #define PROVINCES_FILE "provinces"
-#define POPULATIONS_FILE "populations.txt"
+#define POPULATIONS_FILE "populations.wrld"
 
 int main() {
   const clock_t load_begin = clock();
@@ -49,7 +49,8 @@ int main() {
   int countries_num = country_list.countries_num;
 
   for (int i = 0; i < countries_num; i++) {
-    printf("COUNTRY-%s - ID: %d, NAME: %s\n", countries[i].tag, countries[i].id, countries[i].name);
+    printf("COUNTRY-%s - ID: %d, NAME: %s\n",
+      countries[i].tag, countries[i].id, countries[i].name);
   }
 
   // Initialise provinces
@@ -71,7 +72,7 @@ int main() {
     for (int i = 0; i < provinces_num; i++) {
       if (countries[j].id == provinces[i].owner_country_id) {
         countries[j].provinces[countries[j].provinces_num] = provinces[i].id;
-        countries[j].provinces_num += 1;
+        countries[j].provinces_num++;
 
         provinces[i].owner_country_tag = countries[j].tag;
       }
@@ -105,7 +106,7 @@ int main() {
     print_populations_for_province(populations, populations_num, i);
   }
 
-  // Initialise buildings
+  // Initialise building types
   const char * buildings_loc = "buildings.txt";
   FILE *buildings_file = fopen(buildings_loc, "r");
 
@@ -113,7 +114,7 @@ int main() {
   struct Building *building_types = b_types_list.building_types;
   int building_types_num = b_types_list.building_types_num;
 
-  // Initialise natural resources (nr)
+  // Initialise natural resources
   const char * natural_resources_loc = "natural_resources.txt";
   FILE *natural_resources_file = fopen(natural_resources_loc, "r");
 
@@ -126,6 +127,7 @@ int main() {
       nr_types[i].id, nr_types[i].name, nr_types[i].base_price);
   }
 
+  // Initialise items in building types
   for (int i = 0; i < building_types_num; i++) {
     const int type_id = get_item_type(building_types[i].production_type, nr_types, nr_types_num);
     printf("type_id - %d\n", type_id);
@@ -134,9 +136,11 @@ int main() {
 
   for (int i = 0; i < building_types_num; i++) {
     printf("BUILDING_TYPE-%d - NAME: %s, BASE_PRODUCTION: %s (%d) - %d per day.\n",
-      building_types[i].id, building_types[i].name, building_types[i].production_type, building_types[i].production_type_id, building_types[i].base_production);
+      building_types[i].id, building_types[i].name, building_types[i].production_type,
+      building_types[i].production_type_id, building_types[i].base_production);
   }
 
+  // Initialise items in provinces
   assign_items_to_provinces(provinces, provinces_num, nr_types, nr_types_num);
 
   for (int i = 0; i < provinces_num; i++) {
@@ -148,6 +152,8 @@ int main() {
     }
   }
 
+  // TODO: Initialise buildings in provinces
+
   printf("\n");
 
   printf("Day %d, year %d.\n", world_time.day, world_time.year);
@@ -157,6 +163,7 @@ int main() {
 
   const clock_t sim_begin = clock();
 
+  // Run simulation
   const int sim_days = SIM_DAYS;
   for (int i = 0; i < sim_days; i++) {
     for (int j = 0; j < populations_num; j++) {
@@ -167,12 +174,12 @@ int main() {
     }
     advance_time(&world_time);
   }
+  printf("\n");
 
   const clock_t sim_end = clock();
   const double sim_time_spent = (double)(sim_end - sim_begin) / CLOCKS_PER_SEC;
 
-  printf("\n");
-
+  // Print simulation results
   printf("AFTER %d DAYS\n", sim_days);
   printf("Day %d, year %d.\n", world_time.day, world_time.year);
   for (int i = 0; i < provinces_num; i++) {
@@ -180,6 +187,7 @@ int main() {
     print_populations_for_province(populations, populations_num, i);
   }
 
+  // Save world data to .wrld file
   const clock_t save_begin = clock();
 
   save_world(
@@ -193,11 +201,10 @@ int main() {
   const clock_t save_end = clock();
   const double save_time_spent = (double)(save_end - save_begin) / CLOCKS_PER_SEC;
 
+  // Free data memory
   free_countries(countries, countries_num, &country_list);
   free_provinces(provinces, provinces_num, &province_list);
   free_populations(populations, populations_num, &populations_list);
-
-  getchar();
 
   printf("load_time_spent: %f\n", load_time_spent);
   printf("simulation_time_spent: %f\n", sim_time_spent);
