@@ -110,7 +110,7 @@ int main() {
   }
 
   // Initialise building types
-  const char * buildings_loc = "buildings.txt";
+  const char * buildings_loc = "buildings.wrld";
   FILE *buildings_file = fopen(buildings_loc, "r");
 
   const struct BuildingTypesList b_types_list = initialise_building_types(buildings_file);
@@ -118,7 +118,7 @@ int main() {
   int building_types_num = b_types_list.building_types_num;
 
   // Initialise natural resources
-  const char * natural_resources_loc = "natural_resources.txt";
+  const char * natural_resources_loc = "natural_resources.wrld";
   FILE *natural_resources_file = fopen(natural_resources_loc, "r");
 
   const struct NaturalResourcesList nr_list = initialise_nr(natural_resources_file);
@@ -165,8 +165,8 @@ int main() {
 
   // TODO: Initialise province buildings
   const char * p_buildings_loc = "province_buildings";
-  strcat(p_buildings_loc, FILE_TYPE);
-  FILE *p_buildings_file = fopen(p_buildings_loc, "r");
+  // strcat(p_buildings_loc, FILE_TYPE);
+  // FILE *p_buildings_file = fopen(p_buildings_loc, "r");
 
   // const struct BuildingsList buildings_list = initialise_buildings(p_buildings_file);
   // struct Building *buildings = buildings_list.buildings;
@@ -211,21 +211,22 @@ int main() {
   // Save world data to .wrld file
   const clock_t save_begin = clock();
 
-  save_world(
-    countries, countries_num,
-    provinces, provinces_num,
-    populations, populations_num,
-    building_types, building_types_num,
-    nr_types, nr_types_num
-    );
+  // save_world(
+  //   countries, countries_num,
+  //   provinces, provinces_num,
+  //   populations, populations_num,
+  //   building_types, building_types_num
+  //   );
 
   const clock_t save_end = clock();
   const double save_time_spent = (double)(save_end - save_begin) / CLOCKS_PER_SEC;
 
+
+  // TODO: Fix crashing bug for freeing vars
   // Free data memory
-  free_countries(countries, countries_num, &country_list);
-  free_provinces(provinces, provinces_num, &province_list);
-  free_populations(populations, populations_num, &populations_list);
+  // free_countries(countries, countries_num, &country_list);
+  // free_provinces(provinces, provinces_num, &province_list);
+  // free_populations(populations, populations_num, &populations_list);
 
   if (DEBUG == true) {
     printf("load_time_spent: %f\n", load_time_spent);

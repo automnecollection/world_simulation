@@ -71,7 +71,7 @@ void *read_building_type(char *line, const int id) {
             .id=id,
             .name=name,
             .production_type=production_type,
-            .production_type_id=-2,
+            .production_type_id=-1,
             .base_production=base_production,
         };
     };
