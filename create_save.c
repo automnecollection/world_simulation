@@ -1,18 +1,16 @@
 #include <stdio.h>
-#include <stdlib.h>
-#include <time.h>
 
 #include "country.h"
 #include "province.h"
 #include "population.h"
-#include "building.h"
+#include "building_type.h"
 #include "natural_resource.h"
 
 void save_world(
     struct Country countries[], int countries_num,
     struct Province provinces[], int provinces_num,
     struct Population populations[], int populations_num,
-    struct Building building_types[], int building_types_num,
+    struct BuildingType building_types[], int building_types_num,
     struct NaturalResource nr_types[], int nr_types_num) {
 
     FILE *country_result = fopen("countries_result.txt", "w");

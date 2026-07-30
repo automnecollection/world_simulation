@@ -9,7 +9,7 @@ struct World {
     struct Country *countries;
     struct Province *provinces;
     struct Population *populations;
-    struct Building *buildings;
+    struct BuildingType *buildings;
     struct NaturalResource *natural_resources;
 };
 

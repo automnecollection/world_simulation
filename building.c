@@ -1,104 +1,84 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+
+#include "province.h"
 #include "building.h"
-#include "natural_resource.h"
 #include "item.h"
 
-struct BuildingTypesList initialise_buildings(FILE * file) {
-    int capacity = 8;
-    char line[200];
-
-    struct BuildingTypesList b_types_list;
-    b_types_list.building_types = malloc(capacity * sizeof *b_types_list.building_types);
-    b_types_list.building_types_num = 0;
-
-    if (file != NULL) {
-        int b_num = 0;
-        while (fgets(line, 100, file)) {
-            if (b_num == capacity) {
-                capacity *= 2;
-                b_types_list.building_types = realloc(
-                    b_types_list.building_types,
-                    capacity * sizeof *b_types_list.building_types);
-            }
-            const struct Building *building = read_building(line, b_num);
-
-            if (building != NULL) {
-                b_types_list.building_types[b_num] = *building;
-                b_num += 1;
-            }
-
-            free((void*)building);
+void assign_buildings(struct Province provinces[], const int provinces_num,
+    struct BuildingType building_types[], const size_t b_types_size) {
+    for (int i = 0; i < provinces_num; i++) {
+        struct Building *buildings = calloc(b_types_size, sizeof(struct Building));
+        size_t buildings_size = 0;
+        for (int j = 0; j < b_types_size; j++) {
+            const struct Building building = {
+                .id=building_types[j].id,
+                .level=0,
+                .item_input_ids=0,
+                .item_input_ids_size=0,
+                .item_input_amounts=0,
+                .item_input_amounts_size=0,
+                .item_output_ids=0,
+                .item_output_ids_size=0,
+                .item_output_amounts=0,
+                .item_output_amounts_size=0
+            };
+            buildings[buildings_size] = building;
+            buildings_size++;
         }
-        b_types_list.building_types_num = b_num;
-    }
-    else {
-        printf("Not able to open the building_types file.\n");
-    }
 
-    return b_types_list;
+        provinces[i].buildings = buildings;
+        provinces[i].buildings_size = buildings_size;
+    }
 }
 
-void *read_building(char *line, const int id) {
+void initialise_building_data(FILE * file, struct Building buildings[], size_t buildings_size,
+    struct Province provinces[], size_t provinces_size, struct BuildingType building_types[]) {
+    char line[200];
+
+    if (file != NULL) {
+        while (fgets(line, 100, file)) {
+            read_building_data(line, buildings, buildings_size, provinces, building_types);
+        }
+    }
+}
+
+void read_building_data(char *line, struct Building buildings[], const size_t buildings_size,
+    struct Province provinces[], struct BuildingType building_types[]) {
     if (strstr(line, "#") != NULL) {
-        return NULL;
+        return;
     }
 
     const char *data_split = strtok(line, "=");
 
-    char *name = malloc(strlen(data_split) + 1);
-    strcpy(name, data_split);
+    char *province_name = malloc(strlen(data_split) + 1);
+    strcpy(province_name, data_split);
+    int province_id = get_province_id_from_name(province_name, provinces);
 
     char *data = strtok(NULL, "=");
 
-    const char *str_production_type_token = strtok(data, ",");
-    printf("str_production_type_token - %s\n", str_production_type_token);
-    char *production_type = malloc(strlen(str_production_type_token) + 1);
-    strcpy(production_type, str_production_type_token);
+    const char *str_building_type_token = strtok(data, ",");
+    // printf("str_production_type_token - %s\n", str_production_type_token);
+    char *building_type_name = malloc(strlen(str_building_type_token) + 1);
+    strcpy(building_type_name, str_building_type_token);
 
-    const char *str_base_production = strtok(NULL, ",");
-    printf("str_base_production - %s\n", str_base_production);
-    int base_production = strtol(str_base_production, NULL, 10);
+    int building_type_id = get_building_id_from_name(building_type_name, building_types);
 
-    printf("name, base_production - %s, %d\n", name, base_production);
+    const char *level_token = strtok(NULL, ",");
+    const int level = strtol(level_token, NULL, 10);
 
-    struct Building* new_building = malloc(sizeof(struct Building));
+    provinces[province_id].buildings[building_type_id].level = level;
 
-    if (new_building != NULL) {
-        *new_building = (struct Building) {
-            .id=id,
-            .name=name,
-            .production_type=production_type,
-            .production_type_id=0,
-            .base_production=base_production,
-            .item_input_ids_size=0,
-            .item_input_amounts_size=0,
-            .item_output_ids_size=0,
-            .item_output_amounts_size=0
-        };
-    };
-
-    return new_building;
+    free(data_split);
+    free(province_name);
+    free(building_type_name);
 }
 
-int get_item_type(const char *type, struct NaturalResource natural_resources[], const int natural_resources_num) {
-    for (int i = 0; i < natural_resources_num; i++) {
-        printf("type - %s\n", type);
-        printf("natural_resources[i].name = %s\n", natural_resources[i].name);
-        if (strcmp(type, natural_resources[i].name) == 0) {
-            printf("natural_resources[i].id = %d\n", natural_resources[i].id);
-            return natural_resources[i].id;
-        }
-        printf("did not match - type - %s, natural_resources[i].name - %s\n", type, natural_resources[i].name);
-    }
-    printf("could not find item type - %s\n", type);
-    return -1;
-}
-
-void update_buildings(struct Building buildings[], const int buildings_num, struct Item items[], int items_num) {
+void update_buildings(struct Building buildings[], const int buildings_num, struct BuildingType building_types[],
+    struct Item items[]) {
     for (int i = 0; i < buildings_num; i++) {
-        const int production_amount = buildings[i].base_production * buildings[i].level;
-        items[buildings[i].production_type_id].supply_amount += production_amount;
+        const int production_amount = building_types[buildings[i].id].base_production * buildings[i].level;
+        items[building_types[buildings[i].id].production_type_id].supply_amount += production_amount;
     }
 }

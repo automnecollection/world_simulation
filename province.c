@@ -2,6 +2,8 @@
 #include <string.h>
 #include <stdlib.h>
 #include "province.h"
+
+#include "building_type.h"
 #include "population.h"
 #include "natural_resource.h"
 #include "item.h"
@@ -114,7 +116,7 @@ void calculate_total_population(struct Province *prov, struct Population populat
     prov->total_population_int = (int)total_population;
 }
 
-void update_province(struct Province *prov, struct Population populations[], int populations_num) {
+void update_tick(struct Province *prov, struct Population populations[], int populations_num) {
     calculate_total_population(prov, populations, populations_num);
     // increase_province_populations(prov);
 }
@@ -132,7 +134,7 @@ void update_province(struct Province *prov, struct Population populations[], int
 //     }
 // }
 
-void assign_items_to_provinces(struct Province provinces[], int provinces_num,
+void assign_items(struct Province provinces[], int provinces_num,
     struct NaturalResource natural_resources[], int nr_types_num) {
     for (int i = 0; i < provinces_num; i++) {
         struct Item *items = calloc(nr_types_num, sizeof(struct Item));

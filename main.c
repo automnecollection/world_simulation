@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-#include "string.h"
+#include <string.h>
 
 #include "world.h"
 #include "world_functions.h"
@@ -9,16 +9,17 @@
 #include "country.h"
 #include "population.h"
 #include "natural_resource.h"
-#include "building.h"
+#include "building_type.h"
 #include "item.h"
 #include "create_save.h"
 
 // Get-ChildItem -Recurse -Include *.c,*.h | ForEach-Object { "{0}: {1}" -f $_.Name, (Get-Content $_).Count }
 
-#define DAY 1                       // Starting day of year (1-365)
-#define YEAR 1950                   // Starting year
-#define SIM_DAYS 27740              // How many days the simulation will run for, 27740 = 76 years (runs to 2026)
-#define BASE_BIRTH_RATE 1.000041    // The base birth rate for population groups
+#define DEBUG false
+#define DAY 1                               // Starting day of year (1-365)
+#define YEAR 1950                           // Starting year
+#define SIM_DAYS 27740                      // How many days the simulation will run for, 27740 days = 76 years (runs to 2026)
+#define BASE_BIRTH_RATE 1.000041            // The base birth rate for population groups
 #define LOAD_FROM_RESULTS false
 #define FILE_TYPE ".wrld"
 #define COUNTRIES_FILE "countries"
@@ -38,29 +39,33 @@ int main() {
   char countries_file_loc[] = COUNTRIES_FILE;
   if (LOAD_FROM_RESULTS == true) {
     strcat(countries_file_loc, "_result");
-    printf("countries_file_loc: %s\n", countries_file_loc);
   }
   strcat(countries_file_loc, FILE_TYPE);
-  printf("countries_file_loc: %s\n", countries_file_loc);
+  if (DEBUG == true) {
+    printf("countries_file_loc: %s\n", countries_file_loc);
+  }
   FILE *countries_file = fopen(countries_file_loc, "r");
 
   const struct CountryList country_list = initialise_countries(countries_file);
   struct Country *countries = country_list.countries;
   int countries_num = country_list.countries_num;
 
-  for (int i = 0; i < countries_num; i++) {
-    printf("COUNTRY-%s - ID: %d, NAME: %s\n",
-      countries[i].tag, countries[i].id, countries[i].name);
+  if (DEBUG == true) {
+    for (int i = 0; i < countries_num; i++) {
+      printf("COUNTRY-%s - ID: %d, NAME: %s\n",
+        countries[i].tag, countries[i].id, countries[i].name);
+    }
   }
 
   // Initialise provinces
   char provinces_file_loc[] = PROVINCES_FILE;
   if (LOAD_FROM_RESULTS == true) {
     strcat(provinces_file_loc, "_result");
-    printf("provinces_file_loc: %s\n", provinces_file_loc);
   }
   strcat(provinces_file_loc, FILE_TYPE);
-  printf("provinces_file_loc: %s\n", provinces_file_loc);
+  if (DEBUG == true) {
+    printf("provinces_file_loc: %s\n", provinces_file_loc);
+  }
   FILE *provinces_file = fopen(provinces_file_loc, "r");
 
   const struct ProvinceList province_list = initialise_provinces(provinces_file);
@@ -78,8 +83,6 @@ int main() {
       }
     }
   }
-
-  printf("\n");
 
   // Initialise populations
   const char * populations_file_loc = POPULATIONS_FILE;
@@ -110,8 +113,8 @@ int main() {
   const char * buildings_loc = "buildings.txt";
   FILE *buildings_file = fopen(buildings_loc, "r");
 
-  const struct BuildingTypesList b_types_list = initialise_buildings(buildings_file);
-  struct Building *building_types = b_types_list.building_types;
+  const struct BuildingTypesList b_types_list = initialise_building_types(buildings_file);
+  struct BuildingType *building_types = b_types_list.building_types;
   int building_types_num = b_types_list.building_types_num;
 
   // Initialise natural resources
@@ -122,37 +125,55 @@ int main() {
   struct NaturalResource *nr_types = nr_list.natural_resources;
   int nr_types_num = nr_list.natural_resources_num;
 
-  for (int i = 0; i < nr_types_num; i++) {
-    printf("NATURAL_RESOURCE-%d - NAME: %s, BASE_PRICE: %f\n",
-      nr_types[i].id, nr_types[i].name, nr_types[i].base_price);
+  if (DEBUG == true) {
+    for (int i = 0; i < nr_types_num; i++) {
+      printf("NATURAL_RESOURCE-%d - NAME: %s, BASE_PRICE: %f\n",
+        nr_types[i].id, nr_types[i].name, nr_types[i].base_price);
+    }
   }
 
   // Initialise items in building types
   for (int i = 0; i < building_types_num; i++) {
     const int type_id = get_item_type(building_types[i].production_type, nr_types, nr_types_num);
-    printf("type_id - %d\n", type_id);
+    if (DEBUG == true) {
+      printf("type_id - %d\n", type_id);
+    }
     building_types[i].production_type_id = type_id;
   }
 
-  for (int i = 0; i < building_types_num; i++) {
-    printf("BUILDING_TYPE-%d - NAME: %s, BASE_PRODUCTION: %s (%d) - %d per day.\n",
-      building_types[i].id, building_types[i].name, building_types[i].production_type,
-      building_types[i].production_type_id, building_types[i].base_production);
-  }
-
-  // Initialise items in provinces
-  assign_items_to_provinces(provinces, provinces_num, nr_types, nr_types_num);
-
-  for (int i = 0; i < provinces_num; i++) {
-    printf("PROVINCE %s ITEMS:\n",
-        provinces[i].name);
-    for (int j = 0; j < provinces[i].items_num; j++) {
-      printf("  ITEMS-%d - NAME: %s\n",
-        provinces[i].items[j].item_id, provinces[i].items[j].name);
+  if (DEBUG == true) {
+    for (int i = 0; i < building_types_num; i++) {
+      printf("BUILDING_TYPE-%d - NAME: %s, BASE_PRODUCTION: %s (%d) - %d per day.\n",
+        building_types[i].id, building_types[i].name, building_types[i].production_type,
+        building_types[i].production_type_id, building_types[i].base_production);
     }
   }
 
+  // Initialise items in provinces
+  assign_items(provinces, provinces_num, nr_types, nr_types_num);
+
+  if (DEBUG == true) {
+    for (int i = 0; i < provinces_num; i++) {
+      printf("PROVINCE %s ITEMS:\n",
+          provinces[i].name);
+      for (int j = 0; j < provinces[i].items_num; j++) {
+        printf("  ITEMS-%d - NAME: %s\n",
+          provinces[i].items[j].item_id, provinces[i].items[j].name);
+      }
+    }
+  }
+
+  // TODO: Initialise province buildings
+  const char * p_buildings_loc = "province_buildings";
+  strcat(p_buildings_loc, FILE_TYPE);
+  FILE *p_buildings_file = fopen(p_buildings_loc, "r");
+
+  // const struct BuildingsList buildings_list = initialise_buildings(p_buildings_file);
+  // struct Building *buildings = buildings_list.buildings;
+  // size_t buildings_num = buildings_list.buildings_size;
+
   // TODO: Initialise buildings in provinces
+  // assign_buildings(provinces, provinces_num, building_types, building_types_num);
 
   printf("\n");
 
@@ -170,7 +191,7 @@ int main() {
       increase_pop_size(&populations[j], BASE_BIRTH_RATE);
     }
     for (int j = 0; j < provinces_num; j++) {
-      update_province(&provinces[j], populations, populations_num);
+      update_tick(&provinces[j], populations, populations_num);
     }
     advance_time(&world_time);
   }
@@ -206,9 +227,11 @@ int main() {
   free_provinces(provinces, provinces_num, &province_list);
   free_populations(populations, populations_num, &populations_list);
 
-  printf("load_time_spent: %f\n", load_time_spent);
-  printf("simulation_time_spent: %f\n", sim_time_spent);
-  printf("save_time_spent: %f\n", save_time_spent);
+  if (DEBUG == true) {
+    printf("load_time_spent: %f\n", load_time_spent);
+    printf("simulation_time_spent: %f\n", sim_time_spent);
+    printf("save_time_spent: %f\n", save_time_spent);
+  }
 
   getchar();
 
