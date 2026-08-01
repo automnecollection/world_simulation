@@ -79,6 +79,16 @@ void *read_building_type(char *line, const int id) {
     return new_building_type;
 }
 
+int get_building_type_id_from_name(const char * name, struct BuildingType building_types[], const size_t building_types_size) {
+    for (int i = 0; i < building_types_size; i++) {
+        printf("name: %s, building_types[i].name: %s\n", name, building_types[i].name);
+        if (strcmp(building_types[i].name, name) == 0) {
+            printf("got name - name: %s, building_types[i].name: %s, building_types[i].id %d\n", name, building_types[i].name, building_types[i].id);
+            return building_types[i].id;
+        }
+    }
+}
+
 int get_item_type(const char *type, struct NaturalResource natural_resources[], const int natural_resources_num) {
     for (int i = 0; i < natural_resources_num; i++) {
         printf("type - %s\n", type);

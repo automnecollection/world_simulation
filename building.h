@@ -24,7 +24,11 @@ struct BuildingsList {
 };
 
 struct BuildingsList initialise_buildings(FILE * file);
-void read_building_data(char *line, struct Building buildings[], const size_t buildings_size,
-    struct Province provinces[], struct BuildingType building_types[]);
+
+void initialise_building_data(FILE * file, struct Province provinces[], int provinces_size,
+    struct BuildingType building_types[], size_t building_types_size);
+
+void read_building_data(char *line, struct Province provinces[], struct Province *provinces_pointer[], int provinces_size,
+    struct BuildingType building_types[], size_t building_types_size);
 
 #endif //WORLD_SIM_BUILDING_H

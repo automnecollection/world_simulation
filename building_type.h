@@ -19,5 +19,6 @@ struct BuildingTypesList {
 struct BuildingTypesList initialise_building_types(FILE * file);
 void *read_building_type(char *line, int id);
 int get_item_type(const char *type, struct NaturalResource natural_resources[], int natural_resources_num);
+int get_building_type_id_from_name(const char * name, struct BuildingType building_types[], size_t building_types_size);
 
 #endif //WORLD_SIM_BUILDING_TYPE_H

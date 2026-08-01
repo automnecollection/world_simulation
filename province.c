@@ -157,11 +157,25 @@ void assign_items(struct Province provinces[], int provinces_num,
     }
 }
 
+int get_province_id_from_name(const char * name, struct Province provinces[], const int provinces_size) {
+    printf("get_province_id_from_name\n");
+    for (int i = 0; i < provinces_size; i++) {
+        printf("%d get_province_id_from_name\n", i);
+        printf("provinces[%d].name: %s, name: %s\n", i, provinces[i].name, name);
+        if (strcmp(provinces[i].name, name) == 0) {
+            printf("get_province_id_from_name detected id: %d\n", provinces[i].id);
+            return provinces[i].id;
+        }
+    }
+    return -1;
+}
+
 void free_provinces(struct Province provinces[], const int provinces_num, struct ProvinceList *province_list) {
     for (int i = 0; i < provinces_num; i++) {
         free(provinces[i].name);
         free(provinces[i].terrain);
         free(provinces[i].climate);
+        free(provinces[i].buildings);
     }
     free(province_list->provinces);
     province_list->provinces = NULL;

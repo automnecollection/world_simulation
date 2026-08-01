@@ -55,4 +55,7 @@ void free_countries(struct Country countries[], const int countries_num, struct 
         free(countries[i].name);
         free(countries[i].tag);
     }
+    free(country_list->countries);
+    country_list->countries = NULL;
+    country_list->countries_num = 0;
 }

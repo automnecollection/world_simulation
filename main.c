@@ -3,6 +3,7 @@
 #include <time.h>
 #include <string.h>
 
+#include "building.h"
 #include "world.h"
 #include "world_functions.h"
 #include "province.h"
@@ -15,10 +16,10 @@
 
 // Get-ChildItem -Recurse -Include *.c,*.h | ForEach-Object { "{0}: {1}" -f $_.Name, (Get-Content $_).Count }
 
-#define DEBUG false
+#define DEBUG true
 #define DAY 1                               // Starting day of year (1-365)
-#define YEAR 1950                           // Starting year
-#define SIM_DAYS 27740                      // How many days the simulation will run for, 27740 days = 76 years (runs to 2026)
+#define YEAR 1950                           // Starting year, the game will be designed around starting in 1950
+#define SIM_DAYS 27740                      // How many days the simulation will run for, 27740 days = 76 years (runs to 2026 from 1950)
 #define BASE_BIRTH_RATE 1.000041            // The base birth rate for population groups
 #define LOAD_FROM_RESULTS false
 #define FILE_TYPE ".wrld"
@@ -34,6 +35,8 @@ int main() {
 
   world_time.day = DAY;
   world_time.year = YEAR;
+
+  printf("Day %d, year %d.\n", world_time.day, world_time.year);
 
   // Initialise countries
   char countries_file_loc[] = COUNTRIES_FILE;
@@ -163,21 +166,25 @@ int main() {
     }
   }
 
-  // TODO: Initialise province buildings
-  const char * p_buildings_loc = "province_buildings";
+  // Initialise province buildings
+  const char * p_buildings_loc = "province_buildings.wrld";
   // strcat(p_buildings_loc, FILE_TYPE);
-  // FILE *p_buildings_file = fopen(p_buildings_loc, "r");
+  FILE *p_buildings_file = fopen(p_buildings_loc, "r");
 
-  // const struct BuildingsList buildings_list = initialise_buildings(p_buildings_file);
-  // struct Building *buildings = buildings_list.buildings;
-  // size_t buildings_num = buildings_list.buildings_size;
+  assign_buildings(provinces, provinces_num, building_types, building_types_num);
+  initialise_building_data(p_buildings_file, provinces, provinces_num, building_types, building_types_num);
 
-  // TODO: Initialise buildings in provinces
-  // assign_buildings(provinces, provinces_num, building_types, building_types_num);
+  for (int i = 0; i < provinces_num; i++) {
+    for (int j = 0; j < building_types_num; j++) {
+      if (provinces[i].buildings[j].level > 0) {
+        printf("province - %s, name - %s, type_id - %d, level - %d\n",
+          provinces[i].name, building_types[provinces[i].buildings[j].id].name,
+          provinces[i].buildings[j].id, provinces[i].buildings[j].level);
+      }
+    }
+  }
 
   printf("\n");
-
-  printf("Day %d, year %d.\n", world_time.day, world_time.year);
 
   const clock_t load_end = clock();
   const double load_time_spent = (double)(load_end - load_begin) / CLOCKS_PER_SEC;
@@ -211,22 +218,20 @@ int main() {
   // Save world data to .wrld file
   const clock_t save_begin = clock();
 
-  // save_world(
-  //   countries, countries_num,
-  //   provinces, provinces_num,
-  //   populations, populations_num,
-  //   building_types, building_types_num
-  //   );
+  save_world(
+    countries, countries_num,
+    provinces, provinces_num,
+    populations, populations_num,
+    building_types, building_types_num
+    );
 
   const clock_t save_end = clock();
   const double save_time_spent = (double)(save_end - save_begin) / CLOCKS_PER_SEC;
 
-
-  // TODO: Fix crashing bug for freeing vars
   // Free data memory
-  // free_countries(countries, countries_num, &country_list);
-  // free_provinces(provinces, provinces_num, &province_list);
-  // free_populations(populations, populations_num, &populations_list);
+  free_countries(countries, countries_num, &country_list);
+  free_provinces(provinces, provinces_num, &province_list);
+  free_populations(populations, populations_num, &populations_list);
 
   if (DEBUG == true) {
     printf("load_time_spent: %f\n", load_time_spent);

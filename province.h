@@ -44,6 +44,8 @@ void calculate_total_population(struct Province *prov, struct Population populat
 void update_tick(struct Province *prov, struct Population populations[], int populations_num);
 void increase_population(struct Province *prov);
 struct Province detect_country_provinces(struct Province* provinces[], char *province_owner_tag, char *tag, int provinces_num);
+int get_province_id_from_name(const char * name, struct Province provinces[], int provinces_size);
+
 void free_provinces(struct Province provinces[], int provinces_num, struct ProvinceList *province_list);
 
 #endif
