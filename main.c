@@ -20,7 +20,7 @@
 #define DAY 1                               // Starting day of year (1-365)
 #define YEAR 1950                           // Starting year, the game will be designed around starting in 1950
 #define SIM_DAYS 27740                      // How many days the simulation will run for, 27740 days = 76 years (runs to 2026 from 1950)
-#define BASE_BIRTH_RATE 1.000041            // The base birth rate for population groups
+#define BASE_BIRTH_RATE 1.000034            // The base birth rate for population groups
 #define LOAD_FROM_RESULTS false
 #define FILE_TYPE ".wrld"
 #define COUNTRIES_FILE "countries"
@@ -79,8 +79,8 @@ int main() {
   for (int j = 0; j < countries_num; j++) {
     for (int i = 0; i < provinces_num; i++) {
       if (countries[j].id == provinces[i].owner_country_id) {
-        countries[j].provinces[countries[j].provinces_num] = provinces[i].id;
-        countries[j].provinces_num++;
+        // countries[j].provinces[countries[j].provinces_num] = provinces[i].id;
+        // countries[j].provinces_num++;
 
         provinces[i].owner_country_tag = countries[j].tag;
       }
@@ -194,11 +194,15 @@ int main() {
   // Run simulation
   const int sim_days = SIM_DAYS;
   for (int i = 0; i < sim_days; i++) {
+    // printf("day: %d, year: %d\n", world_time.day, world_time.year);
     for (int j = 0; j < populations_num; j++) {
       increase_pop_size(&populations[j], BASE_BIRTH_RATE);
     }
     for (int j = 0; j < provinces_num; j++) {
       update_tick(&provinces[j], populations, populations_num);
+      // for (int k = 0; k < provinces[j].buildings_size; k++) {
+      update_item_demand(&provinces[j].items, provinces[j].items_num, populations, populations_num);
+      update_buildings(provinces[j].buildings, provinces[j].buildings_size, building_types, &provinces[j].items);
     }
     advance_time(&world_time);
   }
@@ -218,12 +222,12 @@ int main() {
   // Save world data to .wrld file
   const clock_t save_begin = clock();
 
-  save_world(
-    countries, countries_num,
-    provinces, provinces_num,
-    populations, populations_num,
-    building_types, building_types_num
-    );
+  // save_world(
+  //   countries, countries_num,
+  //   provinces, provinces_num,
+  //   populations, populations_num,
+  //   building_types, building_types_num
+  //   );
 
   const clock_t save_end = clock();
   const double save_time_spent = (double)(save_end - save_begin) / CLOCKS_PER_SEC;

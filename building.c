@@ -71,10 +71,12 @@ void read_building_data(char *line, struct Province provinces[], struct Province
     const int level = strtol(level_token, NULL, 10);
 
     // printf("building_type_id : %d\n", building_type_id);
-    
-    printf("provinces[province_id].name = %s\n", provinces[province_id].name);
+
+    printf("provinces[province_id].name = %s\n",
+        provinces[province_id].name);
     printf("building_types[provinces[province_id].buildings[building_type_id]].name = %s\n",
         building_types[provinces[province_id].buildings[building_type_id].id].name);
+
     struct Province *prov = &provinces[province_id];
     prov->buildings[building_type_id].level = level;
 
@@ -84,10 +86,13 @@ void read_building_data(char *line, struct Province provinces[], struct Province
 }
 
 void update_buildings(struct Building buildings[], const int buildings_num, struct BuildingType building_types[],
-    struct Item items[]) {
+    struct Item *items[]) {
     for (int i = 0; i < buildings_num; i++) {
-        const int production_amount = building_types[buildings[i].id].base_production * buildings[i].level;
-        items[building_types[buildings[i].id].production_type_id].supply_amount += production_amount;
+        if ( buildings[i].level > 0) {
+            if ( building_types[buildings[i].id].production_type_id != -1) {
+                const int production_amount = building_types[buildings[i].id].base_production * buildings[i].level;
+                items[building_types[buildings[i].id].production_type_id]->supply_amount += production_amount;
+            }
+        }
     }
 }
-

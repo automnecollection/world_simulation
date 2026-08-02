@@ -1,3 +1,5 @@
+#include <stdio.h>
+
 #ifndef WORLD_SIM_POPULATION_H
 #define WORLD_SIM_POPULATION_H
 

@@ -31,4 +31,7 @@ void initialise_building_data(FILE * file, struct Province provinces[], int prov
 void read_building_data(char *line, struct Province provinces[], struct Province *provinces_pointer[], int provinces_size,
     struct BuildingType building_types[], size_t building_types_size);
 
+void update_buildings(struct Building buildings[], const int buildings_num, struct BuildingType building_types[],
+    struct Item *items[]);
+
 #endif //WORLD_SIM_BUILDING_H

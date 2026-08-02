@@ -5,7 +5,7 @@
 
 struct CountryList initialise_countries(FILE *file) {
     int capacity = 8;
-    char c_line[200];
+    char c_line[250];
 
     struct CountryList country_list;
     country_list.countries = malloc(capacity * sizeof *country_list.countries);
@@ -15,7 +15,7 @@ struct CountryList initialise_countries(FILE *file) {
         int countries_num = 0;
         while (fgets(c_line, 100, file)) {
             if (countries_num == capacity) {
-                capacity *= 2;
+                capacity *= 4;
                 country_list.countries = realloc(
                     country_list.countries,
                     capacity * sizeof *country_list.countries);
