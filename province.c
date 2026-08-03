@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+
 #include "province.h"
 
 #include "building_type.h"
@@ -88,16 +89,100 @@ void *read_province(char *line, const int id) {
     return new_province;
 }
 
-void print_province_data(struct Province const prov) {
-    printf("PROVINCE-%d: %s, ", prov.id, prov.name);
-    printf("COUNTRY OWNER ID: %d, ", prov.owner_country_id);
-    printf("COUNTRY OWNER TAG: %s, ", prov.owner_country_tag);
-    printf("\n");
-    printf("TERRAIN: %s, ", prov.terrain);
-    printf("CLIMATE: %s, ", prov.climate);
-    printf("TOTAL POPULATION: %d", prov.total_population_int);
-    printf("\n");
+void initialise_temp_province_data(FILE * file, struct Province provinces[], int provinces_num) {
+    printf("initialise_temp_province_data");
 
+    char line[200];
+
+    if( file != NULL) {
+        while (fgets(line, 100, file)) {
+            read_province_data(line, provinces, provinces_num);
+        }
+    }
+    else {
+        printf("what?");
+    }
+}
+
+void read_province_data(char *line, struct Province provinces[], int provinces_num) {
+    printf("read_province_data");
+
+    if (strstr(line, "#") != NULL) {
+        return;
+    }
+
+    const char *data_split = strtok(line, ",");
+    char *province_name = malloc(strlen(data_split) + 1);
+    strcpy(province_name, data_split);
+    // printf("provinces[0].name: %s\n", provinces[0].name);
+    int province_id = get_province_id_from_name(province_name, provinces, provinces_num);
+
+    const char *type_token = strtok(NULL, "=");
+    char *type = malloc(strlen(type_token) + 1);
+    strcpy(type, type_token);
+
+    char *data = strtok(NULL, "=");
+
+    const char *str_urbanisation_token = strtok(data, ",");
+    const float urbanisation = strtof(str_urbanisation_token, NULL);
+
+    const char *str_college_edu_token = strtok(NULL, ",");
+    const float college_edu = strtof(str_college_edu_token, NULL);
+
+    const char *str_literacy_token = strtok(NULL, ",");
+    const float literacy = strtof(str_literacy_token, NULL);
+
+    const char *str_secularism_token = strtok(NULL, ",");
+    const float secularism = strtof(str_secularism_token, NULL);
+
+    printf("type: %s\n", type);
+
+    if (strcmp(type, "start") == 0) {
+        provinces[province_id].urbanisation_rate = urbanisation;
+        provinces[province_id].college_education_rate = college_edu;
+        provinces[province_id].literacy_rate = literacy;
+        provinces[province_id].secularism_rate = secularism;
+        provinces[province_id].has_start_data = true;
+    }
+    else if (strcmp(type, "target") == 0) {
+        provinces[province_id].target_urbanisation_rate = urbanisation;
+        provinces[province_id].target_college_education_rate = college_edu;
+        provinces[province_id].target_literacy_rate = literacy;
+        provinces[province_id].target_secularism_rate = secularism;
+        provinces[province_id].has_target_data = true;
+    }
+    else {
+        printf("we didnt get a fuckin target type\n");
+    }
+
+    printf("province_data %s=%f,%f,%f,%f\n",
+        provinces[province_id].name,
+        provinces[province_id].urbanisation_rate,
+        provinces[province_id].college_education_rate,
+        provinces[province_id].literacy_rate,
+        provinces[province_id].secularism_rate);
+
+    free(province_name);
+    free(type);
+}
+
+void print_province_data(struct Province p[], int provinces_num, struct Population populations[], int populations_num) {
+    for (int i = 0; i < provinces_num; i++) {
+        printf("PROVINCE-%d: %s, ", p[i].id, p[i].name);
+        printf("COUNTRY OWNER ID: %d, ", p[i].owner_country_id);
+        printf("COUNTRY OWNER TAG: %s, ", p[i].owner_country_tag);
+        printf("\n");
+        printf("    URBANISATION: %f, COLLEGE_EDU.: %f, LITERACY: %f, SECULARISM: %f\n",
+            p[i].urbanisation_rate,
+            p[i].college_education_rate,
+            p[i].literacy_rate,
+            p[i].secularism_rate);
+        printf("    TERRAIN: %s, ", p[i].terrain);
+        printf("    CLIMATE: %s, ", p[i].climate);
+        printf("    TOTAL POPULATION: %f", p[i].total_population);
+        printf("\n");
+        print_populations_for_province(populations, populations_num, i);
+    }
     // printf("pops num %d", prov.populations_num);
     // for (int i = 0; i < prov.populations_num; i++) {
     //     printf("%d - %d", i, prov.populations[i]);

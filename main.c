@@ -17,15 +17,20 @@
 // Get-ChildItem -Recurse -Include *.c,*.h | ForEach-Object { "{0}: {1}" -f $_.Name, (Get-Content $_).Count }
 
 #define DEBUG true
-#define DAY 1                               // Starting day of year (1-365)
-#define YEAR 1950                           // Starting year, the game will be designed around starting in 1950
-#define SIM_DAYS 27740                      // How many days the simulation will run for, 27740 days = 76 years (runs to 2026 from 1950)
-#define BASE_BIRTH_RATE 1.000034            // The base birth rate for population groups
+#define DAY 1                                 // Starting day of year (1-365)
+#define YEAR 1950                             // Starting year, the game will be designed around starting in 1950
+#define SIM_DAYS 27740                        // How many days the simulation will run for, 27740 days = 76 years (runs to 2026 from 1950)
+#define BASE_BIRTH_RATE 1.0001                // The base birth rate for population groups
 #define LOAD_FROM_RESULTS false
 #define FILE_TYPE ".wrld"
 #define COUNTRIES_FILE "countries"
 #define PROVINCES_FILE "provinces"
 #define POPULATIONS_FILE "populations.wrld"
+
+#define DEF_URBANISATION 55
+#define DEF_COLLEGE_EDU 26
+#define DEF_LITERACY 85
+#define DEF_SECULARISM 51
 
 int main() {
   const clock_t load_begin = clock();
@@ -75,6 +80,10 @@ int main() {
   struct Province *provinces = province_list.provinces;
   int provinces_num = province_list.provinces_num;
 
+  FILE *provinces_data = fopen("province_data.wrld", "r");
+
+  initialise_temp_province_data(provinces_data, provinces, provinces_num);
+
   // Match country and province information
   for (int j = 0; j < countries_num; j++) {
     for (int i = 0; i < provinces_num; i++) {
@@ -99,18 +108,17 @@ int main() {
   int populations_num = populations_list.populations_num;
 
   // Match province and population information
-  for (int i = 0; i < provinces_num; i++) {
-    if (populations[populations_num].province_id == i) {
-      // printf("Detected province %s.\n", provinces[i].name);
-      provinces[i].populations[provinces[i].populations_num] = populations[populations_num].id;
-      provinces[i].populations_num += 1;
-    }
-  }
+  // for (int i = 0; i < provinces_num; i++) {
+  //   for (int j = 0; j < populations_num; j++) {
+  //     if (populations[j].province_id == i) {
+  //       // printf("Detected province %s.\n", provinces[i].name);
+  //       provinces[i].populations[provinces[i].populations_num] = populations[populations_num].id;
+  //       provinces[i].populations_num += 1;
+  //     }
+  //   }
+  // }
 
-  for (int i = 0; i < provinces_num; i++) {
-    print_province_data(provinces[i]);
-    print_populations_for_province(populations, populations_num, i);
-  }
+  print_province_data(provinces, provinces_num, populations, populations_num);
 
   // Initialise building types
   const char * buildings_loc = "buildings.wrld";
@@ -155,6 +163,21 @@ int main() {
   // Initialise items in provinces
   assign_items(provinces, provinces_num, nr_types, nr_types_num);
 
+  for (int i = 0; i < provinces_num; i++) {
+    if (provinces[i].has_start_data == false) {
+      provinces[i].urbanisation_rate = DEF_URBANISATION;
+      provinces[i].college_education_rate = DEF_COLLEGE_EDU;
+      provinces[i].literacy_rate = DEF_LITERACY;
+      provinces[i].secularism_rate = DEF_SECULARISM;
+    }
+    if (provinces[i].has_target_data == false) {
+      provinces[i].urbanisation_rate = DEF_URBANISATION;
+      provinces[i].college_education_rate = DEF_COLLEGE_EDU;
+      provinces[i].literacy_rate = DEF_LITERACY;
+      provinces[i].secularism_rate = DEF_SECULARISM;
+    }
+  }
+
   if (DEBUG == true) {
     for (int i = 0; i < provinces_num; i++) {
       printf("PROVINCE %s ITEMS:\n",
@@ -196,7 +219,12 @@ int main() {
   for (int i = 0; i < sim_days; i++) {
     // printf("day: %d, year: %d\n", world_time.day, world_time.year);
     for (int j = 0; j < populations_num; j++) {
-      increase_pop_size(&populations[j], BASE_BIRTH_RATE);
+      cmplx_increase_pop_size(&populations[j],
+        provinces[populations[j].province_id].urbanisation_rate,
+        provinces[populations[j].province_id].college_education_rate,
+        provinces[populations[j].province_id].literacy_rate,
+        provinces[populations[j].province_id].secularism_rate
+        );
     }
     for (int j = 0; j < provinces_num; j++) {
       update_tick(&provinces[j], populations, populations_num);
@@ -214,20 +242,17 @@ int main() {
   // Print simulation results
   printf("AFTER %d DAYS\n", sim_days);
   printf("Day %d, year %d.\n", world_time.day, world_time.year);
-  for (int i = 0; i < provinces_num; i++) {
-    print_province_data(provinces[i]);
-    print_populations_for_province(populations, populations_num, i);
-  }
+  print_province_data(provinces, provinces_num, populations, populations_num);
 
   // Save world data to .wrld file
   const clock_t save_begin = clock();
 
-  // save_world(
-  //   countries, countries_num,
-  //   provinces, provinces_num,
-  //   populations, populations_num,
-  //   building_types, building_types_num
-  //   );
+  save_world(
+    countries, countries_num,
+    provinces, provinces_num,
+    populations, populations_num,
+    building_types, building_types_num
+    );
 
   const clock_t save_end = clock();
   const double save_time_spent = (double)(save_end - save_begin) / CLOCKS_PER_SEC;

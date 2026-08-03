@@ -20,6 +20,19 @@ struct Province {
     int items_num;
     struct Building *buildings;
     int buildings_size;
+
+    bool has_start_data;
+    float urbanisation_rate;
+    float college_education_rate;
+    float literacy_rate;
+    float secularism_rate;
+
+    bool has_target_data;
+    float target_urbanisation_rate;
+    float target_college_education_rate;
+    float target_literacy_rate;
+    float target_secularism_rate;
+
     char populations[];
 };
 
@@ -31,7 +44,7 @@ struct ProvinceList {
 struct ProvinceList initialise_provinces(FILE * file);
 
 void *read_province(char *line, int id);
-void print_province_data(struct Province prov);
+void print_province_data(struct Province p[], int provinces_num, struct Population populations[], int populations_num);
 void print_province_population(struct Province prov);
 
 void assign_items(struct Province provinces[], int provinces_num,
@@ -45,7 +58,11 @@ void update_tick(struct Province *prov, struct Population populations[], int pop
 void increase_population(struct Province *prov);
 struct Province detect_country_provinces(struct Province* provinces[], char *province_owner_tag, char *tag, int provinces_num);
 int get_province_id_from_name(const char * name, struct Province provinces[], int provinces_size);
+void initialise_temp_province_data(FILE * file, struct Province provinces[], int provinces_num);
+void read_province_data(char *line, struct Province provinces[], int provinces_num);
 
 void free_provinces(struct Province provinces[], int provinces_num, struct ProvinceList *province_list);
+
+char remove_spaces(char* s);
 
 #endif
