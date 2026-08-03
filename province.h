@@ -33,6 +33,11 @@ struct Province {
     float target_literacy_rate;
     float target_secularism_rate;
 
+    float urb_tick;
+    float col_tick;
+    float lit_tick;
+    float sec_tick;
+
     char populations[];
 };
 
@@ -58,11 +63,11 @@ void update_tick(struct Province *prov, struct Population populations[], int pop
 void increase_population(struct Province *prov);
 struct Province detect_country_provinces(struct Province* provinces[], char *province_owner_tag, char *tag, int provinces_num);
 int get_province_id_from_name(const char * name, struct Province provinces[], int provinces_size);
-void initialise_temp_province_data(FILE * file, struct Province provinces[], int provinces_num);
+void initialise_temp_province_data(FILE * file, struct Province provinces[], int provinces_num, int sim_days);
 void read_province_data(char *line, struct Province provinces[], int provinces_num);
 
 void free_provinces(struct Province provinces[], int provinces_num, struct ProvinceList *province_list);
 
-char remove_spaces(char* s);
+void increase_data_ticks(struct Province prov);
 
 #endif

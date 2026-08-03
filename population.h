@@ -20,7 +20,7 @@ struct PopulationList {
 struct PopulationList initialise_populations(FILE * file);
 struct Population *read_population(char *line, int id);
 void increase_pop_size(struct Population *pop, float BASE_BIRTH_RATE);
-void free_populations(struct Population populations[], int populations_num, struct PopulationList *population_list);
+void free_the_people(struct Population populations[], int populations_num, struct PopulationList *population_list);
 void print_populations_for_province(struct Population populations[], int populations_num, int province_id);
 void cmplx_increase_pop_size(struct Population *pop,
     float urbanisation, float college_education, float literacy, float secularism);

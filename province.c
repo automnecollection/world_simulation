@@ -89,7 +89,7 @@ void *read_province(char *line, const int id) {
     return new_province;
 }
 
-void initialise_temp_province_data(FILE * file, struct Province provinces[], int provinces_num) {
+void initialise_temp_province_data(FILE * file, struct Province provinces[], int provinces_num, int sim_days) {
     printf("initialise_temp_province_data");
 
     char line[200];
@@ -101,6 +101,13 @@ void initialise_temp_province_data(FILE * file, struct Province provinces[], int
     }
     else {
         printf("what?");
+    }
+
+    for (int i = 0; i < provinces_num; i++) {
+        provinces[i].urb_tick = (provinces[i].target_urbanisation_rate - provinces[i].urbanisation_rate) / sim_days;
+        provinces[i].col_tick = (provinces[i].target_college_education_rate - provinces[i].college_education_rate) / sim_days;
+        provinces[i].lit_tick = (provinces[i].target_literacy_rate - provinces[i].literacy_rate) / sim_days;
+        provinces[i].sec_tick = (provinces[i].target_secularism_rate - provinces[i].secularism_rate) / sim_days;
     }
 }
 
@@ -172,14 +179,14 @@ void print_province_data(struct Province p[], int provinces_num, struct Populati
         printf("COUNTRY OWNER ID: %d, ", p[i].owner_country_id);
         printf("COUNTRY OWNER TAG: %s, ", p[i].owner_country_tag);
         printf("\n");
-        printf("    URBANISATION: %f, COLLEGE_EDU.: %f, LITERACY: %f, SECULARISM: %f\n",
+        printf("  URBANISATION: %f, COLLEGE_EDU.: %f, LITERACY: %f, SECULARISM: %f\n",
             p[i].urbanisation_rate,
             p[i].college_education_rate,
             p[i].literacy_rate,
             p[i].secularism_rate);
-        printf("    TERRAIN: %s, ", p[i].terrain);
-        printf("    CLIMATE: %s, ", p[i].climate);
-        printf("    TOTAL POPULATION: %f", p[i].total_population);
+        printf("  TERRAIN: %s, ", p[i].terrain);
+        printf("CLIMATE: %s, ", p[i].climate);
+        printf("TOTAL POPULATION: %f", p[i].total_population);
         printf("\n");
         print_populations_for_province(populations, populations_num, i);
     }

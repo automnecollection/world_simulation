@@ -105,7 +105,7 @@ float calc_growth_factor(const float urb, const float col, const float lit, cons
     return 0.0137 * pow(base, 1.219);
 }
 
-void free_populations(struct Population populations[], const int populations_num, struct PopulationList *population_list) {
+void free_the_people(struct Population populations[], const int populations_num, struct PopulationList *population_list) {
     for (int i = 0; i < populations_num; i++) {
         free(populations[i].culture);
         free(populations[i].religion);
