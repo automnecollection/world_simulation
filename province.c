@@ -5,11 +5,13 @@
 #include "province.h"
 
 #include "building_type.h"
+#include "country.h"
 #include "population.h"
 #include "natural_resource.h"
 #include "item.h"
 
-struct ProvinceList initialise_provinces(FILE * file) {
+// TODO: Add ability to list year for population
+struct ProvinceList initialise_provinces(FILE * file, const char * provinces_file_loc, struct Country countries[], const int countries_num) {
     int capacity = 8;
     char c_line[200];
 
@@ -20,20 +22,26 @@ struct ProvinceList initialise_provinces(FILE * file) {
     if (file != NULL) {
         int provinces_num = 0;
         while (fgets(c_line, 100, file)) {
-            if (provinces_num == capacity) {
-                capacity *= 2;
-                province_list.provinces = realloc(
-                    province_list.provinces,
-                    capacity * sizeof *province_list.provinces);
-            }
-            const struct Province *province = read_province(c_line, provinces_num);
+            if (strstr(c_line, "YEAR: ")) {
+                const char *data_split = strtok(c_line, ":");
 
-            if (province != NULL) {
-                province_list.provinces[provinces_num] = *province;
-                provinces_num += 1;
             }
+            else {
+                if (provinces_num == capacity) {
+                    capacity *= 2;
+                    province_list.provinces = realloc(
+                        province_list.provinces,
+                        capacity * sizeof *province_list.provinces);
+                }
+                const struct Province *province = read_province(c_line, provinces_num, countries, countries_num, provinces_file_loc);
 
-            free((void*)province);
+                if (province != NULL) {
+                    province_list.provinces[provinces_num] = *province;
+                    provinces_num += 1;
+                }
+
+                free((void*)province);
+            }
         }
         province_list.provinces_num = provinces_num;
     }
@@ -44,7 +52,7 @@ struct ProvinceList initialise_provinces(FILE * file) {
     return province_list;
 }
 
-void *read_province(char *line, const int id) {
+void *read_province(char *line, const int id, struct Country countries[], const int countries_num, const char * provinces_file_loc) {
     if (strstr(line, "#") != NULL) {
         return NULL;
     }
@@ -56,8 +64,10 @@ void *read_province(char *line, const int id) {
 
     char *data = strtok(NULL, "=");
 
-    const char *str_owner_country_id = strtok(data, ",");
-    const int owner_country_id = strtol(str_owner_country_id, NULL, 10);
+    const char *country_tag_token = strtok(data, ",");
+    char *country_tag = malloc(strlen(data_split) + 1);
+    strcpy(country_tag, country_tag_token);
+    const int owner_country_id = get_country_id_from_tag(country_tag, countries, countries_num);
 
     const char *terrain_token = strtok(NULL, ",");
     char *terrain = malloc(strlen(terrain_token) + 1);
@@ -74,6 +84,7 @@ void *read_province(char *line, const int id) {
             .id=id,
             .name=name,
             .owner_country_id=owner_country_id,
+            .owner_country_tag=country_tag,
             .terrain=terrain,
             .climate=climate,
         };
@@ -83,6 +94,7 @@ void *read_province(char *line, const int id) {
         free(name);
         free(terrain);
         free(climate);
+        printf("ERROR ALERT: Failed to generate the province %d on line %d of the %s file.", id, id+1, provinces_file_loc);
         return NULL;
     }
 
@@ -90,7 +102,7 @@ void *read_province(char *line, const int id) {
 }
 
 void initialise_temp_province_data(FILE * file, struct Province provinces[], int provinces_num, int sim_days) {
-    printf("initialise_temp_province_data");
+    // printf("initialise_temp_province_data");
 
     char line[200];
 
@@ -100,7 +112,7 @@ void initialise_temp_province_data(FILE * file, struct Province provinces[], int
         }
     }
     else {
-        printf("what?");
+        // printf("what?");
     }
 
     for (int i = 0; i < provinces_num; i++) {
@@ -112,8 +124,7 @@ void initialise_temp_province_data(FILE * file, struct Province provinces[], int
 }
 
 void read_province_data(char *line, struct Province provinces[], int provinces_num) {
-    printf("read_province_data");
-
+    // printf("read_province_data");
     if (strstr(line, "#") != NULL) {
         return;
     }
@@ -142,7 +153,7 @@ void read_province_data(char *line, struct Province provinces[], int provinces_n
     const char *str_secularism_token = strtok(NULL, ",");
     const float secularism = strtof(str_secularism_token, NULL);
 
-    printf("type: %s\n", type);
+    // printf("type: %s\n", type);
 
     if (strcmp(type, "start") == 0) {
         provinces[province_id].urbanisation_rate = urbanisation;
@@ -159,15 +170,15 @@ void read_province_data(char *line, struct Province provinces[], int provinces_n
         provinces[province_id].has_target_data = true;
     }
     else {
-        printf("we didnt get a fuckin target type\n");
+        printf("ERROR ALERT: We didnt get a target type in province %s, it's start or target you stupid bastard!\n", provinces[province_id].name);
     }
 
-    printf("province_data %s=%f,%f,%f,%f\n",
-        provinces[province_id].name,
-        provinces[province_id].urbanisation_rate,
-        provinces[province_id].college_education_rate,
-        provinces[province_id].literacy_rate,
-        provinces[province_id].secularism_rate);
+    // printf("province_data %s=%f,%f,%f,%f\n",
+    //     provinces[province_id].name,
+    //     provinces[province_id].urbanisation_rate,
+    //     provinces[province_id].college_education_rate,
+    //     provinces[province_id].literacy_rate,
+    //     provinces[province_id].secularism_rate);
 
     free(province_name);
     free(type);
@@ -179,6 +190,8 @@ void print_province_data(struct Province p[], int provinces_num, struct Populati
         printf("COUNTRY OWNER ID: %d, ", p[i].owner_country_id);
         printf("COUNTRY OWNER TAG: %s, ", p[i].owner_country_tag);
         printf("\n");
+        printf("  CURRENT GROWTH RATE: %f", p[i].current_growth_rate);
+        printf("\n");
         printf("  URBANISATION: %f, COLLEGE_EDU.: %f, LITERACY: %f, SECULARISM: %f\n",
             p[i].urbanisation_rate,
             p[i].college_education_rate,
@@ -189,28 +202,12 @@ void print_province_data(struct Province p[], int provinces_num, struct Populati
         printf("TOTAL POPULATION: %f", p[i].total_population);
         printf("\n");
         print_populations_for_province(populations, populations_num, i);
+        printf("\n");
     }
     // printf("pops num %d", prov.populations_num);
     // for (int i = 0; i < prov.populations_num; i++) {
     //     printf("%d - %d", i, prov.populations[i]);
     // }
-}
-
-void calculate_total_population(struct Province *prov, struct Population populations[], int populations_num) {
-    float total_population = 0;
-    for (int i = 0; i < populations_num; i++) {
-        // printf("size: %f", populations[i]->p_size);
-        if (populations[i].province_id == prov->id) {
-            total_population += populations[i].p_size;
-        }
-    }
-    prov->total_population = total_population;
-    prov->total_population_int = (int)total_population;
-}
-
-void update_tick(struct Province *prov, struct Population populations[], int populations_num) {
-    calculate_total_population(prov, populations, populations_num);
-    // increase_province_populations(prov);
 }
 
 // void increase_province_populations(prov) {
@@ -250,26 +247,19 @@ void assign_items(struct Province provinces[], int provinces_num,
 }
 
 int get_province_id_from_name(const char * name, struct Province provinces[], const int provinces_size) {
-    printf("get_province_id_from_name\n");
     for (int i = 0; i < provinces_size; i++) {
-        printf("%d get_province_id_from_name\n", i);
-        printf("provinces[%d].name: %s, name: %s\n", i, provinces[i].name, name);
         if (strcmp(provinces[i].name, name) == 0) {
-            printf("get_province_id_from_name detected id: %d\n", provinces[i].id);
             return provinces[i].id;
         }
     }
     return -1;
 }
 
-void free_provinces(struct Province provinces[], const int provinces_num, struct ProvinceList *province_list) {
+void free_provinces(struct Province provinces[], const int provinces_num) {
     for (int i = 0; i < provinces_num; i++) {
         free(provinces[i].name);
         free(provinces[i].terrain);
         free(provinces[i].climate);
         free(provinces[i].buildings);
     }
-    free(province_list->provinces);
-    province_list->provinces = NULL;
-    province_list->provinces_num = 0;
 }

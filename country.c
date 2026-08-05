@@ -50,12 +50,18 @@ struct Country read_country(char * line, int id) {
     return new_country;
 }
 
-void free_countries(struct Country countries[], const int countries_num, struct CountryList *country_list) {
+int get_country_id_from_tag(const char * tag, struct Country countries[], const int countries_size) {
+    for (int i = 0; i < countries_size; i++) {
+        if (strcmp(countries[i].tag, tag) == 0) {
+            return countries[i].id;
+        }
+    }
+    return -1;
+}
+
+void free_the_nations(struct Country countries[], const int countries_num) {
     for (int i = 0; i < countries_num; i++) {
         free(countries[i].name);
         free(countries[i].tag);
     }
-    free(country_list->countries);
-    country_list->countries = NULL;
-    country_list->countries_num = 0;
 }

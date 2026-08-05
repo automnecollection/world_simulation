@@ -25,6 +25,10 @@ add_executable(
         create_save.h
         building.c
         building.h
+        save_analysis.c
+        save_analysis.h
+        read_data.c
+        read_data.h
 )
 
 # Request assembly output generation (-S) and use readable Intel syntax

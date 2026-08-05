@@ -5,7 +5,9 @@
 
 #include "population.h"
 
-struct PopulationList initialise_populations(FILE * file) {
+#include "read_data.h"
+
+struct PopulationList initialise_populations(FILE * file, struct Province provinces[], int provinces_size) {
     int capacity = 8;
     char c_line[200];
 
@@ -22,7 +24,7 @@ struct PopulationList initialise_populations(FILE * file) {
                     population_list.populations,
                     capacity * sizeof *population_list.populations);
             }
-            const struct Population *population = read_population(c_line, provinces_num);
+            const struct Population *population = read_population(c_line, provinces_num, provinces, provinces_size);
 
             if (population != NULL) {
                 population_list.populations[provinces_num] = *population;
@@ -40,42 +42,6 @@ struct PopulationList initialise_populations(FILE * file) {
     return population_list;
 }
 
-struct Population *read_population(char *line, const int id) {
-    if (strstr(line, "#") != NULL) {
-        return NULL;
-    }
-
-    const char *data = strtok(line, ",");
-    const int province_id = strtol(data, NULL, 10);
-
-    const char *str_p_size = strtok(NULL, ",");
-    const float p_size = strtof(str_p_size, NULL);
-    const int p_size_int = (int)p_size;
-
-    const char *culture_token = strtok(NULL, ",");
-    char *culture = malloc(strlen(culture_token) + 1);
-    strcpy(culture, culture_token);
-
-    const char *religion_token = strtok(NULL, ",");
-    char *religion = malloc(strlen(religion_token) + 1);
-    strcpy(religion, religion_token);
-
-    struct Population* new_population = malloc(sizeof(struct Population));
-
-    if (new_population != NULL) {
-        *new_population = (struct Population) {
-            .id=id,
-            .province_id=province_id,
-            .p_size=p_size,
-            .p_size_int=p_size_int,
-            .culture=culture,
-            .religion=religion
-        };
-    }
-
-    return new_population;
-}
-
 void increase_pop_size(struct Population *pop, const float BASE_BIRTH_RATE) {
     const float new_pop_size = pop->p_size * BASE_BIRTH_RATE;
     pop->p_size = new_pop_size;
@@ -86,11 +52,14 @@ void cmplx_increase_pop_size(struct Population *pop,
     const float urbanisation, const float college_education, const float literacy, const float secularism) {
 
     const float growth_rate_factor = calc_growth_factor(urbanisation, college_education, literacy, secularism);
-    const float growth_rate = 1.00012f - pow(0.00001 * growth_rate_factor, 1.175);
+    const float growth_rate = 1.00012f - pow(0.00001 * growth_rate_factor, 1.155);
 
     const float new_pop_size = pop->p_size * growth_rate;
     pop->p_size = new_pop_size;
     pop->p_size_int = (int)new_pop_size;
+
+    // TODO: Fix so I can store growth rate in provinces, probably just separate calculating growth rate and increasing pop by growth rate
+    // provinces[pop->province_id].current_growth_rate = growth_rate;
 }
 
 float calc_growth_factor(const float urb, const float col, const float lit, const float sec) {
@@ -98,21 +67,18 @@ float calc_growth_factor(const float urb, const float col, const float lit, cons
         (urb * 2.6)
            + (100 * 0.4)
            + (100 * 0.4)
-           + (col * 1.55)
+           + (col * 1.53)
            + (lit * 1.6)
-           + (sec * 1.1)
+           + (sec * 1.3)
            + (100 * 1.1);
-    return 0.0137 * pow(base, 1.219);
+    return 0.0137 * pow(base, 1.215);
 }
 
-void free_the_people(struct Population populations[], const int populations_num, struct PopulationList *population_list) {
+void free_the_people(struct Population populations[], const int populations_num) {
     for (int i = 0; i < populations_num; i++) {
         free(populations[i].culture);
         free(populations[i].religion);
     }
-    free(population_list->populations);
-    population_list->populations = NULL;
-    population_list->populations_num = 0;
 }
 
 void print_populations_for_province(struct Population populations[], const int populations_num, const int province_id) {
@@ -124,3 +90,16 @@ void print_populations_for_province(struct Population populations[], const int p
     }
     printf("\n");
 }
+
+void calculate_total_population(struct Province *prov, struct Population populations[], int populations_num) {
+    float total_population = 0;
+    for (int i = 0; i < populations_num; i++) {
+        // printf("size: %f", populations[i]->p_size);
+        if (populations[i].province_id == prov->id) {
+            total_population += populations[i].p_size;
+        }
+    }
+    prov->total_population = total_population;
+    prov->total_population_int = (int)total_population;
+}
+

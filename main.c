@@ -16,21 +16,26 @@
 
 // Get-ChildItem -Recurse -Include *.c,*.h | ForEach-Object { "{0}: {1}" -f $_.Name, (Get-Content $_).Count }
 
-#define DEBUG false
+#define DEBUG true
 #define DAY 1                                 // Starting day of year (1-365)
 #define YEAR 1950                             // Starting year, the game will be designed around starting in 1950
 #define SIM_DAYS 27740                        // How many days the simulation will run for, 27740 days = 76 years (runs to 2026 from 1950)
-#define BASE_BIRTH_RATE 1.0001                // The base birth rate for population groups
+#define BASE_BIRTH_RATE 1.0001                // The base birth rate for dummy population increases
 #define LOAD_FROM_RESULTS false
 #define FILE_TYPE ".wrld"
 #define COUNTRIES_FILE "countries"
 #define PROVINCES_FILE "provinces"
 #define POPULATIONS_FILE "populations.wrld"
 
-#define DEF_URBANISATION 55
-#define DEF_COLLEGE_EDU 26
-#define DEF_LITERACY 85
-#define DEF_SECULARISM 51
+#define DEF_URBANISATION 30
+#define DEF_COLLEGE_EDU 3
+#define DEF_LITERACY 40
+#define DEF_SECULARISM 5
+
+#define DEF_TARGET_URBANISATION 58
+#define DEF_TARGET_COLLEGE_EDU 20
+#define DEF_TARGET_LITERACY 88
+#define DEF_TARGET_SECULARISM 16
 
 int main() {
   const clock_t load_begin = clock();
@@ -76,25 +81,13 @@ int main() {
   }
   FILE *provinces_file = fopen(provinces_file_loc, "r");
 
-  const struct ProvinceList province_list = initialise_provinces(provinces_file);
+  const struct ProvinceList province_list = initialise_provinces(provinces_file, countries_file_loc, countries, countries_num);
   struct Province *provinces = province_list.provinces;
   int provinces_num = province_list.provinces_num;
 
   FILE *provinces_data = fopen("province_data.wrld", "r");
 
   initialise_temp_province_data(provinces_data, provinces, provinces_num, SIM_DAYS);
-
-  // Match country and province information
-  for (int j = 0; j < countries_num; j++) {
-    for (int i = 0; i < provinces_num; i++) {
-      if (countries[j].id == provinces[i].owner_country_id) {
-        // countries[j].provinces[countries[j].provinces_num] = provinces[i].id;
-        // countries[j].provinces_num++;
-
-        provinces[i].owner_country_tag = countries[j].tag;
-      }
-    }
-  }
 
   // Initialise populations
   const char * populations_file_loc = POPULATIONS_FILE;
@@ -103,7 +96,7 @@ int main() {
   // }
   FILE *populations_file = fopen(populations_file_loc, "r");
 
-  const struct PopulationList populations_list = initialise_populations(populations_file);
+  const struct PopulationList populations_list = initialise_populations(populations_file, provinces, provinces_num);
   struct Population *populations = populations_list.populations;
   int populations_num = populations_list.populations_num;
 
@@ -118,7 +111,9 @@ int main() {
   //   }
   // }
 
-  print_province_data(provinces, provinces_num, populations, populations_num);
+  if (DEBUG) {
+    print_province_data(provinces, provinces_num, populations, populations_num);
+  }
 
   // Initialise building types
   const char * buildings_loc = "buildings.wrld";
@@ -160,7 +155,7 @@ int main() {
     }
   }
 
-  // Initialise items in provinces
+  // Initialise items in provinces - assign_items() is from province.c
   assign_items(provinces, provinces_num, nr_types, nr_types_num);
 
   for (int i = 0; i < provinces_num; i++) {
@@ -171,10 +166,15 @@ int main() {
       provinces[i].secularism_rate = DEF_SECULARISM;
     }
     if (provinces[i].has_target_data == false) {
-      provinces[i].target_urbanisation_rate = DEF_URBANISATION;
-      provinces[i].target_college_education_rate = DEF_COLLEGE_EDU;
-      provinces[i].target_literacy_rate = DEF_LITERACY;
-      provinces[i].target_secularism_rate = DEF_SECULARISM;
+      provinces[i].target_urbanisation_rate = DEF_TARGET_URBANISATION;
+      provinces[i].target_college_education_rate = DEF_TARGET_COLLEGE_EDU;
+      provinces[i].target_literacy_rate = DEF_TARGET_LITERACY;
+      provinces[i].target_secularism_rate = DEF_TARGET_SECULARISM;
+
+      provinces[i].urb_tick = (provinces[i].target_urbanisation_rate - provinces[i].urbanisation_rate) / SIM_DAYS;
+      provinces[i].col_tick = (provinces[i].target_college_education_rate - provinces[i].college_education_rate) / SIM_DAYS;
+      provinces[i].lit_tick = (provinces[i].target_literacy_rate - provinces[i].literacy_rate) / SIM_DAYS;
+      provinces[i].sec_tick = (provinces[i].target_secularism_rate - provinces[i].secularism_rate) / SIM_DAYS;
     }
   }
 
@@ -214,45 +214,43 @@ int main() {
 
   const clock_t sim_begin = clock();
 
+  bool bogos_binted = false;
+
   // Run simulation
   const int sim_days = SIM_DAYS;
   for (int i = 0; i < sim_days; i++) {
-    bool bogos_binted = false;
     // printf("day: %d, year: %d\n", world_time.day, world_time.year);
     for (int j = 0; j < populations_num; j++) {
       cmplx_increase_pop_size(&populations[j],
-        provinces[populations[j].province_id].urbanisation_rate,
-        provinces[populations[j].province_id].college_education_rate,
-        provinces[populations[j].province_id].literacy_rate,
-        provinces[populations[j].province_id].secularism_rate
+        provinces[populations[j].province_id].urbanisation_rate, provinces[populations[j].province_id].college_education_rate,
+        provinces[populations[j].province_id].literacy_rate, provinces[populations[j].province_id].secularism_rate
         );
     }
     for (int j = 0; j < provinces_num; j++) {
-      update_tick(&provinces[j], populations, populations_num);
+      calculate_total_population(&provinces[j], populations, populations_num);
       // for (int k = 0; k < provinces[j].buildings_size; k++) {
       update_item_demand(&provinces[j].items, provinces[j].items_num, populations, populations_num);
       update_buildings(provinces[j].buildings, provinces[j].buildings_size, building_types, &provinces[j].items);
 
-      if (provinces[j].urb_tick != 0 & provinces[j].urbanisation_rate < provinces[j].target_urbanisation_rate) {
-        provinces[j].urbanisation_rate += provinces[j].urb_tick * 1.2;
+      if (provinces[j].urbanisation_rate < provinces[j].target_urbanisation_rate) {
+        provinces[j].urbanisation_rate += provinces[j].urb_tick * 1.5;
       }
       if (provinces[j].id == 30) {
         if ( provinces[j].urbanisation_rate > provinces[j].target_urbanisation_rate ) {
           if ( bogos_binted == false) {
-            printf("print: %d, %d, %s, %f\n",
-              world_time.day, world_time.year, provinces[j].name, provinces[j].urbanisation_rate);
+            printf("binted: %d, %d, %s, %f\n", world_time.day, world_time.year, provinces[j].name, provinces[j].urbanisation_rate);
             bogos_binted = true;
           }
         }
       }
-      if (provinces[j].col_tick != 0 & provinces[j].college_education_rate < provinces[j].target_college_education_rate) {
-        provinces[j].college_education_rate += provinces[j].col_tick * 2;
+      if (provinces[j].college_education_rate < provinces[j].target_college_education_rate) {
+        provinces[j].college_education_rate += provinces[j].col_tick * 1.5;
       }
-      if (provinces[j].lit_tick != 0 & provinces[j].literacy_rate < provinces[j].target_literacy_rate) {
-        provinces[j].literacy_rate += provinces[j].lit_tick * 2;
+      if (provinces[j].literacy_rate < provinces[j].target_literacy_rate) {
+        provinces[j].literacy_rate += provinces[j].lit_tick * 1.5;
       }
-      if (provinces[j].sec_tick != 0 & provinces[j].secularism_rate < provinces[j].target_secularism_rate) {
-        provinces[j].secularism_rate += provinces[j].sec_tick * 2;
+      if (provinces[j].secularism_rate < provinces[j].target_secularism_rate) {
+        provinces[j].secularism_rate += provinces[j].sec_tick * 1.5;
       }
     }
     advance_time(&world_time);
@@ -280,10 +278,14 @@ int main() {
   const clock_t save_end = clock();
   const double save_time_spent = (double)(save_end - save_begin) / CLOCKS_PER_SEC;
 
+  // TODO: Save analysis
+  // Takes save data and compares it to country data in database
+  // Example: simulation goes to 2026, analysis grabs 2026 real life data and compares the two
+
   // Free data memory
-  free_countries(countries, countries_num, &country_list);
-  free_provinces(provinces, provinces_num, &province_list);
-  free_the_people(populations, populations_num, &populations_list);
+  free_the_nations(countries, countries_num);
+  free_provinces(provinces, provinces_num);
+  free_the_people(populations, populations_num);
 
   if (DEBUG == true) {
     printf("load_time_spent: %f\n", load_time_spent);

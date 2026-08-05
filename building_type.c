@@ -54,15 +54,15 @@ void *read_building_type(char *line, const int id) {
     char *data = strtok(NULL, "=");
 
     const char *str_production_type_token = strtok(data, ",");
-    printf("str_production_type_token - %s\n", str_production_type_token);
+    // printf("str_production_type_token - %s\n", str_production_type_token);
     char *production_type = malloc(strlen(str_production_type_token) + 1);
     strcpy(production_type, str_production_type_token);
 
     const char *str_base_production = strtok(NULL, ",");
-    printf("str_base_production - %s\n", str_base_production);
+    // printf("str_base_production - %s\n", str_base_production);
     int base_production = strtol(str_base_production, NULL, 10);
 
-    printf("name, base_production - %s, %d\n", name, base_production);
+    // printf("name, base_production - %s, %d\n", name, base_production);
 
     struct BuildingType* new_building_type = malloc(sizeof(struct BuildingType));
 
@@ -81,24 +81,25 @@ void *read_building_type(char *line, const int id) {
 
 int get_building_type_id_from_name(const char * name, struct BuildingType building_types[], const size_t building_types_size) {
     for (int i = 0; i < building_types_size; i++) {
-        printf("name: %s, building_types[i].name: %s\n", name, building_types[i].name);
+        // printf("name: %s, building_types[i].name: %s\n", name, building_types[i].name);
         if (strcmp(building_types[i].name, name) == 0) {
-            printf("got name - name: %s, building_types[i].name: %s, building_types[i].id %d\n", name, building_types[i].name, building_types[i].id);
+            // printf("got name - name: %s, building_types[i].name: %s, building_types[i].id %d\n", name, building_types[i].name, building_types[i].id);
             return building_types[i].id;
         }
     }
+    return -1;
 }
 
 int get_item_type(const char *type, struct NaturalResource natural_resources[], const int natural_resources_num) {
     for (int i = 0; i < natural_resources_num; i++) {
-        printf("type - %s\n", type);
-        printf("natural_resources[i].name = %s\n", natural_resources[i].name);
+        // printf("type - %s\n", type);
+        // printf("natural_resources[i].name = %s\n", natural_resources[i].name);
         if (strcmp(type, natural_resources[i].name) == 0) {
-            printf("natural_resources[i].id = %d\n", natural_resources[i].id);
+            // printf("natural_resources[i].id = %d\n", natural_resources[i].id);
             return natural_resources[i].id;
         }
-        printf("did not match - type - %s, natural_resources[i].name - %s\n", type, natural_resources[i].name);
+        // printf("did not match - type - %s, natural_resources[i].name - %s\n", type, natural_resources[i].name);
     }
-    printf("could not find item type - %s\n", type);
+    // printf("could not find item type - %s\n", type);
     return -1;
 }

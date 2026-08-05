@@ -1,7 +1,7 @@
 #ifndef PROVINCE_H
 #define PROVINCE_H
 
-#include "population.h"
+#include "country.h"
 #include "natural_resource.h"
 #include "item.h"
 #include "building_type.h"
@@ -33,6 +33,8 @@ struct Province {
     float target_literacy_rate;
     float target_secularism_rate;
 
+    float current_growth_rate;
+
     float urb_tick;
     float col_tick;
     float lit_tick;
@@ -46,10 +48,8 @@ struct ProvinceList {
     struct Province *provinces;
 };
 
-struct ProvinceList initialise_provinces(FILE * file);
-
-void *read_province(char *line, int id);
-void print_province_data(struct Province p[], int provinces_num, struct Population populations[], int populations_num);
+struct ProvinceList initialise_provinces(FILE * file, const char * provinces_file_loc, struct Country countries[], int countries_num);
+void *read_province(char *line, int id, struct Country countries[], int countries_num, const char * provinces_file_loc);
 void print_province_population(struct Province prov);
 
 void assign_items(struct Province provinces[], int provinces_num,
@@ -58,16 +58,13 @@ void assign_items(struct Province provinces[], int provinces_num,
 void assign_buildings(struct Province provinces[], int provinces_num,
     struct BuildingType building_types[], size_t b_types_size);
 
-void calculate_total_population(struct Province *prov, struct Population populations[], int populations_num);
-void update_tick(struct Province *prov, struct Population populations[], int populations_num);
 void increase_population(struct Province *prov);
 struct Province detect_country_provinces(struct Province* provinces[], char *province_owner_tag, char *tag, int provinces_num);
 int get_province_id_from_name(const char * name, struct Province provinces[], int provinces_size);
 void initialise_temp_province_data(FILE * file, struct Province provinces[], int provinces_num, int sim_days);
 void read_province_data(char *line, struct Province provinces[], int provinces_num);
-
-void free_provinces(struct Province provinces[], int provinces_num, struct ProvinceList *province_list);
-
+void print_province_data(struct Province p[], int provinces_num, struct Population populations[], int populations_num);
+void free_provinces(struct Province provinces[], int provinces_num);
 void increase_data_ticks(struct Province prov);
 
 #endif

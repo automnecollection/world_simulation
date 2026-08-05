@@ -1,7 +1,9 @@
-#include <stdio.h>
-
 #ifndef WORLD_SIM_POPULATION_H
 #define WORLD_SIM_POPULATION_H
+
+#include <stdio.h>
+
+struct Province;
 
 struct Population {
     int id;
@@ -17,13 +19,17 @@ struct PopulationList {
     struct Population *populations;
 };
 
-struct PopulationList initialise_populations(FILE * file);
-struct Population *read_population(char *line, int id);
-void increase_pop_size(struct Population *pop, float BASE_BIRTH_RATE);
-void free_the_people(struct Population populations[], int populations_num, struct PopulationList *population_list);
+struct PopulationList initialise_populations(FILE * file, struct Province *provinces, int provinces_size);
+void free_the_people(struct Population populations[], int populations_num);
 void print_populations_for_province(struct Population populations[], int populations_num, int province_id);
+float calc_growth_factor(float urb, float col, float lit, float sec);
+
+// SIMULATION
+void increase_pop_size(struct Population *pop, float BASE_BIRTH_RATE);
+
 void cmplx_increase_pop_size(struct Population *pop,
     float urbanisation, float college_education, float literacy, float secularism);
-float calc_growth_factor(float urb, float col, float lit, float sec);
+
+void calculate_total_population(struct Province *prov, struct Population populations[], int populations_num);
 
 #endif //WORLD_SIM_POPULATION_H
