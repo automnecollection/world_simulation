@@ -9,12 +9,12 @@
 struct Item {
     int item_id;
     char * name;
-    int demand_amount;
-    int supply_amount;
+    float demand_amount;
+    float supply_amount;
     bool has_deposits;
     int deposits_amount;
 };
 
-void update_item_demand(struct Item *items[], int items_num, struct Population populations[], int populations_num);
+void update_item_demand(struct Item items[], struct Population populations[], int populations_num, int province_id);
 
 #endif //WORLD_SIM_ITEM_H

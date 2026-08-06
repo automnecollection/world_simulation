@@ -14,28 +14,9 @@
 #include "item.h"
 #include "create_save.h"
 
+#include "config.h"
+
 // Get-ChildItem -Recurse -Include *.c,*.h | ForEach-Object { "{0}: {1}" -f $_.Name, (Get-Content $_).Count }
-
-#define DEBUG true
-#define DAY 1                                 // Starting day of year (1-365)
-#define YEAR 1950                             // Starting year, the game will be designed around starting in 1950
-#define SIM_DAYS 27740                        // How many days the simulation will run for, 27740 days = 76 years (runs to 2026 from 1950)
-#define BASE_BIRTH_RATE 1.0001                // The base birth rate for dummy population increases
-#define LOAD_FROM_RESULTS false
-#define FILE_TYPE ".wrld"
-#define COUNTRIES_FILE "countries"
-#define PROVINCES_FILE "provinces"
-#define POPULATIONS_FILE "populations.wrld"
-
-#define DEF_URBANISATION 30
-#define DEF_COLLEGE_EDU 3
-#define DEF_LITERACY 40
-#define DEF_SECULARISM 5
-
-#define DEF_TARGET_URBANISATION 58
-#define DEF_TARGET_COLLEGE_EDU 20
-#define DEF_TARGET_LITERACY 88
-#define DEF_TARGET_SECULARISM 16
 
 int main() {
   const clock_t load_begin = clock();
@@ -183,8 +164,8 @@ int main() {
       printf("PROVINCE %s ITEMS:\n",
           provinces[i].name);
       for (int j = 0; j < provinces[i].items_num; j++) {
-        printf("  ITEMS-%d - NAME: %s\n",
-          provinces[i].items[j].item_id, provinces[i].items[j].name);
+        printf("  ITEMS-%d - NAME: %s, DEMAND: %f, SUPPLY: %f\n",
+          provinces[i].items[j].item_id, provinces[i].items[j].name, provinces[i].items[j].demand_amount, provinces[i].items[j].supply_amount);
       }
     }
   }
@@ -228,20 +209,11 @@ int main() {
     }
     for (int j = 0; j < provinces_num; j++) {
       calculate_total_population(&provinces[j], populations, populations_num);
-      // for (int k = 0; k < provinces[j].buildings_size; k++) {
-      update_item_demand(&provinces[j].items, provinces[j].items_num, populations, populations_num);
+      update_item_demand(provinces[j].items, populations, populations_num, provinces[j].id);
       update_buildings(provinces[j].buildings, provinces[j].buildings_size, building_types, &provinces[j].items);
 
       if (provinces[j].urbanisation_rate < provinces[j].target_urbanisation_rate) {
         provinces[j].urbanisation_rate += provinces[j].urb_tick * 1.5;
-      }
-      if (provinces[j].id == 30) {
-        if ( provinces[j].urbanisation_rate > provinces[j].target_urbanisation_rate ) {
-          if ( bogos_binted == false) {
-            printf("binted: %d, %d, %s, %f\n", world_time.day, world_time.year, provinces[j].name, provinces[j].urbanisation_rate);
-            bogos_binted = true;
-          }
-        }
       }
       if (provinces[j].college_education_rate < provinces[j].target_college_education_rate) {
         provinces[j].college_education_rate += provinces[j].col_tick * 1.5;
@@ -256,6 +228,15 @@ int main() {
     advance_time(&world_time);
   }
   printf("\n");
+
+  // if (provinces[j].id == 30) {
+  //   if ( provinces[j].urbanisation_rate > provinces[j].target_urbanisation_rate ) {
+  //     if ( bogos_binted == false) {
+  //       printf("binted: %d, %d, %s, %f\n", world_time.day, world_time.year, provinces[j].name, provinces[j].urbanisation_rate);
+  //       bogos_binted = true;
+  //     }
+  //   }
+  // }
 
   const clock_t sim_end = clock();
   const double sim_time_spent = (double)(sim_end - sim_begin) / CLOCKS_PER_SEC;

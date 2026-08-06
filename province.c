@@ -202,6 +202,10 @@ void print_province_data(struct Province p[], int provinces_num, struct Populati
         printf("TOTAL POPULATION: %f", p[i].total_population);
         printf("\n");
         print_populations_for_province(populations, populations_num, i);
+        for (int j = 0; j < p[i].items_num; j++) {
+            printf("  ITEMS-%d - NAME: %s, DEMAND: %f, SUPPLY: %f\n",
+              p[i].items[j].item_id, p[i].items[j].name, p[i].items[j].demand_amount, p[i].items[j].supply_amount);
+        }
         printf("\n");
     }
     // printf("pops num %d", prov.populations_num);

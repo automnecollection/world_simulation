@@ -29,6 +29,7 @@ add_executable(
         save_analysis.h
         read_data.c
         read_data.h
+        config.h
 )
 
 # Request assembly output generation (-S) and use readable Intel syntax
