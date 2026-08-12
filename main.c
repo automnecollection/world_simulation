@@ -210,6 +210,8 @@ int main() {
     for (int j = 0; j < provinces_num; j++) {
       calculate_total_population(&provinces[j], populations, populations_num);
       update_item_demand(provinces[j].items, populations, populations_num, provinces[j].id);
+      calc_item_surplus_or_deficit(provinces[j].items, provinces[j].items_num);
+      calc_item_cost(provinces[j].items, provinces[j].items_num);
       update_buildings(provinces[j].buildings, provinces[j].buildings_size, building_types, &provinces[j].items);
 
       if (provinces[j].urbanisation_rate < provinces[j].target_urbanisation_rate) {
@@ -249,12 +251,14 @@ int main() {
   // Save world data to .wrld file
   const clock_t save_begin = clock();
 
-  save_world(
-    countries, countries_num,
-    provinces, provinces_num,
-    populations, populations_num,
-    building_types, building_types_num
-    );
+  if (SAVE_WORLD) {
+    save_world(
+      countries, countries_num,
+      provinces, provinces_num,
+      populations, populations_num,
+      building_types, building_types_num
+      );
+  }
 
   const clock_t save_end = clock();
   const double save_time_spent = (double)(save_end - save_begin) / CLOCKS_PER_SEC;
@@ -268,11 +272,9 @@ int main() {
   free_provinces(provinces, provinces_num);
   free_the_people(populations, populations_num);
 
-  if (DEBUG == true) {
-    printf("load_time_spent: %f\n", load_time_spent);
-    printf("simulation_time_spent: %f\n", sim_time_spent);
-    printf("save_time_spent: %f\n", save_time_spent);
-  }
+  printf("load_time_spent: %f\n", load_time_spent);
+  printf("simulation_time_spent: %f\n", sim_time_spent);
+  printf("save_time_spent: %f\n", save_time_spent);
 
   getchar();
 

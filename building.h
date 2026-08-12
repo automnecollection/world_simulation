@@ -16,6 +16,7 @@ struct Building {
     int item_output_ids_size;
     int item_output_amounts;
     int item_output_amounts_size;
+    float last_supply;
 };
 
 struct BuildingsList {

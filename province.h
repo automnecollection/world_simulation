@@ -67,4 +67,6 @@ void print_province_data(struct Province p[], int provinces_num, struct Populati
 void free_provinces(struct Province provinces[], int provinces_num);
 void increase_data_ticks(struct Province prov);
 
+int shut_program();
+
 #endif

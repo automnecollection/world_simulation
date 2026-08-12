@@ -90,8 +90,22 @@ void update_buildings(struct Building buildings[], const int buildings_num, stru
     for (int i = 0; i < buildings_num; i++) {
         if ( buildings[i].level > 0) {
             if ( building_types[buildings[i].id].production_type_id != -1) {
-                const int production_amount = building_types[buildings[i].id].base_production * buildings[i].level;
+                const float production_amount = building_types[buildings[i].id].base_production * buildings[i].level;
+                // printf("building_types[buildings[i].id].base_production * buildings[i].level: %d\n", building_types[buildings[i].id].base_production * buildings[i].level);
+                // printf("production_amount: %f\n", production_amount);
                 items[building_types[buildings[i].id].production_type_id]->supply_amount += production_amount;
+                buildings[i].last_supply = production_amount;
+            }
+        }
+    }
+}
+
+void calc_levels_needed_for_produced_item_surplus(struct Building buildings[], const int buildings_num, struct BuildingType building_types[],
+    struct Item *items[]) {
+    for (int i = 0; i < buildings_num; i++) {
+        if ( buildings[i].level > 0) {
+            if ( building_types[buildings[i].id].production_type_id != -1) {
+                // Do something
             }
         }
     }

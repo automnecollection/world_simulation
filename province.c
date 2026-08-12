@@ -124,7 +124,6 @@ void initialise_temp_province_data(FILE * file, struct Province provinces[], int
 }
 
 void read_province_data(char *line, struct Province provinces[], int provinces_num) {
-    // printf("read_province_data");
     if (strstr(line, "#") != NULL) {
         return;
     }
@@ -132,7 +131,6 @@ void read_province_data(char *line, struct Province provinces[], int provinces_n
     const char *data_split = strtok(line, ",");
     char *province_name = malloc(strlen(data_split) + 1);
     strcpy(province_name, data_split);
-    // printf("provinces[0].name: %s\n", provinces[0].name);
     int province_id = get_province_id_from_name(province_name, provinces, provinces_num);
 
     const char *type_token = strtok(NULL, "=");
@@ -153,8 +151,6 @@ void read_province_data(char *line, struct Province provinces[], int provinces_n
     const char *str_secularism_token = strtok(NULL, ",");
     const float secularism = strtof(str_secularism_token, NULL);
 
-    // printf("type: %s\n", type);
-
     if (strcmp(type, "start") == 0) {
         provinces[province_id].urbanisation_rate = urbanisation;
         provinces[province_id].college_education_rate = college_edu;
@@ -170,15 +166,10 @@ void read_province_data(char *line, struct Province provinces[], int provinces_n
         provinces[province_id].has_target_data = true;
     }
     else {
-        printf("ERROR ALERT: We didnt get a target type in province %s, it's start or target you stupid bastard!\n", provinces[province_id].name);
+        printf("ERROR ALERT: We didnt get a data type in province %s, it's start or target you stupid bastard!\n", provinces[province_id].name);
+        getchar();
+        abort();
     }
-
-    // printf("province_data %s=%f,%f,%f,%f\n",
-    //     provinces[province_id].name,
-    //     provinces[province_id].urbanisation_rate,
-    //     provinces[province_id].college_education_rate,
-    //     provinces[province_id].literacy_rate,
-    //     provinces[province_id].secularism_rate);
 
     free(province_name);
     free(type);
@@ -202,16 +193,14 @@ void print_province_data(struct Province p[], int provinces_num, struct Populati
         printf("TOTAL POPULATION: %f", p[i].total_population);
         printf("\n");
         print_populations_for_province(populations, populations_num, i);
+        // print_items_for_province(p[i].items,
         for (int j = 0; j < p[i].items_num; j++) {
-            printf("  ITEMS-%d - NAME: %s, DEMAND: %f, SUPPLY: %f\n",
-              p[i].items[j].item_id, p[i].items[j].name, p[i].items[j].demand_amount, p[i].items[j].supply_amount);
+            printf("  ITEMS-%d - NAME: %s, DEMAND: %f, SUPPLY: %f, SUP_DEM_RATIO: %f, COST_RATIO: %f\n",
+              p[i].items[j].item_id, p[i].items[j].name, p[i].items[j].demand_amount, p[i].items[j].supply_amount,
+              p[i].items[j].dem_sup_ratio, p[i].items[j].cost_ratio);
         }
         printf("\n");
     }
-    // printf("pops num %d", prov.populations_num);
-    // for (int i = 0; i < prov.populations_num; i++) {
-    //     printf("%d - %d", i, prov.populations[i]);
-    // }
 }
 
 // void increase_province_populations(prov) {
