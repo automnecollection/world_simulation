@@ -103,8 +103,7 @@ void update_buildings(struct Building buildings[], const int buildings_num, stru
 void calc_levels_needed_for_produced_item_surplus(struct Building buildings[], const int buildings_num, struct BuildingType building_types[],
     struct Item *items[]) {
     for (int i = 0; i < buildings_num; i++) {
-        if ( buildings[i].level > 0) {
-            if ( building_types[buildings[i].id].production_type_id != -1) {
+        if ( buildings[i].level > 0) { if ( building_types[buildings[i].id].production_type_id != -1) {
                 // Do something
             }
         }

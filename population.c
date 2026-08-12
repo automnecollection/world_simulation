@@ -36,7 +36,7 @@ struct PopulationList initialise_populations(FILE * file, struct Province provin
         population_list.populations_num = provinces_num;
     }
     else {
-        printf("Not able to open the populations file.\n");
+        printf("ERROR: Not able to open the populations file.\n");
     }
 
     return population_list;
@@ -65,12 +65,10 @@ void cmplx_increase_pop_size(struct Population *pop,
 float calc_growth_factor(const float urb, const float col, const float lit, const float sec) {
     float base =
         (urb * 2.6)
-           + (100 * 0.4)
-           + (100 * 0.4)
            + (col * 1.53)
            + (lit * 1.6)
            + (sec * 1.3)
-           + (100 * 1.1);
+           + (100 * 1.9);
     return 0.0137 * pow(base, 1.215);
 }
 

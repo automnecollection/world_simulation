@@ -92,10 +92,6 @@ int main() {
   //   }
   // }
 
-  if (DEBUG) {
-    print_province_data(provinces, provinces_num, populations, populations_num);
-  }
-
   // Initialise building types
   const char * buildings_loc = "buildings.wrld";
   FILE *buildings_file = fopen(buildings_loc, "r");
@@ -103,6 +99,10 @@ int main() {
   const struct BuildingTypesList b_types_list = initialise_building_types(buildings_file);
   struct BuildingType *building_types = b_types_list.building_types;
   int building_types_num = b_types_list.building_types_num;
+
+  if (DEBUG) {
+    print_province_data(provinces, provinces_num, populations, populations_num, building_types);
+  }
 
   // Initialise natural resources
   const char * natural_resources_loc = "natural_resources.wrld";
@@ -246,7 +246,7 @@ int main() {
   // Print simulation results
   printf("AFTER %d DAYS\n", sim_days);
   printf("Day %d, year %d.\n", world_time.day, world_time.year);
-  print_province_data(provinces, provinces_num, populations, populations_num);
+  print_province_data(provinces, provinces_num, populations, populations_num, building_types);
 
   // Save world data to .wrld file
   const clock_t save_begin = clock();

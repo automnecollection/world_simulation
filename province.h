@@ -58,14 +58,19 @@ void assign_items(struct Province provinces[], int provinces_num,
 void assign_buildings(struct Province provinces[], int provinces_num,
     struct BuildingType building_types[], size_t b_types_size);
 
+// Simulation
 void increase_population(struct Province *prov);
 struct Province detect_country_provinces(struct Province* provinces[], char *province_owner_tag, char *tag, int provinces_num);
 int get_province_id_from_name(const char * name, struct Province provinces[], int provinces_size);
 void initialise_temp_province_data(FILE * file, struct Province provinces[], int provinces_num, int sim_days);
 void read_province_data(char *line, struct Province provinces[], int provinces_num);
-void print_province_data(struct Province p[], int provinces_num, struct Population populations[], int populations_num);
 void free_provinces(struct Province provinces[], int provinces_num);
 void increase_data_ticks(struct Province prov);
+
+// Sim helpers
+void print_province_data(struct Province p[], int provinces_num,
+    struct Population populations[], int populations_num,
+    struct BuildingType building_types[]);
 
 int shut_program();
 

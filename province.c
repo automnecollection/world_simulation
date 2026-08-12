@@ -4,6 +4,7 @@
 
 #include "province.h"
 
+#include "building.h"
 #include "building_type.h"
 #include "country.h"
 #include "population.h"
@@ -46,7 +47,9 @@ struct ProvinceList initialise_provinces(FILE * file, const char * provinces_fil
         province_list.provinces_num = provinces_num;
     }
     else {
-        printf("Not able to open the provinces file.\n");
+        printf("ERROR: Not able to open the provinces file.\n");
+        getchar();
+        abort();
     }
 
     return province_list;
@@ -175,7 +178,9 @@ void read_province_data(char *line, struct Province provinces[], int provinces_n
     free(type);
 }
 
-void print_province_data(struct Province p[], int provinces_num, struct Population populations[], int populations_num) {
+void print_province_data(struct Province p[], const int provinces_num,
+    struct Population populations[], const int populations_num,
+    struct BuildingType building_types[]) {
     for (int i = 0; i < provinces_num; i++) {
         printf("PROVINCE-%d: %s, ", p[i].id, p[i].name);
         printf("COUNTRY OWNER ID: %d, ", p[i].owner_country_id);
@@ -193,28 +198,19 @@ void print_province_data(struct Province p[], int provinces_num, struct Populati
         printf("TOTAL POPULATION: %f", p[i].total_population);
         printf("\n");
         print_populations_for_province(populations, populations_num, i);
-        // print_items_for_province(p[i].items,
-        for (int j = 0; j < p[i].items_num; j++) {
-            printf("  ITEMS-%d - NAME: %s, DEMAND: %f, SUPPLY: %f, SUP_DEM_RATIO: %f, COST_RATIO: %f\n",
-              p[i].items[j].item_id, p[i].items[j].name, p[i].items[j].demand_amount, p[i].items[j].supply_amount,
-              p[i].items[j].dem_sup_ratio, p[i].items[j].cost_ratio);
+        for (int j = 0; j < p[i].buildings_size; j++) {
+            printf("  %s - LEVEL: %d, LAST_OUTPUT: %f\n",
+                building_types[p[i].buildings[j].id].name, p[i].buildings[j].level, p[i].buildings[j].last_supply);
+        }
+        printf("\n");
+        for (int k = 0; k < p[i].items_num; k++) {
+            printf("  ITEMS-%d - NAME: %s, DEMAND: %f, SUPPLY: %f, DEM_SUP_RATIO: %f, COST_MULTIPLIER: %f\n",
+              p[i].items[k].item_id, p[i].items[k].name, p[i].items[k].demand_amount, p[i].items[k].supply_amount,
+              p[i].items[k].dem_sup_ratio, p[i].items[k].cost_ratio);
         }
         printf("\n");
     }
 }
-
-// void increase_province_populations(prov) {
-//
-// }
-
-// struct Province detect_country_provinces(const struct Province* provinces, char *province_owner_tag, char *tag, int provinces_num) {
-//     for (int j = 0; j < provinces_num; j++) {
-//         if (province_owner_tag == tag) {
-//             const struct Province detected_province = provinces[j];
-//             return detected_province;
-//         }
-//     }
-// }
 
 void assign_items(struct Province provinces[], int provinces_num,
     struct NaturalResource natural_resources[], int nr_types_num) {
