@@ -48,6 +48,7 @@ struct ProvinceList {
     struct Province *provinces;
 };
 
+// Initialisation
 struct ProvinceList initialise_provinces(FILE * file, const char * provinces_file_loc, struct Country countries[], int countries_num);
 void *read_province(char *line, int id, struct Country countries[], int countries_num, const char * provinces_file_loc);
 void print_province_population(struct Province prov);

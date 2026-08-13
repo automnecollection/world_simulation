@@ -80,13 +80,12 @@ void free_the_people(struct Population populations[], const int populations_num)
 }
 
 void print_populations_for_province(struct Population populations[], const int populations_num, const int province_id) {
-    printf("  Populations:\n");
+    printf("    Populations:\n");
     for (int j = 0; j < populations_num; j++) {
         if (populations[j].province_id == province_id) {
-            printf("    %s, %s - %f\n", populations[j].culture, populations[j].religion, populations[j].p_size);
+            printf("        %s, %s - %f\n", populations[j].culture, populations[j].religion, populations[j].p_size);
         }
     }
-    printf("\n");
 }
 
 void calculate_total_population(struct Province *prov, struct Population populations[], int populations_num) {

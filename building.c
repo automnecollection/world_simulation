@@ -39,13 +39,13 @@ void initialise_building_data(FILE * file, struct Province provinces[], int prov
 
     if (file != NULL) {
         while (fgets(line, 100, file)) {
-            read_building_data(line, provinces, &provinces, provinces_size, building_types, building_types_size);
+            read_building_data(line, provinces, provinces_size, building_types, building_types_size);
         }
     }
 }
 
 // TODO: Remove assign buildings and reduce this function to return a building struct with the required level
-void read_building_data(char *line, struct Province provinces[], struct Province *provinces_pointer[], const int provinces_size,
+void read_building_data(char *line, struct Province provinces[], const int provinces_size,
     struct BuildingType building_types[], const size_t building_types_size) {
     if (strstr(line, "#") != NULL) {
         return;
@@ -68,7 +68,7 @@ void read_building_data(char *line, struct Province provinces[], struct Province
     int building_type_id = get_building_type_id_from_name(building_type_name, building_types, building_types_size);
 
     const char *level_token = strtok(NULL, ",");
-    const int level = strtol(level_token, NULL, 10);
+    const int level = strtol(level_token , NULL, 10);
 
     // printf("building_type_id : %d\n", building_type_id);
 

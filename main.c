@@ -208,11 +208,13 @@ int main() {
         );
     }
     for (int j = 0; j < provinces_num; j++) {
+      struct Province p = provinces[j];
+
       calculate_total_population(&provinces[j], populations, populations_num);
-      update_item_demand(provinces[j].items, populations, populations_num, provinces[j].id);
-      calc_item_surplus_or_deficit(provinces[j].items, provinces[j].items_num);
-      calc_item_cost(provinces[j].items, provinces[j].items_num);
-      update_buildings(provinces[j].buildings, provinces[j].buildings_size, building_types, &provinces[j].items);
+      update_item_demand(p.items, populations, populations_num, p.id);
+      calc_item_surplus_or_deficit(p.items, p.items_num);
+      calc_item_cost(p.items, p.items_num);
+      update_buildings(p.buildings, p.buildings_size, building_types, &p.items);
 
       if (provinces[j].urbanisation_rate < provinces[j].target_urbanisation_rate) {
         provinces[j].urbanisation_rate += provinces[j].urb_tick * 1.5;

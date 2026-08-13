@@ -1,18 +1,17 @@
 #ifndef WORLD_SIM_CONFIG_H
 #define WORLD_SIM_CONFIG_H
 
-// Application settings
+// General settings
     #define DEBUG                       false
     #define SAVE_WORLD                  false
 
-    // History files and initialisation
+// Simulation parameters
     #define LOAD_FROM_RESULTS           false
     #define FILE_TYPE                   ".wrld"                //
     #define COUNTRIES_FILE              "countries"            //
     #define PROVINCES_FILE              "provinces"            //
     #define POPULATIONS_FILE            "populations.wrld"     //
 
-// Simulation parameters
     #define DAY                         1                      // Starting day of year (1-365)
     #define YEAR                        1950                   // Starting year, the sim will be designed around starting in 1950
     #define SIM_DAYS                    27740                  // How many days the simulation will run for, 27740 days = 76 years (runs to 2026 from 1950)
