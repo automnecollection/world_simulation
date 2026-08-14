@@ -3,6 +3,8 @@
 
 #include <stdio.h>
 
+#include "language.h"
+
 struct Province;
 
 struct Population {
@@ -25,7 +27,7 @@ void print_populations_for_province(struct Population populations[], int populat
 float calc_growth_factor(float urb, float col, float lit, float sec);
 
 // SIMULATION
-void increase_pop_size(struct Population *pop, float BASE_BIRTH_RATE);
+void increase_pop_size(struct Population *pop, float base_birth_rate);
 
 void cmplx_increase_pop_size(struct Population *pop,
     float urbanisation, float college_education, float literacy, float secularism);

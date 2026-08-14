@@ -73,6 +73,10 @@ void print_province_data(struct Province p[], int provinces_num,
     struct Population populations[], int populations_num,
     struct BuildingType building_types[]);
 
+void print_province_data_province(struct Province p[], int provinces_num,
+    struct Population populations[], int populations_num,
+    struct BuildingType building_types[]);
+
 int shut_program();
 
 #endif

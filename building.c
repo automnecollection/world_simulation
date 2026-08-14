@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <math.h>
 
 #include "province.h"
 #include "building.h"
@@ -93,6 +94,9 @@ void update_buildings(struct Building buildings[], const int buildings_num, stru
                 const float production_amount = building_types[buildings[i].id].base_production * buildings[i].level;
                 // printf("building_types[buildings[i].id].base_production * buildings[i].level: %d\n", building_types[buildings[i].id].base_production * buildings[i].level);
                 // printf("production_amount: %f\n", production_amount);
+                struct Item *item = items[building_types[buildings[i].id].production_type_id];
+
+                // printf("building_types[buildings[i].id].production_type_id: %d\n", building_types[buildings[i].id].production_type_id);
                 items[building_types[buildings[i].id].production_type_id]->supply_amount += production_amount;
                 buildings[i].last_supply = production_amount;
             }
@@ -104,7 +108,26 @@ void calc_levels_needed_for_produced_item_surplus(struct Building buildings[], c
     struct Item *items[]) {
     for (int i = 0; i < buildings_num; i++) {
         if ( buildings[i].level > 0) { if ( building_types[buildings[i].id].production_type_id != -1) {
-                // Do something
+            printf("fabsf(items[building_types[buildings[i].id].production_type_id]->supply_min_demand): %f\n", fabsf(items[building_types[buildings[i].id].production_type_id]->supply_min_demand));
+            printf("building_types[buildings_num].base_production: %d\n", building_types[buildings[i].id].base_production);
+            printf("fabsf(items[building_types[buildings[i].id].production_type_id]->supply_min_demand)/building_types[buildings_num].base_production: %f\n", fabsf(items[building_types[buildings[i].id].production_type_id]->supply_min_demand)/building_types[buildings_num].base_production);
+
+            buildings[i].levels_for_surplus = fabsf(items[building_types[buildings[i].id].production_type_id]->supply_min_demand)/building_types[buildings[i].id].base_production;
+            }
+        }
+    }
+}
+
+void take_demand_from_item_supplies(struct Building buildings[], const int buildings_num, struct BuildingType building_types[],
+    struct Item *items[]) {
+    for (int i = 0; i < buildings_num; i++) {
+        if ( buildings[i].level > 0) {
+            if ( building_types[buildings[i].id].production_type_id != -1) {
+                items[building_types[buildings[i].id].production_type_id]->supply_before_demand = items[building_types[buildings[i].id].production_type_id]->supply_amount;
+                items[building_types[buildings[i].id].production_type_id]->supply_amount -= items[building_types[buildings[i].id].production_type_id]->demand_amount;
+                if ( items[building_types[buildings[i].id].production_type_id]->supply_amount < 0.0f ) {
+                    items[building_types[buildings[i].id].production_type_id]->supply_amount = 0.0f;
+                }
             }
         }
     }

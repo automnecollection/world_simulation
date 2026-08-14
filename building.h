@@ -17,6 +17,7 @@ struct Building {
     int item_output_amounts;
     int item_output_amounts_size;
     float last_supply;
+    float levels_for_surplus;
 };
 
 struct BuildingsList {
@@ -33,6 +34,12 @@ void read_building_data(char *line, struct Province provinces[], int provinces_s
     struct BuildingType building_types[], size_t building_types_size);
 
 void update_buildings(struct Building buildings[], const int buildings_num, struct BuildingType building_types[],
+    struct Item *items[]);
+
+void calc_levels_needed_for_produced_item_surplus(struct Building buildings[], const int buildings_num, struct BuildingType building_types[],
+    struct Item *items[]);
+
+void take_demand_from_item_supplies(struct Building buildings[], const int buildings_num, struct BuildingType building_types[],
     struct Item *items[]);
 
 #endif //WORLD_SIM_BUILDING_H

@@ -11,6 +11,7 @@ struct Item {
     char * name;
     float demand_amount;
     float supply_amount;
+    float supply_before_demand;
     bool has_deposits;
     int deposits_amount;
     float dem_sup_ratio;

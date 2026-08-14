@@ -212,9 +212,11 @@ int main() {
 
       calculate_total_population(&provinces[j], populations, populations_num);
       update_item_demand(p.items, populations, populations_num, p.id);
+      update_buildings(p.buildings, p.buildings_size, building_types, &p.items);
       calc_item_surplus_or_deficit(p.items, p.items_num);
       calc_item_cost(p.items, p.items_num);
-      update_buildings(p.buildings, p.buildings_size, building_types, &p.items);
+      calc_levels_needed_for_produced_item_surplus(p.buildings, p.buildings_size, building_types, &p.items);
+      take_demand_from_item_supplies(p.buildings, p.buildings_size, building_types, &p.items);
 
       if (provinces[j].urbanisation_rate < provinces[j].target_urbanisation_rate) {
         provinces[j].urbanisation_rate += provinces[j].urb_tick * 1.5;
@@ -248,7 +250,7 @@ int main() {
   // Print simulation results
   printf("AFTER %d DAYS\n", sim_days);
   printf("Day %d, year %d.\n", world_time.day, world_time.year);
-  print_province_data(provinces, provinces_num, populations, populations_num, building_types);
+  print_province_data_province(provinces, provinces_num, populations, populations_num, building_types);
 
   // Save world data to .wrld file
   const clock_t save_begin = clock();

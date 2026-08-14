@@ -62,7 +62,7 @@ void *read_building_type(char *line, const int id) {
     // printf("str_base_production - %s\n", str_base_production);
     int base_production = strtol(str_base_production, NULL, 10);
 
-    // printf("name, base_production - %s, %d\n", name, base_production);
+    printf("name, base_production - %s, %d\n", name, base_production);
 
     struct BuildingType* new_building_type = malloc(sizeof(struct BuildingType));
 

@@ -2,8 +2,10 @@
 #include <string.h>
 #include <stdlib.h>
 
-#include "province.h"
+#include "config.h"
+#include "language.h"
 
+#include "province.h"
 #include "building.h"
 #include "building_type.h"
 #include "country.h"
@@ -20,7 +22,7 @@ struct ProvinceList initialise_provinces(FILE * file, const char * provinces_fil
     province_list.provinces = malloc(capacity * sizeof *province_list.provinces);
     province_list.provinces_num = 0;
 
-    if (file != NULL) {
+    if (file is_not NULL) {
         int provinces_num = 0;
         while (fgets(c_line, 100, file)) {
             if (strstr(c_line, "YEAR: ")) {
@@ -28,7 +30,7 @@ struct ProvinceList initialise_provinces(FILE * file, const char * provinces_fil
 
             }
             else {
-                if (provinces_num == capacity) {
+                if (provinces_num is capacity) {
                     capacity *= 2;
                     province_list.provinces = realloc(
                         province_list.provinces,
@@ -36,7 +38,7 @@ struct ProvinceList initialise_provinces(FILE * file, const char * provinces_fil
                 }
                 const struct Province *province = read_province(c_line, provinces_num, countries, countries_num, provinces_file_loc);
 
-                if (province != NULL) {
+                if (province is_not NULL) {
                     province_list.provinces[provinces_num] = *province;
                     provinces_num += 1;
                 }
@@ -56,31 +58,26 @@ struct ProvinceList initialise_provinces(FILE * file, const char * provinces_fil
 }
 
 void *read_province(char *line, const int id, struct Country countries[], const int countries_num, const char * provinces_file_loc) {
-    if (strstr(line, "#") != NULL) {
-        return NULL;
-    }
+    get_and_return_null(line, "#");
 
-    const char *data_split = strtok(line, "=");
+    const char *name_token = strtok(line, "=");
+    char *name = ALLOC_FOR(name_token);
+    strcpy(name, name_token);
 
-    char *name = malloc(strlen(data_split) + 1);
-    strcpy(name, data_split);
-
-    char *data = strtok(NULL, "=");
-
-    const char *country_tag_token = strtok(data, ",");
-    char *country_tag = malloc(strlen(data_split) + 1);
+    const char *country_tag_token = TOKENISE(",");
+    char *country_tag = ALLOC_FOR(country_tag_token);
     strcpy(country_tag, country_tag_token);
     const int owner_country_id = get_country_id_from_tag(country_tag, countries, countries_num);
 
-    const char *terrain_token = strtok(NULL, ",");
-    char *terrain = malloc(strlen(terrain_token) + 1);
+    const char *terrain_token = TOKENISE(",");
+    char *terrain = ALLOC_FOR(terrain_token);
     strcpy(terrain, terrain_token);
 
-    const char *climate_token = strtok(NULL, ",");
-    char *climate = malloc(strlen(climate_token) + 1);
+    const char *climate_token = TOKENISE(",");
+    char *climate = ALLOC_FOR(climate_token);
     strcpy(climate, climate_token);
 
-    struct Province* new_province = malloc(sizeof(struct Province));
+    struct Province* new_province = SIZE_ALLOC(Province);
 
     if (new_province != NULL) {
         *new_province = (struct Province) {
@@ -93,7 +90,7 @@ void *read_province(char *line, const int id, struct Country countries[], const 
         };
     };
 
-    if (new_province == NULL) {
+    if (new_province is NULL) {
         free(name);
         free(terrain);
         free(climate);
@@ -101,7 +98,7 @@ void *read_province(char *line, const int id, struct Country countries[], const 
         return NULL;
     }
 
-    printf("name: %s\n", new_province->name);
+    // printf("name: %s\n", new_province->name);
 
     return new_province;
 }
@@ -123,15 +120,15 @@ void initialise_temp_province_data(FILE * file, struct Province provinces[], int
     }
 
     for (int i = 0; i < provinces_num; i++) {
-        provinces[i].urb_tick = (provinces[i].target_urbanisation_rate - provinces[i].urbanisation_rate) / sim_days;
-        provinces[i].col_tick = (provinces[i].target_college_education_rate - provinces[i].college_education_rate) / sim_days;
-        provinces[i].lit_tick = (provinces[i].target_literacy_rate - provinces[i].literacy_rate) / sim_days;
-        provinces[i].sec_tick = (provinces[i].target_secularism_rate - provinces[i].secularism_rate) / sim_days;
+        provinces[i].urb_tick = (provinces[i].target_urbanisation_rate - provinces[i].urbanisation_rate) / 27740;
+        provinces[i].col_tick = (provinces[i].target_college_education_rate - provinces[i].college_education_rate) / 27740;
+        provinces[i].lit_tick = (provinces[i].target_literacy_rate - provinces[i].literacy_rate) / 27740;
+        provinces[i].sec_tick = (provinces[i].target_secularism_rate - provinces[i].secularism_rate) / 27740;
     }
 }
 
 void read_province_data(char *line, struct Province provinces[], int provinces_num) {
-    if (strstr(line, "#") != NULL) {
+    if (strstr(line, "#") is_not NULL) {
         return;
     }
 
@@ -140,32 +137,30 @@ void read_province_data(char *line, struct Province provinces[], int provinces_n
     strcpy(province_name, data_split);
     int province_id = get_province_id_from_name(province_name, provinces, provinces_num);
 
-    const char *type_token = strtok(NULL, "=");
-    char *type = malloc(strlen(type_token) + 1);
+    const char *type_token = TOKENISE("=");
+    char *type = ALLOC_FOR(type_token);
     strcpy(type, type_token);
 
-    char *data = strtok(NULL, "=");
+    const char *str_urbanisation_token = TOKENISE(",");
+    const float urbanisation = float(str_urbanisation_token);
 
-    const char *str_urbanisation_token = strtok(data, ",");
-    const float urbanisation = strtof(str_urbanisation_token, NULL);
+    const char *str_college_edu_token = TOKENISE(",");
+    const float college_edu = float(str_college_edu_token);
 
-    const char *str_college_edu_token = strtok(NULL, ",");
-    const float college_edu = strtof(str_college_edu_token, NULL);
+    const char *str_literacy_token = TOKENISE(",");
+    const float literacy = float(str_literacy_token);
 
-    const char *str_literacy_token = strtok(NULL, ",");
-    const float literacy = strtof(str_literacy_token, NULL);
+    const char *str_secularism_token = TOKENISE(",");
+    const float secularism = float(str_secularism_token);
 
-    const char *str_secularism_token = strtok(NULL, ",");
-    const float secularism = strtof(str_secularism_token, NULL);
-
-    if (strcmp(type, "start") == 0) {
+    if_match(type, "start") {
         provinces[province_id].urbanisation_rate = urbanisation;
         provinces[province_id].college_education_rate = college_edu;
         provinces[province_id].literacy_rate = literacy;
         provinces[province_id].secularism_rate = secularism;
         provinces[province_id].has_start_data = true;
     }
-    else if (strcmp(type, "target") == 0) {
+    else if_match(type, "target") {
         provinces[province_id].target_urbanisation_rate = urbanisation;
         provinces[province_id].target_college_education_rate = college_edu;
         provinces[province_id].target_literacy_rate = literacy;
@@ -175,8 +170,7 @@ void read_province_data(char *line, struct Province provinces[], int provinces_n
     else {
         printf("ERROR ALERT: We didnt get a data type in province %s, it's start or target you stupid bastard!\n",
             provinces[province_id].name);
-        getchar();
-        abort();
+        exit();
     }
 
     free(province_name);
@@ -204,13 +198,14 @@ void print_province_data(struct Province p[], const int provinces_num,
         print_populations_for_province(populations, populations_num, i);
         printf("    Buildings:\n");
         for (int j = 0; j < p[i].buildings_size; j++) {
-            printf("        %s - LEVEL: %d, LAST_OUTPUT: %f\n",
-                building_types[p[i].buildings[j].id].name, p[i].buildings[j].level, p[i].buildings[j].last_supply);
+            printf("        %s - LEVEL: %d, LAST_OUTPUT: %f, LEVELS FOR SURPLUS: %f\n",
+                building_types[p[i].buildings[j].id].name, p[i].buildings[j].level, p[i].buildings[j].last_supply,
+                p[i].buildings[j].levels_for_surplus);
         }
         printf("    Items:\n");
         for (int k = 0; k < p[i].items_num; k++) {
-            printf("        %s, DEMAND: %f, SUPPLY: %f\n",
-                p[i].items[k].name, p[i].items[k].demand_amount, p[i].items[k].supply_amount);
+            printf("        %s - DEMAND: %f, SUPPLY: %f, SUP_B4_DEM: %f\n",
+                p[i].items[k].name, p[i].items[k].demand_amount, p[i].items[k].supply_amount, p[i].items[k].supply_before_demand);
             printf("                  DEM_SUP_RATIO: %f, COST_MULTIPLIER: %f\n",
                 p[i].items[k].dem_sup_ratio, p[i].items[k].cost_ratio);
         }
@@ -218,9 +213,44 @@ void print_province_data(struct Province p[], const int provinces_num,
     }
 }
 
+void print_province_data_province(struct Province p[], const int provinces_num,
+    struct Population populations[], const int populations_num,
+    struct BuildingType building_types[]) {
+    const int i = 0;
+
+    printf("PROVINCE-%d: %s, ", p[i].id, p[i].name);
+    printf("COUNTRY OWNER ID: %d, ", p[i].owner_country_id);
+    printf("COUNTRY OWNER TAG: %s, ", p[i].owner_country_tag);
+    printf("\n");
+    printf("    CURRENT GROWTH RATE: %f", p[i].current_growth_rate);
+    printf("\n");
+    printf("    URBANISATION: %f, COLLEGE_EDU.: %f, LITERACY: %f, SECULARISM: %f\n",
+        p[i].urbanisation_rate,
+        p[i].college_education_rate,
+        p[i].literacy_rate,
+        p[i].secularism_rate);
+    printf("    TERRAIN: %s, ", p[i].terrain);
+    printf("CLIMATE: %s, ", p[i].climate);
+    printf("TOTAL POPULATION: %f\n", p[i].total_population);
+    print_populations_for_province(populations, populations_num, i);
+    printf("    Buildings:\n");
+    for (int j = 0; j < p[i].buildings_size; j++) {
+        printf("        %s - LEVEL: %d, LAST_OUTPUT: %f, LEVELS FOR SURPLUS: %f\n",
+            building_types[p[i].buildings[j].id].name, p[i].buildings[j].level, p[i].buildings[j].last_supply,
+            p[i].buildings[j].levels_for_surplus);
+    }
+    printf("    Items:\n");
+    for (int k = 0; k < p[i].items_num; k++) {
+        printf("        %s - DEMAND: %f, SUPPLY: %f, SUP_B4_DEM: %f\n",
+            p[i].items[k].name, p[i].items[k].demand_amount, p[i].items[k].supply_amount, p[i].items[k].supply_before_demand);
+        printf("                  DEM_SUP_RATIO: %f, COST_MULTIPLIER: %f\n",
+            p[i].items[k].dem_sup_ratio, p[i].items[k].cost_ratio);
+    }
+    printf("\n");
+}
+
 void assign_items(struct Province provinces[], int provinces_num,
     struct NaturalResource natural_resources[], int nr_types_num) {
-
     for (int i = 0; i < provinces_num; i++) {
         struct Item *items = calloc(nr_types_num, sizeof(struct Item));
         int items_num = 0;
@@ -244,7 +274,7 @@ void assign_items(struct Province provinces[], int provinces_num,
 
 int get_province_id_from_name(const char * name, struct Province provinces[], const int provinces_size) {
     for (int i = 0; i < provinces_size; i++) {
-        if (strcmp(provinces[i].name, name) == 0) {
+        if (strcmp(provinces[i].name, name) is 0) {
             return provinces[i].id;
         }
     }

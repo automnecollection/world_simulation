@@ -30,6 +30,7 @@ add_executable(
         read_data.c
         read_data.h
         config.h
+        language.h
 )
 
 # Request assembly output generation (-S) and use readable Intel syntax

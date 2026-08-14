@@ -20,7 +20,7 @@ struct Population *read_population(char *line, const int id, struct Province pro
     const float p_size = strtof(str_p_size, NULL);
     const int p_size_int = (int)p_size;
 
-    printf("p_size: %f\n", p_size);
+    // printf("p_size: %f\n", p_size);
 
     const char *culture_token = strtok(NULL, ",");
     char *culture = malloc(strlen(culture_token) + 1);
