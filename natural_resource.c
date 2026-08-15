@@ -23,6 +23,7 @@ struct NaturalResourcesList initialise_nr(FILE * file) {
 
             if (natural_resource != NULL) {
                 nr_list.natural_resources[nr_num] = *natural_resource;
+                printf("%s - %d\n", nr_list.natural_resources[nr_num].name, nr_list.natural_resources[nr_num].id);
                 nr_num += 1;
             }
 

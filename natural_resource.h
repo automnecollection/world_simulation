@@ -1,6 +1,7 @@
 #ifndef WORLD_SIM_NATURAL_RESOURCES_H
 #define WORLD_SIM_NATURAL_RESOURCES_H
 
+#include <stdio.h>
 #include <stdbool.h>
 
 struct NaturalResource {

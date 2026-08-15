@@ -3,6 +3,10 @@
 #include <time.h>
 #include <string.h>
 
+#include "language.h"
+
+#include "simulation.h"
+
 #include "building.h"
 #include "world.h"
 #include "world_functions.h"
@@ -122,9 +126,9 @@ int main() {
   // Initialise items in building types
   for (int i = 0; i < building_types_num; i++) {
     const int type_id = get_item_type(building_types[i].production_type, nr_types, nr_types_num);
-    if (DEBUG == true) {
+    // if (DEBUG == true) {
       printf("type_id - %d\n", type_id);
-    }
+    // }
     building_types[i].production_type_id = type_id;
   }
 
@@ -159,11 +163,11 @@ int main() {
     }
   }
 
-  if (DEBUG == true) {
-    for (int i = 0; i < provinces_num; i++) {
+  if (DEBUG) {
+    LOOP(i, provinces_num) {
       printf("PROVINCE %s ITEMS:\n",
           provinces[i].name);
-      for (int j = 0; j < provinces[i].items_num; j++) {
+      LOOP(j, provinces[i].items_num) {
         printf("  ITEMS-%d - NAME: %s, DEMAND: %f, SUPPLY: %f\n",
           provinces[i].items[j].item_id, provinces[i].items[j].name, provinces[i].items[j].demand_amount, provinces[i].items[j].supply_amount);
       }
@@ -178,8 +182,8 @@ int main() {
   assign_buildings(provinces, provinces_num, building_types, building_types_num);
   initialise_building_data(p_buildings_file, provinces, provinces_num, building_types, building_types_num);
 
-  for (int i = 0; i < provinces_num; i++) {
-    for (int j = 0; j < building_types_num; j++) {
+  LOOP(i, provinces_num) {
+    LOOP(j, building_types_num) {
       if (provinces[i].buildings[j].level > 0) {
         printf("province - %s, name - %s, type_id - %d, level - %d\n",
           provinces[i].name, building_types[provinces[i].buildings[j].id].name,
@@ -199,40 +203,11 @@ int main() {
 
   // Run simulation
   const int sim_days = SIM_DAYS;
-  for (int i = 0; i < sim_days; i++) {
-    // printf("day: %d, year: %d\n", world_time.day, world_time.year);
-    for (int j = 0; j < populations_num; j++) {
-      cmplx_increase_pop_size(&populations[j],
-        provinces[populations[j].province_id].urbanisation_rate, provinces[populations[j].province_id].college_education_rate,
-        provinces[populations[j].province_id].literacy_rate, provinces[populations[j].province_id].secularism_rate
-        );
-    }
-    for (int j = 0; j < provinces_num; j++) {
-      struct Province p = provinces[j];
 
-      calculate_total_population(&provinces[j], populations, populations_num);
-      update_item_demand(p.items, populations, populations_num, p.id);
-      update_buildings(p.buildings, p.buildings_size, building_types, &p.items);
-      calc_item_surplus_or_deficit(p.items, p.items_num);
-      calc_item_cost(p.items, p.items_num);
-      calc_levels_needed_for_produced_item_surplus(p.buildings, p.buildings_size, building_types, &p.items);
-      take_demand_from_item_supplies(p.buildings, p.buildings_size, building_types, &p.items);
-
-      if (provinces[j].urbanisation_rate < provinces[j].target_urbanisation_rate) {
-        provinces[j].urbanisation_rate += provinces[j].urb_tick * 1.5;
-      }
-      if (provinces[j].college_education_rate < provinces[j].target_college_education_rate) {
-        provinces[j].college_education_rate += provinces[j].col_tick * 1.5;
-      }
-      if (provinces[j].literacy_rate < provinces[j].target_literacy_rate) {
-        provinces[j].literacy_rate += provinces[j].lit_tick * 1.5;
-      }
-      if (provinces[j].secularism_rate < provinces[j].target_secularism_rate) {
-        provinces[j].secularism_rate += provinces[j].sec_tick * 1.5;
-      }
-    }
-    advance_time(&world_time);
-  }
+  run_simulation(sim_days, provinces, provinces_num,
+                    populations, populations_num,
+                    building_types, nr_types,
+                    world_time);
   printf("\n");
 
   // if (provinces[j].id == 30) {
