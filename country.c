@@ -1,6 +1,9 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
+
+#include "language.h"
+
 #include "country.h"
 
 struct CountryList initialise_countries(FILE *file) {
@@ -34,14 +37,13 @@ struct CountryList initialise_countries(FILE *file) {
 }
 
 struct Country read_country(char * line, int id) {
-    const char *data_split = strtok(line, "=");
-
-    char *name = malloc(strlen(data_split) + 1);
-    strcpy(name, data_split);
-
-    const char *tag_token = strtok(NULL, ",");
-    char *tag = malloc(strlen(tag_token) + 1);
+    const char *tag_token = strtok(line, "=");
+    char *tag = STR_ALLOC(tag_token);
     strcpy(tag, tag_token);
+
+    const char *name_token = NEXT_TOKEN(",");
+    char *name = STR_ALLOC(name_token);
+    strcpy(name, name_token);
 
     const struct Country new_country = {
         name, id, tag
@@ -50,9 +52,11 @@ struct Country read_country(char * line, int id) {
     return new_country;
 }
 
+// TODO: Calculate desired level for each building type in all owned provinces
+
 int get_country_id_from_tag(const char * tag, struct Country countries[], const int countries_size) {
-    for (int i = 0; i < countries_size; i++) {
-        if (strcmp(countries[i].tag, tag) == 0) {
+    LOOP(i, countries_size) {
+        if (MATCH(countries[i].tag, tag)) {
             return countries[i].id;
         }
     }

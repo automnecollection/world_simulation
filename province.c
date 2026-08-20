@@ -22,14 +22,14 @@ struct ProvinceList initialise_provinces(FILE * file, const char * provinces_fil
     province_list.provinces = malloc(capacity * sizeof *province_list.provinces);
     province_list.provinces_num = 0;
 
-    if (file is_not NULL) {
+    if (file != NULL) {
         int provinces_num = 0;
         while (fgets(c_line, 100, file)) {
             if (strstr(c_line, "YEAR: ")) {
                 const char *data_split = strtok(c_line, ":");
             }
             else {
-                if (provinces_num is capacity) {
+                if (provinces_num == capacity) {
                     capacity *= 2;
                     province_list.provinces = realloc(
                         province_list.provinces,
@@ -37,7 +37,7 @@ struct ProvinceList initialise_provinces(FILE * file, const char * provinces_fil
                 }
                 const struct Province *province = read_province(c_line, provinces_num, countries, countries_num, provinces_file_loc);
 
-                if (province is_not NULL) {
+                if (province != NULL) {
                     province_list.provinces[provinces_num] = *province;
                     provinces_num += 1;
                 }
@@ -76,9 +76,9 @@ void *read_province(char *line, const int id, struct Country countries[], const 
     char *climate = STR_ALLOC(climate_token);
     strcpy(climate, climate_token);
 
-    struct Province* new_province = STRUCT_ALLOC(Province);
+    struct Province* new_province = SIZE_ALLOC(struct Province);
 
-    if (new_province is_not NULL) {
+    if (new_province != NULL) {
         *new_province = (struct Province) {
             .id=id,
             .name=name,
@@ -89,7 +89,7 @@ void *read_province(char *line, const int id, struct Country countries[], const 
         };
     };
 
-    if (new_province is NULL) {
+    if (new_province == NULL) {
         free(name);
         free(terrain);
         free(climate);
@@ -107,7 +107,7 @@ void initialise_temp_province_data(FILE * file, struct Province provinces[], int
 
     char line[200];
 
-    if (file is_not NULL) {
+    if (file != NULL) {
         while (fgets(line, 100, file)) {
             read_province_data(line, provinces, provinces_num);
         }

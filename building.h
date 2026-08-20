@@ -18,6 +18,9 @@ struct Building {
     int item_output_amounts_size;
     float last_supply;
     float levels_for_surplus;
+
+    // Country related stats
+    float desired_building_level;
 };
 
 struct BuildingsList {

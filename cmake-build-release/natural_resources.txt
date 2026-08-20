@@ -1,3 +1,0 @@
-WATER=1.0,None
-FOOD=1.0,None
-MICROCHIPS=50.0,None

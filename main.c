@@ -192,32 +192,22 @@ int main() {
     }
   }
 
-  printf("\n");
-
   const clock_t load_end = clock();
   const double load_time_spent = (double)(load_end - load_begin) / CLOCKS_PER_SEC;
 
   const clock_t sim_begin = clock();
 
-  bool bogos_binted = false;
-
   // Run simulation
   const int sim_days = SIM_DAYS;
 
-  run_simulation(sim_days, provinces, provinces_num,
-                    populations, populations_num,
-                    building_types, nr_types,
-                    world_time);
-  printf("\n");
-
-  // if (provinces[j].id == 30) {
-  //   if ( provinces[j].urbanisation_rate > provinces[j].target_urbanisation_rate ) {
-  //     if ( bogos_binted == false) {
-  //       printf("binted: %d, %d, %s, %f\n", world_time.day, world_time.year, provinces[j].name, provinces[j].urbanisation_rate);
-  //       bogos_binted = true;
-  //     }
-  //   }
-  // }
+  run_simulation(
+    sim_days,
+    provinces, provinces_num,
+    countries, countries_num,
+    populations, populations_num,
+    building_types, nr_types,
+    world_time
+    );
 
   const clock_t sim_end = clock();
   const double sim_time_spent = (double)(sim_end - sim_begin) / CLOCKS_PER_SEC;
@@ -232,10 +222,7 @@ int main() {
 
   if (SAVE_WORLD) {
     save_world(
-      countries, countries_num,
-      provinces, provinces_num,
-      populations, populations_num,
-      building_types, building_types_num
+      countries, countries_num, provinces, provinces_num, populations, populations_num, building_types, building_types_num
       );
   }
 

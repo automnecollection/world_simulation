@@ -101,12 +101,14 @@ void update_buildings(struct Building buildings[], const int buildings_num, stru
 void calc_levels_needed_for_produced_item_surplus(struct Building buildings[], const int buildings_num, struct BuildingType building_types[],
     struct Item items[]) {
     LOOP(i, buildings_num) {
-        if ( buildings[i].level > 0) { if ( building_types[buildings[i].id].production_type_id != -1) {
-                if (items[building_types[buildings[i].id].production_type_id].supply_amount > items[building_types[buildings[i].id].production_type_id].demand_amount) {
+        const struct BuildingType* building_type = &building_types[buildings[i].id];
+        if (buildings[i].level > 0) { if (building_type->production_type_id != -1) {
+                const struct Item* item = &items[building_type->production_type_id];
+                if (item->supply_amount > item->demand_amount) {
                     buildings[i].levels_for_surplus = 0.0f;
                 }
                 else {
-                    buildings[i].levels_for_surplus = fabsf(items[building_types[buildings[i].id].production_type_id].supply_min_demand)/building_types[buildings[i].id].base_production;
+                    buildings[i].levels_for_surplus = fabsf(item->supply_min_demand)/building_type->base_production;
                 }
             }
         }
@@ -116,11 +118,13 @@ void calc_levels_needed_for_produced_item_surplus(struct Building buildings[], c
 void take_demand_from_item_supplies(struct Building buildings[], const int buildings_num, struct BuildingType building_types[],
     struct Item items[]) {
     LOOP(i, buildings_num) {
-        if ( buildings[i].level > 0) { if ( building_types[buildings[i].id].production_type_id is_not -1) {
-                items[building_types[buildings[i].id].production_type_id].supply_before_demand = items[building_types[buildings[i].id].production_type_id].supply_amount;
-                items[building_types[buildings[i].id].production_type_id].supply_amount -= items[building_types[buildings[i].id].production_type_id].demand_amount;
-                if ( items[building_types[buildings[i].id].production_type_id].supply_amount < 0.0f ) {
-                    items[building_types[buildings[i].id].production_type_id].supply_amount = 0.0f;
+        const struct BuildingType* building_type = &building_types[buildings[i].id];
+        if (buildings[i].level > 0) { if (building_type->production_type_id != -1) {
+                struct Item* item = &items[building_type->production_type_id];
+                item->supply_before_demand = item->supply_amount;
+                item->supply_amount -= item->demand_amount;
+                if (item->supply_amount < 0.0f) {
+                    item->supply_amount = 0.0f;
                 }
             }
         }
