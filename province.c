@@ -15,7 +15,7 @@
 
 // TODO: Add ability to list year for population
 struct ProvinceList initialise_provinces(FILE * file, const char * provinces_file_loc, struct Country countries[], const int countries_num) {
-    int capacity = 8;
+    int capacity = 100;
     char c_line[300];
 
     struct ProvinceList province_list;

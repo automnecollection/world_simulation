@@ -34,7 +34,8 @@ int main() {
   printf("Day %d, year %d.\n", world_time.day, world_time.year);
 
   // Initialise countries
-  char countries_file_loc[] = COUNTRIES_FILE;
+  char countries_file_loc[64];
+  strcpy(countries_file_loc, COUNTRIES_FILE);
   if (LOAD_FROM_RESULTS == true) {
     strcat(countries_file_loc, "_result");
   }
@@ -56,7 +57,8 @@ int main() {
   }
 
   // Initialise provinces
-  char provinces_file_loc[] = PROVINCES_FILE;
+  char provinces_file_loc[64];
+  strcpy(provinces_file_loc,PROVINCES_FILE);
   if (LOAD_FROM_RESULTS == true) {
     strcat(provinces_file_loc, "_result");
   }
@@ -206,7 +208,7 @@ int main() {
     countries, countries_num,
     populations, populations_num,
     building_types, nr_types,
-    world_time
+    &world_time
     );
 
   const clock_t sim_end = clock();
@@ -215,7 +217,7 @@ int main() {
   // Print simulation results
   printf("AFTER %d DAYS\n", sim_days);
   printf("Day %d, year %d.\n", world_time.day, world_time.year);
-  print_province_data_province(provinces, provinces_num, populations, populations_num, building_types);
+  print_province_data(provinces, provinces_num, populations, populations_num, building_types);
 
   // Save world data to .wrld file
   const clock_t save_begin = clock();

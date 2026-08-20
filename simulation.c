@@ -16,7 +16,7 @@ void run_simulation(int sim_days, struct Province provinces[], int provinces_num
                     struct Country countries[], int countries_num,
                     struct Population populations[], int populations_num,
                     struct BuildingType building_types[], struct NaturalResource *nr_types,
-                    struct WorldTime world_time) {
+                    struct WorldTime *world_time) {
     LOOP(day, sim_days) {
         // printf("day: %d, year: %d\n", world_time.day, world_time.year);
         LOOP(i, populations_num) {
@@ -54,6 +54,6 @@ void run_simulation(int sim_days, struct Province provinces[], int provinces_num
 
         }
         // TODO: Time does not advance why the fuck not
-        advance_time(&world_time);
+        advance_time(world_time);
     }
 }

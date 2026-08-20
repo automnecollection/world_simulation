@@ -60,6 +60,7 @@ int get_country_id_from_tag(const char * tag, struct Country countries[], const 
             return countries[i].id;
         }
     }
+    printf("why the fuck not?\n");
     return -1;
 }
 
