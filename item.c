@@ -11,6 +11,8 @@
 void update_item_demand(struct Item items[], struct Population populations[], const int populations_num, const int province_id) {
     items[0].demand_amount = 0;
     items[1].demand_amount = 0;
+
+    items[3].demand_amount = 0;
     LOOP(i, populations_num) {
         if (populations[i].province_id == province_id) {
             // Water - Was * 3.0f
@@ -18,7 +20,7 @@ void update_item_demand(struct Item items[], struct Population populations[], co
             // Food
             items[1].demand_amount += populations[i].p_size * 0.001879f;
             // Refined Oil
-            // items[3].demand_amount += populations[i].p_size * 0.0001;
+            items[3].demand_amount += populations[i].p_size * 0.0001;
         }
     }
 }

@@ -51,9 +51,8 @@ void run_simulation(int sim_days, struct Province provinces[], int provinces_num
             }
         }
         LOOP(country_id, countries_num) {
-
+            // calc_country_total_population(&countries[country_id], provinces, provinces_num);
         }
-        // TODO: Time does not advance why the fuck not
         advance_time(world_time);
     }
 }

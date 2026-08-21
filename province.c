@@ -288,6 +288,16 @@ int get_province_id_from_name(const char * name, struct Province provinces[], co
     return -1;
 }
 
+void calc_country_total_population(struct Country *c, struct Province p[], const int provinces_num) {
+    int total_population = 0;
+    LOOP(province_id, provinces_num) {
+        if (p[province_id].owner_country_id == c->id) {
+            total_population += p[province_id].total_population;
+        }
+    }
+    // c->total_population = total_population;
+}
+
 void free_provinces(struct Province provinces[], const int provinces_num) {
     LOOP(i, provinces_num) {
         free(provinces[i].name);

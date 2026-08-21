@@ -71,19 +71,8 @@ void read_building_data(char *line, struct Province provinces[], const int provi
     const char *level_token = NEXT_TOKEN(",");
     const int level = STR_INT(level_token);
 
-    // printf("building_type_id : %d\n", building_type_id);
-
-    // printf("provinces[province_id].name = %s\n",
-    //     provinces[province_id].name);
-    // printf("building_types[provinces[province_id].buildings[building_type_id]].name = %s\n",
-    //     building_types[provinces[province_id].buildings[building_type_id].id].name);
-
-    struct Province *prov = &provinces[province_id];
-    prov->buildings[building_type_id].level = level;
-
-    // free(data_split);
-    // free(province_name);
-    // free(building_type_name);
+    struct Building *building = &provinces[province_id].buildings[building_type_id];
+    building->level = level;
 }
 
 void update_buildings(struct Building buildings[], const int buildings_num, struct BuildingType building_types[],

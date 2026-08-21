@@ -33,6 +33,11 @@ add_executable(
         language.h
         simulation.c
         simulation.h
+        list_init.c
+        list_init.h
+        list_init.c
+        unit.c
+        unit.h
 )
 
 # Request assembly output generation (-S) and use readable Intel syntax

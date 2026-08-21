@@ -19,25 +19,20 @@ struct Country {
     int id;
     char * tag;
     int provinces_num;
+    int total_population;
 
     char provinces[];
 };
 
-struct CountryList {
-    int countries_num;
-    struct Country *countries;
-};
+// Initialisation
+void read_country(const char* line, int index, void* out_struct, void *ctx);
 
-// INITIALISATION
-struct CountryList initialise_countries(FILE * file);
-struct Country read_country(char * line, int id);
-
-// HELPERS
+// Helpers
 int get_country_id_from_tag(const char * tag, struct Country countries[], int countries_size);
 
-// SIMULATION
+// Simulation
 
-// MEMORY MANAGEMENT
+// Memory management
 void free_the_nations(struct Country countries[], int countries_num);
 
 #endif

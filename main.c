@@ -3,9 +3,12 @@
 #include <time.h>
 #include <string.h>
 
+#include "config.h"
 #include "language.h"
 
 #include "simulation.h"
+#include "list_init.h"
+#include "create_save.h"
 
 #include "building.h"
 #include "world.h"
@@ -16,9 +19,7 @@
 #include "natural_resource.h"
 #include "building_type.h"
 #include "item.h"
-#include "create_save.h"
-
-#include "config.h"
+#include "unit.h"
 
 // Get-ChildItem -Recurse -Include *.c,*.h | ForEach-Object { "{0}: {1}" -f $_.Name, (Get-Content $_).Count }
 
@@ -45,9 +46,9 @@ int main() {
   }
   FILE *countries_file = fopen(countries_file_loc, "r");
 
-  const struct CountryList country_list = initialise_countries(countries_file);
-  struct Country *countries = country_list.countries;
-  int countries_num = country_list.countries_num;
+  struct List countries_list = initialise_list(countries_file, sizeof(struct Country), read_country, NULL);
+  struct Country *countries = countries_list.items;
+  size_t countries_num = countries_list.items_size;
 
   if (DEBUG == true) {
     for (int i = 0; i < countries_num; i++) {
@@ -193,6 +194,15 @@ int main() {
       }
     }
   }
+
+  // Initialise units
+  const char * units_loc = "units.wrld";
+  FILE *units_file = fopen(units_loc, "r");
+
+  struct UnitParserCtx unit_ctx = {countries, countries_num, provinces, provinces_num};
+  struct List units_list = initialise_list(units_file, sizeof(struct Unit), read_unit, &unit_ctx);
+  struct Unit *units = units_list.items;
+  size_t units_num = units_list.items_size;
 
   const clock_t load_end = clock();
   const double load_time_spent = (double)(load_end - load_begin) / CLOCKS_PER_SEC;
