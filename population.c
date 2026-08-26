@@ -64,27 +64,31 @@ float calc_growth_factor(const float urb, const float col, const float lit, cons
     return 0.0137 * pow(base, 1.215);
 }
 
+// This is deep af
 void free_the_people(struct Population populations[], const int populations_num) {
-    for (int i = 0; i < populations_num; i++) {
-        free(populations[i].culture);
-        free(populations[i].religion);
+    LOOP(population_index, populations_num) {
+        const struct Population* pop = &populations[population_index];
+        free(pop->culture);
+        free(pop->religion);
     }
 }
 
 void print_populations_for_province(struct Population populations[], const int populations_num, const int province_id) {
     printf("    Populations:\n");
-    for (int j = 0; j < populations_num; j++) {
-        if (populations[j].province_id == province_id) {
-            printf("        %s, %s - %f\n", populations[j].culture, populations[j].religion, populations[j].p_size);
+    LOOP(population_index, populations_num) {
+        const struct Population* pop = &populations[population_index];
+        if (pop->province_id == province_id) {
+            printf("        %s, %s - %f\n", pop->culture, pop->religion, pop->p_size);
         }
     }
 }
 
 void calculate_total_population(struct Province *prov, struct Population populations[], int populations_num) {
     float total_population = 0;
-    for (int i = 0; i < populations_num; i++) {
-        if (populations[i].province_id == prov->id) {
-            total_population += populations[i].p_size;
+    LOOP(population_index, populations_num) {
+        const struct Population* pop = &populations[population_index];
+        if (pop->province_id == prov->id) {
+            total_population += pop->p_size;
         }
     }
     prov->total_population = total_population;

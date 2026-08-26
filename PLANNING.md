@@ -35,8 +35,21 @@ This system is needed because having the government building and running casinos
 And some governments choose intervene into housing, construction, farming, industry, medical or illicit drugs etc. to a higher extent than others typically do, socialist and communist governments for example.
 Western pro-capitalist governments in the simulation will typically want to avoid building in these industries less, unless the simulation is divergent enough to cause them to do so.
 
-## Simulation features
- - Population happiness.
+## Country AI
+ - Use an array sorted by building type indexes to store the calculated desired building levels.
+ - Countries will calculate the amount of supply produced in item producing buildings and subsequently the level for all buildings to meet demand for all items. 
+ - Governments may mandate to produce items above or below the demand amount if its calculated that they want to do so, and may choose to store surplus. 
+ - For items or services that are high in demand and low in profitability for private businesses the government will have a higher chance of intervening in this industry by constructing buildings providing the type item or service.
+ - Or some governments will construct certain buildings as part of government policy or law, like police stations, hospitals, other government buildings. Though government laws could allow private intervention into these industries.
+
+## Characters
+ - There will only be characters for simulation relevant people like politicians, major militants or rebels and activists. The vast majority of other people in the world are abstracted away in the data and calculations, like in population sizes (though characters are apart of the population size).
+ - I will attempt to assign real life people in these fields as characters in 1950, trying to record their data in the simulation as accurately and fairly as I can.
+ - The most relevant data for characters will be ideologically related, but assigning ideology to some people could be quite debatable and maybe controversial, but I will try keep it as neutral as possible.
+ - The individual votes of the characters in government will determine the passing of laws and shit.
+
+## Economy
+ -  
 
 ## 22 August 2026
  - Add province adjacencies.

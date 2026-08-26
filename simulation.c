@@ -12,10 +12,8 @@
 #include "world_functions.h"
 
 
-void run_simulation(int sim_days, struct Province provinces[], int provinces_num,
-                    struct Country countries[], int countries_num,
-                    struct Population populations[], int populations_num,
-                    struct BuildingType building_types[], struct NaturalResource *nr_types,
+void run_simulation(int sim_days, struct Province provinces[], int provinces_num, struct Country countries[], int countries_num,
+                    struct Population populations[], int populations_num, struct BuildingType building_types[], struct NaturalResource *nr_types,
                     struct WorldTime *world_time) {
     LOOP(day, sim_days) {
         // printf("day: %d, year: %d\n", world_time.day, world_time.year);
@@ -36,7 +34,6 @@ void run_simulation(int sim_days, struct Province provinces[], int provinces_num
             calc_levels_needed_for_produced_item_surplus(p.buildings, p.buildings_size, building_types, p.items);
             take_demand_from_item_supplies(p.buildings, p.buildings_size, building_types, p.items);
 
-            // TODO: Broken, does not produce correct values :( Shoots up to full target values in one year.
             if (provinces[i].urbanisation_rate < provinces[i].target_urbanisation_rate) {
                 provinces[i].urbanisation_rate += provinces[i].urb_tick * 1.5;
             }
@@ -51,7 +48,7 @@ void run_simulation(int sim_days, struct Province provinces[], int provinces_num
             }
         }
         LOOP(country_id, countries_num) {
-            // calc_country_total_population(&countries[country_id], provinces, provinces_num);
+            calc_country_total_population(&countries[country_id], provinces, provinces_num);
         }
         advance_time(world_time);
     }

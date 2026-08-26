@@ -67,6 +67,7 @@ void initialise_temp_province_data(FILE * file, struct Province provinces[], int
 void read_province_data(char *line, struct Province provinces[], int provinces_num);
 void free_provinces(struct Province provinces[], int provinces_num);
 void increase_data_ticks(struct Province prov);
+void calc_country_total_population(struct Country *c, struct Province provinces[], int provinces_num);
 
 // Sim helpers
 void print_province_data(struct Province p[], int provinces_num,

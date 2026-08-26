@@ -29,12 +29,13 @@ void read_unit(const char *line, int index, void *out_struct, void *ctx) {
     u->manpower = manpower;
 }
 
-void print_units_for_province(const int province_id, struct Unit u[], const int units_num) {
+void print_units_for_province(const int province_id, struct Unit units[], const int units_num) {
     printf("    Units:\n");
     LOOP(unit_index, units_num) {
-        if (u[unit_index].province_home_id == province_id) {
+        struct Unit* u = &units[unit_index];
+        if (u->province_home_id == province_id) {
             printf("        UNIT-%d - %d, %d\n",
-                u[unit_index].province_home_id, u[unit_index].owner_country_id, u[unit_index].manpower);
+                u->province_home_id, u->owner_country_id, u->manpower);
         }
     }
 }
