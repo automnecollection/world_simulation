@@ -24,4 +24,7 @@ struct UnitParserCtx {
 // Initialisation
 void read_unit(const char *line, int index, void *out_struct, void *ctx);
 
+// Simulation helpers
+void print_units_for_province(int province_id, struct Unit u[], int units_num);
+
 #endif //WORLD_SIM_UNIT_H

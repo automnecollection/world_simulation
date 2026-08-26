@@ -6,7 +6,7 @@
 #include "province.h"
 #include "read_data.h"
 
-struct Population *read_population(char *line, const int id, struct Province provinces[], int provinces_num) {
+struct Population *readdd_population(char *line, const int id, struct Province provinces[], int provinces_num) {
     if (strstr(line, "#") != NULL) {
         return NULL;
     }

@@ -7,39 +7,33 @@
 
 #include "read_data.h"
 
-struct PopulationList initialise_populations(FILE * file, struct Province provinces[], int provinces_size) {
-    int capacity = 8;
-    char c_line[200];
+void read_population(const char* line, const int index, void* out_struct, void *ctx) {
+    struct Population *p = out_struct;
+    struct PopulationParserCtx *data = ctx;
 
-    struct PopulationList population_list;
-    population_list.populations = malloc(capacity * sizeof *population_list.populations);
-    population_list.populations_num = 0;
+    const char *data_split = strtok(line, "=");
+    char *province_name = malloc(strlen(data_split) + 1);
+    strcpy(province_name, data_split);
+    int province_id = get_province_id_from_name(province_name, data->provinces, data->provinces_num);
 
-    if (file != NULL) {
-        int provinces_num = 0;
-        while (fgets(c_line, 100, file)) {
-            if (provinces_num == capacity) {
-                capacity *= 2;
-                population_list.populations = realloc(
-                    population_list.populations,
-                    capacity * sizeof *population_list.populations);
-            }
-            const struct Population *population = read_population(c_line, provinces_num, provinces, provinces_size);
+    const char *str_p_size = strtok(NULL, ",");
+    const float p_size = strtof(str_p_size, NULL);
+    const int p_size_int = (int)p_size;
 
-            if (population != NULL) {
-                population_list.populations[provinces_num] = *population;
-                provinces_num += 1;
-            }
+    const char *culture_token = strtok(NULL, ",");
+    char *culture = malloc(strlen(culture_token) + 1);
+    strcpy(culture, culture_token);
 
-            free((void*)population);
-        }
-        population_list.populations_num = provinces_num;
-    }
-    else {
-        printf("ERROR: Not able to open the populations file.\n");
-    }
+    const char *religion_token = strtok(NULL, ",");
+    char *religion = malloc(strlen(religion_token) + 1);
+    strcpy(religion, religion_token);
 
-    return population_list;
+    p->id=index;
+    p->province_id=province_id;
+    p->p_size=p_size;
+    p->p_size_int=p_size_int;
+    p->culture=culture;
+    p->religion=religion;
 }
 
 void increase_pop_size(struct Population *pop, const float BASE_BIRTH_RATE) {
@@ -54,9 +48,7 @@ void cmplx_increase_pop_size(struct Population *pop,
     const float growth_rate_factor = calc_growth_factor(urbanisation, college_education, literacy, secularism);
     const float growth_rate = 1.00012f - pow(0.00001 * growth_rate_factor, 1.155);
 
-    const float new_pop_size = pop->p_size * growth_rate;
-    pop->p_size = new_pop_size;
-    pop->p_size_int = (int)new_pop_size;
+    pop->p_size = pop->p_size * growth_rate;
 
     // TODO: Fix so I can store growth rate in provinces, probably just separate calculating growth rate and increasing pop by growth rate
     // provinces[pop->province_id].current_growth_rate = growth_rate;
@@ -91,7 +83,6 @@ void print_populations_for_province(struct Population populations[], const int p
 void calculate_total_population(struct Province *prov, struct Population populations[], int populations_num) {
     float total_population = 0;
     for (int i = 0; i < populations_num; i++) {
-        // printf("size: %f", populations[i]->p_size);
         if (populations[i].province_id == prov->id) {
             total_population += populations[i].p_size;
         }

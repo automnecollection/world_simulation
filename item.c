@@ -13,6 +13,7 @@ void update_item_demand(struct Item items[], struct Population populations[], co
     items[1].demand_amount = 0;
 
     items[3].demand_amount = 0;
+
     LOOP(i, populations_num) {
         if (populations[i].province_id == province_id) {
             // Water - Was * 3.0f

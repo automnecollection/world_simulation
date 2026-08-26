@@ -19,18 +19,18 @@ void read_country(const char* line, const int index, void* out_struct, void *ctx
 
     c->tag = tag;
     c->name = name;
-    c->id = (int)index;
+    c->id = index;
 }
 
 // TODO: Calculate desired level for each building type in all owned provinces
 
 int get_country_id_from_tag(const char * tag, struct Country countries[], const int countries_size) {
-    LOOP(i, countries_size) {
-        if (strcmp(countries[i].tag, tag) == 0) {
-            return countries[i].id;
+    LOOP(country_id, countries_size) {
+        const struct Country* c = &countries[country_id];
+        if (strcmp(c->tag, tag) == 0) {
+            return c->id;
         }
     }
-    printf("why the fuck not?\n");
     return -1;
 }
 

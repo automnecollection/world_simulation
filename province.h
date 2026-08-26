@@ -4,6 +4,7 @@
 #include "country.h"
 #include "natural_resource.h"
 #include "item.h"
+#include "unit.h"
 #include "building_type.h"
 
 struct Province {
@@ -43,14 +44,13 @@ struct Province {
     char populations[];
 };
 
-struct ProvinceList {
-    int provinces_num;
-    struct Province *provinces;
+struct ProvinceParserCtx {
+    struct Country *countries;
+    int countries_num;
 };
 
 // Initialisation
-struct ProvinceList initialise_provinces(FILE * file, const char * provinces_file_loc, struct Country countries[], int countries_num);
-void *read_province(char *line, int id, struct Country countries[], int countries_num, const char * provinces_file_loc);
+void read_province(const char *line, int index, void *out_struct, void *ctx);
 void print_province_population(struct Province prov);
 
 void assign_items(struct Province provinces[], int provinces_num,
@@ -62,7 +62,7 @@ void assign_buildings(struct Province provinces[], int provinces_num,
 // Simulation
 void increase_population(struct Province *prov);
 struct Province detect_country_provinces(struct Province* provinces[], char *province_owner_tag, char *tag, int provinces_num);
-int get_province_id_from_name(const char * name, struct Province provinces[], int provinces_size);
+int get_province_id_from_name(const char * name, struct Province p[], const int provinces_size);
 void initialise_temp_province_data(FILE * file, struct Province provinces[], int provinces_num, int sim_days);
 void read_province_data(char *line, struct Province provinces[], int provinces_num);
 void free_provinces(struct Province provinces[], int provinces_num);
@@ -71,11 +71,10 @@ void increase_data_ticks(struct Province prov);
 // Sim helpers
 void print_province_data(struct Province p[], int provinces_num,
     struct Population populations[], int populations_num,
-    struct BuildingType building_types[]);
-
-void print_province_data_province(struct Province p[], int provinces_num,
+    struct BuildingType building_types[], struct Unit units[], int units_num);
+void print_province(int i, struct Province p[],
     struct Population populations[], int populations_num,
-    struct BuildingType building_types[]);
+    struct BuildingType building_types[], struct Unit units[], int units_num);
 
 int shut_program();
 

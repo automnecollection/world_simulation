@@ -1,3 +1,7 @@
+#pragma once
+#include <string.h>
+#include <stdio.h>
+
 #ifndef WORLD_SIM_STRUCT_LOADER_H
 #define WORLD_SIM_STRUCT_LOADER_H
 

@@ -3,6 +3,6 @@
 
 #include "province.h"
 
-struct Population *read_population(char *line, int id, struct Province provinces[], int provinces_num);
+struct Population *readdd_population(char *line, int id, struct Province provinces[], int provinces_num);
 
 #endif //WORLD_SIM_READ_DATA_H

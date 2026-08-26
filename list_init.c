@@ -5,8 +5,8 @@
 #include "list_init.h"
 
 struct List initialise_list(FILE *file, size_t struct_size, ParserFunc read_func, void *ctx) {
-    int capacity = 8;
-    char line[250];
+    int capacity = 100;
+    char line[1000];
 
     struct List list;
     list.items = malloc(capacity * struct_size);
@@ -14,6 +14,7 @@ struct List initialise_list(FILE *file, size_t struct_size, ParserFunc read_func
 
     if (file != NULL) {
         while (fgets(line, 100, file)) { if (!strstr(line, "#")) {
+                line[strcspn(line, "\n")] = '\0';
                 if (list.items_size == capacity) {
                     capacity *= 2;
                     list.items = realloc(

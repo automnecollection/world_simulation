@@ -41,21 +41,11 @@ int main() {
     strcat(countries_file_loc, "_result");
   }
   strcat(countries_file_loc, FILE_TYPE);
-  if (DEBUG == true) {
-    printf("countries_file_loc: %s\n", countries_file_loc);
-  }
   FILE *countries_file = fopen(countries_file_loc, "r");
 
   struct List countries_list = initialise_list(countries_file, sizeof(struct Country), read_country, NULL);
   struct Country *countries = countries_list.items;
   size_t countries_num = countries_list.items_size;
-
-  if (DEBUG == true) {
-    for (int i = 0; i < countries_num; i++) {
-      printf("COUNTRY-%s - ID: %d, NAME: %s\n",
-        countries[i].tag, countries[i].id, countries[i].name);
-    }
-  }
 
   // Initialise provinces
   char provinces_file_loc[64];
@@ -64,40 +54,36 @@ int main() {
     strcat(provinces_file_loc, "_result");
   }
   strcat(provinces_file_loc, FILE_TYPE);
-  if (DEBUG == true) {
-    printf("provinces_file_loc: %s\n", provinces_file_loc);
-  }
   FILE *provinces_file = fopen(provinces_file_loc, "r");
 
-  const struct ProvinceList province_list = initialise_provinces(provinces_file, countries_file_loc, countries, countries_num);
-  struct Province *provinces = province_list.provinces;
-  int provinces_num = province_list.provinces_num;
+  // const struct ProvinceList province_list = initialise_provinces(provinces_file, countries_file_loc, countries, countries_num);
+  struct ProvinceParserCtx province_ctx = {countries, countries_num};
+  printf("check\n");
+  struct List province_list = initialise_list(provinces_file, sizeof(struct Province), read_province, &province_ctx);
+  printf("check2\n");
+  struct Province *provinces = province_list.items;
+  int provinces_num = province_list.items_size;
+
+  // LOOP(i, provinces_num) {
+  //   printf("%s\n", provinces[i].name);
+  // }
 
   FILE *provinces_data = fopen("province_data.wrld", "r");
 
   initialise_temp_province_data(provinces_data, provinces, provinces_num, SIM_DAYS);
 
+  printf("checken\n");
+
   // Initialise populations
   const char * populations_file_loc = POPULATIONS_FILE;
-  // if (LOAD_FROM_RESULTS == true) {
-  //   populations_file_loc = strcat("result_", populations_file_loc);
-  // }
   FILE *populations_file = fopen(populations_file_loc, "r");
 
-  const struct PopulationList populations_list = initialise_populations(populations_file, provinces, provinces_num);
-  struct Population *populations = populations_list.populations;
-  int populations_num = populations_list.populations_num;
+  struct PopulationParserCtx population_ctx = {provinces, provinces_num};
+  const struct List populations_list = initialise_list(populations_file, sizeof(struct Population), read_population, &population_ctx);
+  struct Population *populations = populations_list.items;
+  int populations_num = populations_list.items_size;
 
-  // Match province and population information
-  // for (int i = 0; i < provinces_num; i++) {
-  //   for (int j = 0; j < populations_num; j++) {
-  //     if (populations[j].province_id == i) {
-  //       // printf("Detected province %s.\n", provinces[i].name);
-  //       provinces[i].populations[provinces[i].populations_num] = populations[populations_num].id;
-  //       provinces[i].populations_num += 1;
-  //     }
-  //   }
-  // }
+  printf("check3\n");
 
   // Initialise building types
   const char * buildings_loc = "buildings.wrld";
@@ -107,10 +93,6 @@ int main() {
   struct BuildingType *building_types = b_types_list.building_types;
   int building_types_num = b_types_list.building_types_num;
 
-  if (DEBUG) {
-    print_province_data(provinces, provinces_num, populations, populations_num, building_types);
-  }
-
   // Initialise natural resources
   const char * natural_resources_loc = "natural_resources.wrld";
   FILE *natural_resources_file = fopen(natural_resources_loc, "r");
@@ -119,13 +101,6 @@ int main() {
   struct NaturalResource *nr_types = nr_list.natural_resources;
   int nr_types_num = nr_list.natural_resources_num;
 
-  if (DEBUG == true) {
-    for (int i = 0; i < nr_types_num; i++) {
-      printf("NATURAL_RESOURCE-%d - NAME: %s, BASE_PRICE: %f\n",
-        nr_types[i].id, nr_types[i].name, nr_types[i].base_price);
-    }
-  }
-
   // Initialise items in building types
   for (int i = 0; i < building_types_num; i++) {
     const int type_id = get_item_type(building_types[i].production_type, nr_types, nr_types_num);
@@ -133,14 +108,6 @@ int main() {
       printf("type_id - %d\n", type_id);
     // }
     building_types[i].production_type_id = type_id;
-  }
-
-  if (DEBUG == true) {
-    for (int i = 0; i < building_types_num; i++) {
-      printf("BUILDING_TYPE-%d - NAME: %s, BASE_PRODUCTION: %s (%d) - %d per day.\n",
-        building_types[i].id, building_types[i].name, building_types[i].production_type,
-        building_types[i].production_type_id, building_types[i].base_production);
-    }
   }
 
   // Initialise items in provinces - assign_items() is from province.c
@@ -158,23 +125,12 @@ int main() {
       provinces[i].target_college_education_rate = DEF_TARGET_COLLEGE_EDU;
       provinces[i].target_literacy_rate = DEF_TARGET_LITERACY;
       provinces[i].target_secularism_rate = DEF_TARGET_SECULARISM;
-
-      provinces[i].urb_tick = (provinces[i].target_urbanisation_rate - provinces[i].urbanisation_rate) / SIM_DAYS;
-      provinces[i].col_tick = (provinces[i].target_college_education_rate - provinces[i].college_education_rate) / SIM_DAYS;
-      provinces[i].lit_tick = (provinces[i].target_literacy_rate - provinces[i].literacy_rate) / SIM_DAYS;
-      provinces[i].sec_tick = (provinces[i].target_secularism_rate - provinces[i].secularism_rate) / SIM_DAYS;
     }
-  }
 
-  if (DEBUG) {
-    LOOP(i, provinces_num) {
-      printf("PROVINCE %s ITEMS:\n",
-          provinces[i].name);
-      LOOP(j, provinces[i].items_num) {
-        printf("  ITEMS-%d - NAME: %s, DEMAND: %f, SUPPLY: %f\n",
-          provinces[i].items[j].item_id, provinces[i].items[j].name, provinces[i].items[j].demand_amount, provinces[i].items[j].supply_amount);
-      }
-    }
+    provinces[i].urb_tick = (provinces[i].target_urbanisation_rate - provinces[i].urbanisation_rate) / 27740;
+    provinces[i].col_tick = (provinces[i].target_college_education_rate - provinces[i].college_education_rate) / 27740;
+    provinces[i].lit_tick = (provinces[i].target_literacy_rate - provinces[i].literacy_rate) / 27740;
+    provinces[i].sec_tick = (provinces[i].target_secularism_rate - provinces[i].secularism_rate) / 27740;
   }
 
   // Initialise province buildings
@@ -207,6 +163,37 @@ int main() {
   const clock_t load_end = clock();
   const double load_time_spent = (double)(load_end - load_begin) / CLOCKS_PER_SEC;
 
+  if (DEBUG) {
+    printf("countries_file_loc: %s\n", countries_file_loc);
+
+    for (int i = 0; i < countries_num; i++) {
+      printf("COUNTRY-%s - ID: %d, NAME: %s\n",
+        countries[i].tag, countries[i].id, countries[i].name);
+    }
+
+    printf("provinces_file_loc: %s\n", provinces_file_loc);
+
+    for (int i = 0; i < nr_types_num; i++) {
+      printf("NATURAL_RESOURCE-%d - NAME: %s, BASE_PRICE: %f\n",
+        nr_types[i].id, nr_types[i].name, nr_types[i].base_price);
+    }
+
+    for (int i = 0; i < building_types_num; i++) {
+      printf("BUILDING_TYPE-%d - NAME: %s, BASE_PRODUCTION: %s (%d) - %d per day.\n",
+        building_types[i].id, building_types[i].name, building_types[i].production_type,
+        building_types[i].production_type_id, building_types[i].base_production);
+    }
+
+    LOOP(i, provinces_num) {
+      printf("PROVINCE %s ITEMS:\n",
+          provinces[i].name);
+      LOOP(j, provinces[i].items_num) {
+        printf("  ITEMS-%d - NAME: %s, DEMAND: %f, SUPPLY: %f\n",
+          provinces[i].items[j].item_id, provinces[i].items[j].name, provinces[i].items[j].demand_amount, provinces[i].items[j].supply_amount);
+      }
+    }
+  }
+
   const clock_t sim_begin = clock();
 
   // Run simulation
@@ -214,10 +201,7 @@ int main() {
 
   run_simulation(
     sim_days,
-    provinces, provinces_num,
-    countries, countries_num,
-    populations, populations_num,
-    building_types, nr_types,
+    provinces, provinces_num, countries, countries_num, populations, populations_num, building_types, nr_types,
     &world_time
     );
 
@@ -227,7 +211,7 @@ int main() {
   // Print simulation results
   printf("AFTER %d DAYS\n", sim_days);
   printf("Day %d, year %d.\n", world_time.day, world_time.year);
-  print_province_data(provinces, provinces_num, populations, populations_num, building_types);
+  print_province_data(provinces, provinces_num, populations, populations_num, building_types, units, units_num);
 
   // Save world data to .wrld file
   const clock_t save_begin = clock();

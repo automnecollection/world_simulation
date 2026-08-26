@@ -21,17 +21,21 @@ struct PopulationList {
     struct Population *populations;
 };
 
-struct PopulationList initialise_populations(FILE * file, struct Province *provinces, int provinces_size);
+struct PopulationParserCtx {
+    struct Province *provinces;
+    int provinces_num;
+};
+
+// Initialisation
+void read_population(const char* line, int index, void* out_struct, void *ctx);
 void free_the_people(struct Population populations[], int populations_num);
 void print_populations_for_province(struct Population populations[], int populations_num, int province_id);
 float calc_growth_factor(float urb, float col, float lit, float sec);
 
-// SIMULATION
+// Simulation
 void increase_pop_size(struct Population *pop, float base_birth_rate);
-
 void cmplx_increase_pop_size(struct Population *pop,
     float urbanisation, float college_education, float literacy, float secularism);
-
 void calculate_total_population(struct Province *prov, struct Population populations[], int populations_num);
 
 #endif //WORLD_SIM_POPULATION_H

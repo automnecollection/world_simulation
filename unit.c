@@ -20,7 +20,21 @@ void read_unit(const char *line, int index, void *out_struct, void *ctx) {
     strcpy(province_name, province_name_token);
     int province_id = get_province_id_from_name(province_name, data->provinces, data->provinces_num);
 
+    const char *str_manpower = NEXT_TOKEN(",");
+    const int manpower = STR_INT(str_manpower);
+
     u->index = index;
     u->owner_country_id = owner_country_id;
     u->province_home_id = province_id;
+    u->manpower = manpower;
+}
+
+void print_units_for_province(const int province_id, struct Unit u[], const int units_num) {
+    printf("    Units:\n");
+    LOOP(unit_index, units_num) {
+        if (u[unit_index].province_home_id == province_id) {
+            printf("        UNIT-%d - %d, %d\n",
+                u[unit_index].province_home_id, u[unit_index].owner_country_id, u[unit_index].manpower);
+        }
+    }
 }

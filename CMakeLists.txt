@@ -38,6 +38,7 @@ add_executable(
         list_init.c
         unit.c
         unit.h
+        list_init.c
 )
 
 # Request assembly output generation (-S) and use readable Intel syntax

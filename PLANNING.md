@@ -34,3 +34,10 @@ Somehow have a system where building types will have a calculation of whether a 
 This system is needed because having the government building and running casinos and other types of buildings would be strange typically.
 And some governments choose intervene into housing, construction, farming, industry, medical or illicit drugs etc. to a higher extent than others typically do, socialist and communist governments for example.
 Western pro-capitalist governments in the simulation will typically want to avoid building in these industries less, unless the simulation is divergent enough to cause them to do so.
+
+## Simulation features
+ - Population happiness.
+
+## 22 August 2026
+ - Add province adjacencies.
+ - Code random unit province movement.

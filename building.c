@@ -90,14 +90,14 @@ void update_buildings(struct Building buildings[], const int buildings_num, stru
 void calc_levels_needed_for_produced_item_surplus(struct Building buildings[], const int buildings_num, struct BuildingType building_types[],
     struct Item items[]) {
     LOOP(i, buildings_num) {
-        const struct BuildingType* building_type = &building_types[buildings[i].id];
-        if (buildings[i].level > 0) { if (building_type->production_type_id != -1) {
-                const struct Item* item = &items[building_type->production_type_id];
+        const struct BuildingType* b_type = &building_types[buildings[i].id];
+        if (buildings[i].level > 0) { if (b_type->production_type_id != -1) {
+                const struct Item* item = &items[b_type->production_type_id];
                 if (item->supply_amount > item->demand_amount) {
                     buildings[i].levels_for_surplus = 0.0f;
                 }
                 else {
-                    buildings[i].levels_for_surplus = fabsf(item->supply_min_demand)/building_type->base_production;
+                    buildings[i].levels_for_surplus = fabsf(item->supply_min_demand)/b_type->base_production;
                 }
             }
         }
