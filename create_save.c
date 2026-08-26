@@ -35,15 +35,16 @@ void save_world(
 
     FILE *provinces_result = fopen("provinces_result.wrld", "w");
     LOOP(i, provinces_num) {
-        fprintf(provinces_result, "%s=%d,%s,%s,None\n",
-            provinces[i].name, provinces[i].owner_country_id, provinces[i].terrain, provinces[i].climate);
+        fprintf(provinces_result, "%s=%s,%s,%s,%f\n",
+            provinces[i].name, provinces[i].owner_country_tag, provinces[i].terrain, provinces[i].climate,
+            provinces[i].total_population);
     }
     fclose(provinces_result);
 
     FILE *populations_result = fopen("populations_result.wrld", "w");
     LOOP(i, populations_num) {
-        fprintf(populations_result, "%d,%d,%s,%s,None\n",
-            populations[i].province_id, populations[i].p_size_int, populations[i].culture, populations[i].religion);
+        fprintf(populations_result, "%s=%f,%s,%s\n",
+            provinces[populations[i].province_id].name, populations[i].p_size, populations[i].culture, populations[i].religion);
     }
     fclose(populations_result);
 

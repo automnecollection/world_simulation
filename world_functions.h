@@ -4,6 +4,8 @@
 struct WorldTime {
     int day;
     int year;
+
+    int start_year;
 };
 
 void advance_time(struct WorldTime *world_time);
