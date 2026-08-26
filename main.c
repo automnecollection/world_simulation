@@ -218,7 +218,7 @@ int main() {
   const clock_t save_begin = clock();
 
   save_world(
-      countries, countries_num, provinces, provinces_num, populations, populations_num, building_types, building_types_num
+      countries, countries_num, provinces, provinces_num, populations, populations_num, building_types, building_types_num, &world_time
       );
 
   const clock_t save_end = clock();

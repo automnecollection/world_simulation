@@ -20,6 +20,8 @@ struct Country {
     char * tag;
     int provinces_num;
     float total_population;
+
+    float start_total_population;
 };
 
 // Initialisation

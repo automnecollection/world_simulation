@@ -15,6 +15,17 @@
 void run_simulation(int sim_days, struct Province provinces[], int provinces_num, struct Country countries[], int countries_num,
                     struct Population populations[], int populations_num, struct BuildingType building_types[], struct NaturalResource *nr_types,
                     struct WorldTime *world_time) {
+    world_time->start_year = world_time->year;
+
+    LOOP(province_index, provinces_num) {
+        calculate_total_population(&provinces[province_index], populations, populations_num);
+        provinces[province_index].start_total_population = provinces[province_index].total_population;
+    }
+    LOOP(country_index, provinces_num) {
+        calc_country_total_population(&countries[country_index], provinces, provinces_num);
+        countries[country_index].start_total_population = countries[country_index].total_population;
+    }
+
     LOOP(day, sim_days) {
         // printf("day: %d, year: %d\n", world_time.day, world_time.year);
         LOOP(i, populations_num) {

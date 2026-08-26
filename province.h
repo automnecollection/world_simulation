@@ -22,6 +22,8 @@ struct Province {
     struct Building *buildings;
     int buildings_size;
 
+    float start_total_population;
+
     bool has_start_data;
     float urbanisation_rate;
     float college_education_rate;

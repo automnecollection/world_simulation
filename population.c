@@ -94,4 +94,3 @@ void calculate_total_population(struct Province *prov, struct Population populat
     prov->total_population = total_population;
     prov->total_population_int = (int)total_population;
 }
-

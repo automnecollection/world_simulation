@@ -4,7 +4,7 @@ from dataclasses import dataclass
 class Country:
     tag: str
     name: str
-    total_population: int
+    total_population: dict
 
 @dataclass
 class Province:
@@ -37,14 +37,14 @@ def read_country(country_line: str):
     tag = data[0]
     name = data[1].split(",")[0].strip("\n")
 
-    country = Country(tag=tag, name=name, total_population=0)
+    country = Country(tag=tag, name=name, total_population={})
     return country
 
 def init_country_data(wlrd_file: str, current_dir, country_list):
     file_location = current_dir.parent / "cmake-build-release" / wlrd_file
     file = open(file_location, "r")
     for line in file:
-        if line.startswith("#"):
+        if line.__contains__("#"):
             continue
         for country in country_list:
             if line.split("=")[0] == country.tag:
@@ -52,4 +52,6 @@ def init_country_data(wlrd_file: str, current_dir, country_list):
     return country_list
 
 def read_country_data(country, data):
-    country.total_population = data.strip("\n").strip(".000000")
+    data = data.split(",")
+    country.total_population.update({data[0].split(":")[0]: data[0].split(":")[1].strip("\n")})
+    country.total_population.update({data[1].split(":")[0]: data[1].split(":")[1].strip("\n")})
