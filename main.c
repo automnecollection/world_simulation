@@ -211,16 +211,15 @@ int main() {
   // Print simulation results
   printf("AFTER %d DAYS\n", sim_days);
   printf("Day %d, year %d.\n", world_time.day, world_time.year);
-  print_province_data(provinces, provinces_num, populations, populations_num, building_types, units, units_num);
+  // print_province_data(provinces, provinces_num, populations, populations_num, building_types, units, units_num);
+  print_province(0, provinces, populations, populations_num, building_types, units, units_num);
 
   // Save world data to .wrld file
   const clock_t save_begin = clock();
 
-  if (SAVE_WORLD) {
-    save_world(
+  save_world(
       countries, countries_num, provinces, provinces_num, populations, populations_num, building_types, building_types_num
       );
-  }
 
   const clock_t save_end = clock();
   const double save_time_spent = (double)(save_end - save_begin) / CLOCKS_PER_SEC;

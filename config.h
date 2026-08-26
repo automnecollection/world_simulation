@@ -3,7 +3,7 @@
 
 // General settings
     #define DEBUG                       false
-    #define SAVE_WORLD                  false
+    #define SAVE_WORLD                  true
 
 // Simulation parameters
     #define LOAD_FROM_RESULTS           false
