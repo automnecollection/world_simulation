@@ -58,5 +58,5 @@ AFG=name:Afghanistan,total_population:{},pop_percent_increase:0,real_total_popul
 HAI=name:Haiti,total_population:{},pop_percent_increase:0,real_total_population:{},real_pop_percent_increase:0,real_accuracy:0
 AZE=name:Azerbaijan,total_population:{},pop_percent_increase:0,real_total_population:{},real_pop_percent_increase:0,real_accuracy:0
 BOL=name:Bolivia,total_population:{},pop_percent_increase:0,real_total_population:{},real_pop_percent_increase:0,real_accuracy:0
-GUA=name:Guatemala,total_population:{},pop_percent_increase:0,real_total_population:{},real_pop_percent_increase:0,real_accuracy:0
+GUA=name:uat,total_population:{},pop_percent_increase:0,real_total_population:{},real_pop_percent_increase:0,real_accuracy:0
 GUI=name:Guinea,total_population:{},pop_percent_increase:0,real_total_population:{},real_pop_percent_increase:0,real_accuracy:0

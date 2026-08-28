@@ -6,8 +6,8 @@ Portugal,target=61,43,96,90,NONE
 Japan,start=50,10,70,25,NONE
 Japan,target=93,60,99,65,NONE
 # America
-America,start=64,6,95,15,NONE
-America,target=80,38,100,54,NONE
+United_States_of_America,start=64,6,95,15,NONE
+United_States_of_America,target=80,38,100,54,NONE
 # Australia
 Australia,start=77,2,95,1,NONE
 Australia,target=87,51,100,43,NONE

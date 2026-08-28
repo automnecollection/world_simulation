@@ -28,16 +28,30 @@ void run_simulation(int sim_days, struct Province provinces[], int provinces_num
 
     LOOP(day, sim_days) {
         // printf("day: %d, year: %d\n", world_time.day, world_time.year);
+        /*
+            POPULATION TICK DESCRIPTION
+            Calculate increase of every population group based off province statistics like urbanisation, literacy etc.
+
+        */
         LOOP(i, populations_num) {
             cmplx_increase_pop_size(&populations[i],
               provinces[populations[i].province_id].urbanisation_rate, provinces[populations[i].province_id].college_education_rate,
               provinces[populations[i].province_id].literacy_rate, provinces[populations[i].province_id].secularism_rate
               );
         }
-        LOOP(i, provinces_num) {
-            struct Province p = provinces[i];
+        /*
+            PROVINCE TICK DESCRIPTION
+            Calculate total population of province from sizes populations located in province.
+            Calculate demand for all items from province populations statistics.
+            Calculate stats related to item demand and supply, including cost and levels required to get an item surplus.
+            Populations will buy items, decreasing supply of the items and adding it to active use.
+            Some demands / items will be used quickly like water, food and electricity while other goods like computers, furniture, housing will be used for a long time.
 
-            calculate_total_population(&provinces[i], populations, populations_num);
+        */
+        LOOP(p_index, provinces_num) {
+            struct Province p = provinces[p_index];
+
+            calculate_total_population(&provinces[p_index], populations, populations_num);
             update_item_demand(p.items, populations, populations_num, p.id);
             update_buildings(p.buildings, p.buildings_size, building_types, p.items);
             calc_item_surplus_or_deficit(p.items, p.items_num);
@@ -45,19 +59,27 @@ void run_simulation(int sim_days, struct Province provinces[], int provinces_num
             calc_levels_needed_for_produced_item_surplus(p.buildings, p.buildings_size, building_types, p.items);
             take_demand_from_item_supplies(p.buildings, p.buildings_size, building_types, p.items);
 
-            if (provinces[i].urbanisation_rate < provinces[i].target_urbanisation_rate) {
-                provinces[i].urbanisation_rate += provinces[i].urb_tick * 1.5;
+            if (provinces[p_index].urbanisation_rate < provinces[p_index].target_urbanisation_rate) {
+                provinces[p_index].urbanisation_rate += provinces[p_index].urb_tick * 1.5;
             }
-            if (provinces[i].college_education_rate < provinces[i].target_college_education_rate) {
-                provinces[i].college_education_rate += provinces[i].col_tick * 1.5;
+            if (provinces[p_index].college_education_rate < provinces[p_index].target_college_education_rate) {
+                provinces[p_index].college_education_rate += provinces[p_index].col_tick * 1.5;
             }
-            if (provinces[i].literacy_rate < provinces[i].target_literacy_rate) {
-                provinces[i].literacy_rate += provinces[i].lit_tick * 1.5;
+            if (provinces[p_index].literacy_rate < provinces[p_index].target_literacy_rate) {
+                provinces[p_index].literacy_rate += provinces[p_index].lit_tick * 1.5;
             }
-            if (provinces[i].secularism_rate < provinces[i].target_secularism_rate) {
-                provinces[i].secularism_rate += provinces[i].sec_tick * 1.5;
+            if (provinces[p_index].secularism_rate < provinces[p_index].target_secularism_rate) {
+                provinces[p_index].secularism_rate += provinces[p_index].sec_tick * 1.5;
             }
         }
+        /*
+            COUNTRY TICK DESCRIPTION
+            Calculate total population of country from province total populations.
+
+            TODO: Add simple country AI.
+            Countries will determine what buildings / infrastructure they want to build, allocating money.
+            Countries will have relations with other countries. Countries will be able to go to war.
+        */
         LOOP(country_id, countries_num) {
             calc_country_total_population(&countries[country_id], provinces, provinces_num);
         }

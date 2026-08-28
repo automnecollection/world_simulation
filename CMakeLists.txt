@@ -39,6 +39,8 @@ add_executable(
         unit.c
         unit.h
         list_init.c
+        create_save_json.c
+        create_save_json.h
 )
 
 # Request assembly output generation (-S) and use readable Intel syntax

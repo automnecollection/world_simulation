@@ -1,5 +1,7 @@
 #include <stdio.h>
 
+#include "create_save.h"
+
 #include "country.h"
 #include "province.h"
 #include "population.h"
@@ -34,10 +36,10 @@ void save_world(
     fclose(countries_data_result);
 
     FILE *provinces_result = fopen("../wrld_files/provinces_result.wrld", "w");
-    LOOP(i, provinces_num) {
+    LOOP(province_index, provinces_num) {
         fprintf(provinces_result, "%s=%s,%s,%s,%f\n",
-            provinces[i].name, provinces[i].owner_country_tag, provinces[i].terrain, provinces[i].climate,
-            provinces[i].total_population);
+            provinces[province_index].name, provinces[province_index].owner_country_tag, provinces[province_index].terrain, provinces[province_index].climate,
+            provinces[province_index].total_population);
     }
     fclose(provinces_result);
 

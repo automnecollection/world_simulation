@@ -9,6 +9,7 @@
 #include "simulation.h"
 #include "list_init.h"
 #include "create_save.h"
+#include "create_save_json.h"
 
 #include "building.h"
 #include "world.h"
@@ -49,9 +50,7 @@ int main()
 
   // const struct ProvinceList province_list = initialise_provinces(provinces_file, countries_file_loc, countries, countries_num);
   struct ProvinceParserCtx province_ctx = {countries, countries_num};
-  printf("check\n");
   struct List province_list = initialise_list(provinces_file, sizeof(struct Province), read_province, &province_ctx);
-  printf("check2\n");
   struct Province *provinces = province_list.items;
   int provinces_num = province_list.items_size;
 
@@ -189,7 +188,7 @@ int main()
   // Save world data to .wrld file
   const clock_t save_begin = clock();
 
-  save_world(
+  save_world_json(
       countries, countries_num, provinces, provinces_num, populations, populations_num, building_types, building_types_num, &world_time
       );
 

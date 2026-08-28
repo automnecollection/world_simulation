@@ -28,7 +28,7 @@ class Population:
     size: str
     culture: str
     religion: str
-7
+
 def parse_list(wrld_file, read_func, **kwargs):
     parsed_objects = []
     file = open(wrld_file, "r")
@@ -139,11 +139,12 @@ def read_population(population_line: str, provinces):
     if population_line == "":
         return None
     data = population_line.split("=")
-    province_name = data[1].split(",")[0].strip("\n")
+    fields = data[1].split(",")
+    province_name = fields[0].strip("\n")
     province = get_list_obj_from_str(obj_list=provinces, var="tag", str_line=province_name)
-    size = data[1].split(",")[0].strip("\n")
-    culture = data[1].split(",")[1].strip("\n")
-    religion = data[1].split(",")[2].strip("\n")
+    size = fields[1].strip("\n")
+    culture = fields[2].strip("\n")
+    religion = fields[3].strip("\n")
 
     population = Population(
         province=province,
