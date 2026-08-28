@@ -8,9 +8,9 @@
 // Simulation parameters
     #define LOAD_FROM_RESULTS           false
     #define FILE_TYPE                   ".wrld"                //
-    #define COUNTRIES_FILE              "countries"            //
-    #define PROVINCES_FILE              "provinces"            //
-    #define POPULATIONS_FILE            "populations.wrld"     //
+    #define COUNTRIES_FILE              "../wrld_files/countries.wrld"            //
+    #define PROVINCES_FILE              "../wrld_files/provinces.wrld"            //
+    #define POPULATIONS_FILE            "../wrld_files/populations.wrld"     //
 
     #define DAY                         1                      // Starting day of year (1-365)
     #define YEAR                        1950                   // Starting year, the sim will be designed around starting in 1950

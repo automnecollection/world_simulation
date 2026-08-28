@@ -14,17 +14,17 @@ void save_world(
     struct BuildingType building_types[], int building_types_num,
     const struct WorldTime *world_time) {
 
-    FILE *country_result = fopen("countries_result.wrld", "w");
+    FILE *country_result = fopen("../wrld_files/countries_result.wrld", "w");
     if (country_result == NULL) {
         perror("Error opening file country result\n");
     }
     LOOP(i, countries_num) {
-        fprintf(country_result, "%s=%s\n",
+        fprintf(country_result, "%s=name:%s,total_population:{},pop_percent_increase:0,real_total_population:{},real_pop_percent_increase:0,real_accuracy:0\n",
             countries[i].tag, countries[i].name);
     }
     fclose(country_result);
 
-    FILE *countries_data_result = fopen("countries_data_result.wrld", "w");
+    FILE *countries_data_result = fopen("../wrld_files/countries_data_result.wrld", "w");
     LOOP(i, countries_num) {
         fprintf(countries_data_result, "%s=%d:%f,%d:%f\n",
             countries[i].tag,
@@ -33,7 +33,7 @@ void save_world(
     }
     fclose(countries_data_result);
 
-    FILE *provinces_result = fopen("provinces_result.wrld", "w");
+    FILE *provinces_result = fopen("../wrld_files/provinces_result.wrld", "w");
     LOOP(i, provinces_num) {
         fprintf(provinces_result, "%s=%s,%s,%s,%f\n",
             provinces[i].name, provinces[i].owner_country_tag, provinces[i].terrain, provinces[i].climate,
@@ -41,14 +41,16 @@ void save_world(
     }
     fclose(provinces_result);
 
-    FILE *populations_result = fopen("populations_result.wrld", "w");
+    FILE *populations_result = fopen("../wrld_files/populations_result.wrld", "w");
+    int index = 0;
     LOOP(i, populations_num) {
-        fprintf(populations_result, "%s=%f,%s,%s\n",
-            provinces[populations[i].province_id].name, populations[i].p_size, populations[i].culture, populations[i].religion);
+        fprintf(populations_result, "%d=%s,%f,%s,%s\n",
+            index, provinces[populations[i].province_id].name, populations[i].p_size, populations[i].culture, populations[i].religion);
+        index++;
     }
     fclose(populations_result);
 
-    FILE *buildings_result = fopen("buildings_result.wrld", "w");
+    FILE *buildings_result = fopen("../wrld_files/buildings_result.wrld", "w");
     LOOP(i, building_types_num) {
         fprintf(buildings_result, "%s=%s,%d,None\n",
             building_types[i].name, building_types[i].production_type, building_types[i].base_production);

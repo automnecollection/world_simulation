@@ -23,7 +23,8 @@
 
 // Get-ChildItem -Recurse -Include *.c,*.h | ForEach-Object { "{0}: {1}" -f $_.Name, (Get-Content $_).Count }
 
-int main() {
+int main()
+{
   const clock_t load_begin = clock();
 
   struct World world;
@@ -35,12 +36,7 @@ int main() {
   printf("Day %d, year %d.\n", world_time.day, world_time.year);
 
   // Initialise countries
-  char countries_file_loc[64];
-  strcpy(countries_file_loc, COUNTRIES_FILE);
-  if (LOAD_FROM_RESULTS == true) {
-    strcat(countries_file_loc, "_result");
-  }
-  strcat(countries_file_loc, FILE_TYPE);
+  const char * countries_file_loc = "../wrld_files/countries.wrld";
   FILE *countries_file = fopen(countries_file_loc, "r");
 
   struct List countries_list = initialise_list(countries_file, sizeof(struct Country), read_country, NULL);
@@ -48,12 +44,7 @@ int main() {
   size_t countries_num = countries_list.items_size;
 
   // Initialise provinces
-  char provinces_file_loc[64];
-  strcpy(provinces_file_loc,PROVINCES_FILE);
-  if (LOAD_FROM_RESULTS == true) {
-    strcat(provinces_file_loc, "_result");
-  }
-  strcat(provinces_file_loc, FILE_TYPE);
+  const char * provinces_file_loc = "../wrld_files/provinces.wrld";
   FILE *provinces_file = fopen(provinces_file_loc, "r");
 
   // const struct ProvinceList province_list = initialise_provinces(provinces_file, countries_file_loc, countries, countries_num);
@@ -64,15 +55,9 @@ int main() {
   struct Province *provinces = province_list.items;
   int provinces_num = province_list.items_size;
 
-  // LOOP(i, provinces_num) {
-  //   printf("%s\n", provinces[i].name);
-  // }
-
-  FILE *provinces_data = fopen("province_data.wrld", "r");
+  FILE *provinces_data = fopen("../wrld_files/province_data.wrld", "r");
 
   initialise_temp_province_data(provinces_data, provinces, provinces_num, SIM_DAYS);
-
-  printf("checken\n");
 
   // Initialise populations
   const char * populations_file_loc = POPULATIONS_FILE;
@@ -83,10 +68,8 @@ int main() {
   struct Population *populations = populations_list.items;
   int populations_num = populations_list.items_size;
 
-  printf("check3\n");
-
   // Initialise building types
-  const char * buildings_loc = "buildings.wrld";
+  const char * buildings_loc = "../wrld_files/buildings.wrld";
   FILE *buildings_file = fopen(buildings_loc, "r");
 
   const struct BuildingTypesList b_types_list = initialise_building_types(buildings_file);
@@ -94,7 +77,7 @@ int main() {
   int building_types_num = b_types_list.building_types_num;
 
   // Initialise natural resources
-  const char * natural_resources_loc = "natural_resources.wrld";
+  const char * natural_resources_loc = "../wrld_files/natural_resources.wrld";
   FILE *natural_resources_file = fopen(natural_resources_loc, "r");
 
   const struct NaturalResourcesList nr_list = initialise_nr(natural_resources_file);
@@ -105,7 +88,7 @@ int main() {
   for (int i = 0; i < building_types_num; i++) {
     const int type_id = get_item_type(building_types[i].production_type, nr_types, nr_types_num);
     // if (DEBUG == true) {
-      printf("type_id - %d\n", type_id);
+    printf("type_id - %d\n", type_id);
     // }
     building_types[i].production_type_id = type_id;
   }
@@ -134,25 +117,14 @@ int main() {
   }
 
   // Initialise province buildings
-  const char * p_buildings_loc = "province_buildings.wrld";
-  // strcat(p_buildings_loc, FILE_TYPE);
+  const char * p_buildings_loc = "../wrld_files/province_buildings.wrld";
   FILE *p_buildings_file = fopen(p_buildings_loc, "r");
 
   assign_buildings(provinces, provinces_num, building_types, building_types_num);
   initialise_building_data(p_buildings_file, provinces, provinces_num, building_types, building_types_num);
 
-  LOOP(i, provinces_num) {
-    LOOP(j, building_types_num) {
-      if (provinces[i].buildings[j].level > 0) {
-        printf("province - %s, name - %s, type_id - %d, level - %d\n",
-          provinces[i].name, building_types[provinces[i].buildings[j].id].name,
-          provinces[i].buildings[j].id, provinces[i].buildings[j].level);
-      }
-    }
-  }
-
   // Initialise units
-  const char * units_loc = "units.wrld";
+  const char * units_loc = "../wrld_files/units.wrld";
   FILE *units_file = fopen(units_loc, "r");
 
   struct UnitParserCtx unit_ctx = {countries, countries_num, provinces, provinces_num};
