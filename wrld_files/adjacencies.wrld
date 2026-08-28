@@ -1,0 +1,15 @@
+# France
+France=West_Germany
+# China
+China=India
+# India
+India=China
+# Russia
+Russia=Siberia
+Siberia=Russia
+# United_Kingdom
+# Japan
+# Iran
+# Transjordan
+Jordan=West_Bank
+West_Bank=Jordan

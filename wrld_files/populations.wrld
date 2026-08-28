@@ -1,0 +1,227 @@
+# province_tag,size,culture,religion,NONE
+# France 
+# 41,883,119 population
+France=41883119,French,Catholic_Christianity,NONE
+# Iran
+# 16,510,553 population
+Iran=16510553,Iranian,Shia_Islam,NONE
+# Transjordan
+# 438,800 population
+Jordan=438800,Jordanian,Sunni_Islam,NONE
+# West_Bank - 764,900 people
+West_Bank=688000,Palestinian,Sunni_Islam,NONE
+West_Bank=76000,Palestinian,Orthodox_Christianity,NONE
+# China
+China=554000000,Chinese,Buddhism,NONE
+# India
+India=376000000,Indian,Buddhism,NONE
+# Russia - Total population of Russia 103.39 mil, 10 mil in siberia
+# Mainland Russia
+Russia=93390000,Russian,Orthodox_Christianity,NONE
+# Siberia
+Siberia=10000000,Siberian,Orthodox_Christianity,NONE
+# United_Kingdom
+United_Kingdom=50120000,English,Protestant_Christianity,NONE
+# Japan
+Japan=86440000,Japanese,Buddhism,NONE
+# ISRAEL RANDOM
+Israel=1500000,Israeli,Judaism,NONE
+# GAZA RANDOM
+Gaza=240000,Palestinian,Sunni_Islam,NONE
+# NEW YORK RANDOM
+New_York=3612000,American,Protestant_Christianity,NONE
+# Syria
+Syria=3612000,Syrian,Sunni_Islam,NONE
+# Victoria 
+# 2.04 million
+# 	- 0.1% Indigenous
+Victoria=2037960,Australian,Protestant_Christianity,NONE
+Victoria=2040,Aboriginal,Protestant_Christianity,NONE
+# New_South_Wales
+# 2.76 million
+# 	- 1% Indigenous
+New_South_Wales=2732400,Australian,Protestant_Christianity,NONE
+New_South_Wales=27600,Aboriginal,Protestant_Christianity,NONE
+# Queensland
+# 1.50 million
+# 	- 4% Indigenous
+Queensland=1440000,Australian,Protestant_Christianity,NONE
+Queensland=60000,Aboriginal,Protestant_Christianity,NONE
+# Western_Australia
+# 0.79 million
+# 	- 4% Indigenous
+Western_Australia=758400,Australian,Protestant_Christianity,NONE
+Western_Australia=31600,Aboriginal,Protestant_Christianity,NONE
+# South_Australia_Mediterranean
+# 80% population of south aus (random number) = 528,000
+# 528,000
+# 	- 1% Indigenous
+South_Australia_Mediterranean=522720,Australian,Protestant_Christianity,NONE
+South_Australia_Mediterranean=5280,Aboriginal,Protestant_Christianity,NONE
+# South_Australia_Desert
+# 132,000
+# 	- 1% Indigenous
+South_Australia_Desert=130680,Australian,Protestant_Christianity,None
+South_Australia_Desert=1320,Aboriginal,Protestant_Christianity,None
+# Tasmania
+# 0.21 million
+# 	- 0.1% Indigenous
+Tasmania=209790,Australian,Protestant_Christianity,None
+Tasmania=210,Aboriginal,Protestant_Christianity,None
+# RANDOM
+Northern_Territory=300000,Australian,Protestant_Christianity,None
+# Chad
+Chad=2500000,Chadian,Protestant_Christianity,None
+# North Korea
+# 11100000
+North_Korea=10000000,Korean,Buddhism,NONE
+# South Korea
+South_Korea=20100000,Korean,Buddhism,NONE
+# Cuba
+Cuba=5920000,Cuban,Orthodox_Christianity,NONE
+# United_States_of_America
+United_States_of_America=151300000,American,Protestant_Christianity,NONE
+Samoa=88280,Samoan,Samoan,NONE
+# Mongolia
+Mongolia=781697,Mongolian,Buddhism,NONE
+# Tunisia 
+Tunisia=3608985,Tunisian,Sunni_Islam,NONE
+# Portugal
+Portugal=8418876,Portuguese,Catholic_Christianity,NONE
+# Netherlands
+Netherlands=10110000,Dutch,Catholic_Christianity,NONE
+# Lebanon - 60 christian, 40 shia
+Lebanon=810000,Lebanese,Maronite_Christianity,NONE
+Lebanon=540000,Lebanese,Shia_Islam,NONE
+# Sweden
+Sweden=7016566,Swedish,Protestant_Christianity,NONE
+# Norway
+Norway=3280000,Norwegians,Protestant_Christianity,NONE
+# Indonesia
+Indonesia=69500000,Indonesian,Shia_Islam,NONE
+# West Germany
+# 30% catholic, 70% protestant
+# 50,958,000 total
+# 24 + 43 + 33 = 
+# ~24% population - 12,229,920
+North_Germany=8560944,German,Protestant_Christianity,NONE
+North_Germany=3668976,German,Catholic_Christianity,NONE
+# 43% population - 21,911,940
+Central_Germany=15338358,German,Protestant_Christianity,NONE
+Central_Germany=6573582,German,Catholic_Christianity,NONE
+# ~33% population - 16,816,140
+South_Germany=11771298,German,Protestant_Christianity,NONE
+South_Germany=5044842,German,Catholic_Christianity,NONE
+# East Germany
+# 18,390,000 million people
+East_Germany=12873000,German,Protestant_Christianity,NONE
+East_Germany=5517000,German,Catholic_Christianity,NONE
+# Brazil
+# 53,408,551 population
+# 3.8 million in amazon
+# 100% catholic for now
+Main_Brazil=49608551,Brazilian,Catholic_Christianity,NONE
+Amazon_Rainforest=3800000,Brazilian,Catholic_Christianity,NONE
+# Bangladesh
+# 41,206,856 population
+Bangladesh=41206856,Bangladeshi,Sunni_Islam,NONE
+# Ukraine
+# 37,310,887 population
+# 72 % eastern orthodox
+# 13 % greek catholic
+# 15 % atheist for now
+Ukraine=26863838,Ukrainian,Orthodox_Christianity,NONE
+Ukraine=5596633,Ukrainian,Atheist,NONE
+Ukraine=4850415,Ukrainian,Greek_Catholic_Christianity,NONE
+# Nigeria
+# Cyprus
+# 20 % sunni islam, other orthodox chris
+# 493,871 population
+Cyprus=395096,Cypriot,Orthodox_Christianity,NONE
+Cyprus=98775,Cypriot,Sunni_Islam,None
+# Gabon
+# 472,842 population
+Gabon=472842,Gabonian,Idk,None
+# Oman
+# 456,988 population
+Oman=456988,Omani,Sunni_Islam,NONE
+# Spain
+# 28,016,000 population
+Spain=28016000,Spanish,Catholic_Christianity,NONE
+# Poland
+# 24,564,000 population
+Poland=24564000,Polish,Protestant_Christianity,NONE
+# Turkey
+# 20,715,000 population
+Turkey=20715000,Turkish,Sunni_Islam,NONE
+# Thailand
+# 20,167,000 population
+Thailand=20167000,Thai,Theravada_Buddhism,NONE
+# Philippines
+# 18,501,000 population
+Philippines=18501000,Filipino,Catholic_Christianity,NONE
+# Burma / Myanmar
+# 17,573,000 population
+Burma=17573000,Burmese,Theravada_Buddhism,NONE
+# Ethiopia
+# 17,517,000 population
+# religious demography - https://countryeconomy.com/demography/religions/ethiopia?year=1950
+# * 0.435 = christianity
+# * 0.27 = sunni_islam
+# * 0.295 = other
+Ethiopia=3428952,Ethiopian,Orthodox_Christianity,NONE
+Ethiopia=4729590,Ethiopian,Sunni_Islam,NONE
+# Ethiopian_Traditional_Religion
+Ethiopia=5167515,Ethiopian,Animist,NONE
+# Argentina
+# 16,850,000 population
+Argentina=16850000,Argentinian,Catholic_Christianity,NONE
+# Romania
+# 16,282,000 population
+Romania=16282000,Romanian,Eastern_Orthodox_Christianity,NONE
+# Canada
+# 13,594,000 population
+Canada=13594000,Canadian,Protestant_Christianity,NONE
+# South Africa
+# 12,908,000 population
+South_Africa=12908000,South_African,Catholic_Christianity,NONE
+# Congo
+# 12,174,000 population
+# all catholic for now
+Congo=12174000,Congolese,Catholic_Christianity,NONE
+# Colombia
+# 11,615,000 population
+# 92 to 95 percent catholic, all catholic for now
+Colombia=11615000,Colombian,Catholic_Christianity,NONE
+# Hungary
+# 9,292,000 population
+# 92 percent catholic, all catholic for now
+Hungary=9292000,Hungarian,Catholic_Christianity,NONE
+# Algeria
+# 8,893,000 population
+Algeria=8893000,Algerian,Sunni_Islam,NONE
+# Czechoslovakia
+# 77 percent catholic, all catholic for now
+# 8,876,000 + 3,438,000 = 12,314,000 population
+Czechia=8876000,Czech,Catholic_Christianity,NONE
+Slovakia=3438000,Slovak,Catholic_Christianity,NONE
+# Morocco
+# Haiti
+# 3,242,000 population
+# 80 to 90 percent catholic, all catholic for now
+# have to consider haitian vodou religion
+Haiti=3242000,Haitian,Catholic_Christianity,NONE
+# Azerbaijan
+# 3,105,000 population
+# majority shia, all shia for now
+Azerbaijan=3105000,Azerbaijani,Shia_Islam,NONE
+# Bolivia
+# 3,067,000 population
+Bolivia=3067000,Bolivian,Catholic_Christianity,NONE
+# Guatemala
+# 3,058,000 population
+Guatemala=3058000,Guatemalan,Catholic_Christianity,NONE
+# Guinea
+# 2,989,000 population
+# 85 to 89 percent islam, all sunni_islam for now
+Guinea=2989000,Guinean,Sunni_Islam,NONE
