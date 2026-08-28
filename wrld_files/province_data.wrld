@@ -1,0 +1,64 @@
+# urbanisation,college_education,literacy,secularism
+# Portugal
+Portugal,start=25,15,55,40,NONE
+Portugal,target=61,43,96,90,NONE
+# Japan
+Japan,start=50,10,70,25,NONE
+Japan,target=93,60,99,65,NONE
+# America
+America,start=64,6,95,15,NONE
+America,target=80,38,100,54,NONE
+# Australia
+Australia,start=77,2,95,1,NONE
+Australia,target=87,51,100,43,NONE
+# Italy
+Italy,start=54,2,83,10,NONE
+Italy,target=76,25,99.5,60,NONE
+# Egypt
+Egypt,start=30,5,25,1,NONE
+Egypt,target=44,33,80,25,NONE
+# Mexico
+Mexico,start=43,1,45,1,NONE
+Mexico,target=88,15,95,10,NONE
+# Gaza
+Gaza,start=5,1,20,0,NONE
+Gaza,target=100,45,96,5,NONE
+# South_Korea
+South_Korea,start=20,4,25,12,NONE
+South_Korea,target=82,90,99,60,NONE
+# Chad
+Chad,start=4,0.5,8,0,NONE
+Chad,target=22,4.5,30,20,NONE
+# Israel
+Israel,start=45,7,52.5,5,NONE
+Israel,target=87,37,97,10,NONE
+# Pakistan
+Balochistan,start=17,1,15,5,NONE
+Balochistan,target=39,11,63,10,NONE
+# Netherlands
+Netherlands,start=55,4,99,17,NONE
+Netherlands,target=86,36,99,66,NONE
+# Syria
+Syria,start=30,1,33,0,NONE
+Syria,target=62,10,86,5,NONE
+# Lebanon
+Lebanon,start=32,2,45,0,NONE	
+Lebanon,target=90,20,93,5,NONE
+# Sweden
+Sweden,start=66,10,99,15,NONE	
+Sweden,target=89,52,99,60,NONE
+# Norway
+Norway,start=32,3,99,10,NONE
+Norway,target=86,50,88,55,NONE
+# Indonesia
+Indonesia,start=12,0.5,20,5,NONE
+Indonesia,target=60,14,97,30,NONE
+# Nepal
+Nepal,start=3,0,3.5,10,NONE
+Nepal,target=22,4,74,40,NONE
+# India
+India,start=17,1,18,3,NONE
+India,target=37,29,81,13,NONE
+# France
+France,start=17,1,18,3,NONE
+France,target=37,29,81,13,NONE

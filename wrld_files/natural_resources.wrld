@@ -1,0 +1,5 @@
+WATER=0.005,None
+FOOD=0.1,None
+RAW_OIL=0.10,None
+REFINED_OIL=0.55,None
+COAL=0.3,None

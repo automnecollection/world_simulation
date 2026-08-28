@@ -1,0 +1,152 @@
+# new_province_tag=country_tag,terrain,climate
+# France
+France=FRA,Flat,Grassland
+# China
+China=CHI,Hills,Grassland
+# India
+India=IND,Hills,Tropical
+# Total population of Russia 103.39 mil, 10 mil in siberia
+Russia=RUS,Flat,Grassland
+Siberia=RUS,Flat,Subarctic
+# United_Kingdom
+United_Kingdom=UNK,Flat,Temperate_Grassland
+# Japan
+Japan=JAP,Mountains,Grassland
+# Middle East
+Iran=IRA,Mountains,Arid
+# Transjordan
+Jordan=TRJ,Flat,Arid
+West_Bank=TRJ,Hills,Plains
+# Israel
+Israel=ISR,Flat,Plains
+# Egypt
+Gaza=EGY,Flat,Arid
+# Syria
+Syria=SYR,Flat,Arid
+# Australia
+Victoria=AUS,Flat,Mediterranean
+New_South_Wales=AUS,Hills,Mediterranean
+Queensland=AUS,Hills,Tropical
+Western_Australia=AUS,Flat,Desert
+South_Australia_Mediterranean=AUS,Flat,Mediterranean
+South_Australia_Desert=AUS,Flat,Desert
+Tasmania=AUS,Hills,Grassland
+Northern_Territory=AUS,Flat,Desert
+# Chad
+Chad=CHA,Flat,Desert
+# North Korea
+North_Korea=NKR,Mountains,Grassland
+# South Korea
+South_Korea=SKR,Mountains,Grassland
+# Cuba
+Cuba=CUB,Flat,Grassland
+# United States of America
+United_States_of_America=USA,Flat,Grassland
+New_York=USA,Flat,Grassland
+Samoa=USA,Flat,Grassland
+# Mongolia
+Mongolia=MON,Flat,Steppe
+# Tunisia
+Tunisia=TUN,Flat,Arid
+# Portugal
+Portugal=POR,Flat,Mediterranean
+# Italy
+Italy=ITA,Hills,Mediterranean
+# Mexico
+North_Mexico=MEX,Flat,Desert
+Middle_Mexico=MEX,Hills,Temperate
+South_Mexico=MEX,Hills,Subtropical
+# Netherlands
+Netherlands=NET,Flat,Grassland
+# Lebanon
+Lebanon=LEB,Hills,Mediterranean
+# Sweden
+Sweden=SWE,Hills,Subarctic
+# Norway
+Norway=NOR,Hills,Subarctic
+# Indonesia
+Indonesia=IDN,Flat,Tropical
+# West Germany
+North_Germany=WGE,Flat,Grassland
+Central_Germany=WGE,Hills,Grassland
+South_Germany=WGE,Mountains,Grassland
+# East Germany
+East_Germany=EGE,Hills,Grassland
+# Brazil
+Main_Brazil=BRA,Hills,Tropical
+Amazon_Rainforest=BRA,Hills,Rainforest
+# Bangladesh
+Bangladesh=BAN,Hills,Tropical
+# Ukraine
+Ukraine=UKR,Flat,Steppe_Grassland
+# Nigeria
+North_Nigeria=NGE,Flat,Arid_Steppe
+Central_Nigeria=NGE,Hills,Savannah
+South_Nigeria=NGE,Hills,Tropical
+# Pakistan
+Balochistan=PAK,Null,Null
+Sindh=PAK,Null,Null
+Punjab=PAK,Null,Null
+Fata=PAK,Null,Null
+Khyber_Pakhutunkhwa=PAK,Null,Null
+Gilgit_Balistan=PAK,Null,Null
+Pakistani_Kashmir=PAK,Null,Null
+# Cyprus
+Cyprus=CYP,Null,Null
+# Gabon
+Gabon=GAB,Null,Null
+# Oman
+Oman=OMA,Null,Null
+# Spain
+Spain=SPA,Null,Null
+# Vietnam
+Vietnam=FRA,Null,Null
+# Poland
+Poland=POL,Null,Null
+# Turkey
+Turkey=TUR,Null,Null
+# Thailand
+Thailand=THA,Null,Null
+# Philippines
+Philippines=PHI,Null,Null
+# Burma / Myanmar
+Burma=BUR,Null,Null
+# Ethiopia
+Ethiopia=ETH,Null,Null
+# Argentia
+Argentina=ARG,Null,Null
+# Romania
+Romania=ROM,Null,Null
+# Canada
+Canada=CAN,Null,Null
+# South_Africa
+South_Africa=SAF,Null,Null
+# Congo
+Congo=CON,Null,Null
+# Colombia
+Colombia=COL,Null,Null
+# Hungary
+Hungary=HUN,Null,Null
+# Algeria
+Algeria=ALG,Null,Null
+# Czechoslovakia
+Czechia=CZE,Null,Null
+Slovakia=CZE,Null,Null
+# Morocco
+Morocco=MOR,Null,Null
+# Belgium
+Belgium=BEL,Null,Null
+# Sri_Lanka
+Sri_Lanka=SRI,Null,Null
+# Afghanistan
+Afghanistan=AFG,Null,Null
+# Haiti
+Haiti=HAI,Null,Null
+# Azerbaijan
+Azerbaijan=AZE,Null,Null
+# Bolivia
+Bolivia=BOL,Null,Null
+# Guatemala
+Guatemala=GUA,Null,Null
+# Guinea
+Guinea=GUI,Null,Null
