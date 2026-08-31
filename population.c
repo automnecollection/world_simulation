@@ -4,8 +4,7 @@
 #include <math.h>
 
 #include "population.h"
-
-#include "read_data.h"
+#include "province.h"
 
 void read_population(const char* line, const int index, void* out_struct, void *ctx) {
     struct Population *p = out_struct;

@@ -22,6 +22,9 @@ struct Country {
     float total_population;
 
     float start_total_population;
+
+    // Economy
+    float government_currency_ownership;
 };
 
 // Initialisation

@@ -59,10 +59,10 @@ void *read_building_type(char *line, const int id) {
     strcpy(production_type, str_production_type_token);
 
     const char *str_base_production = strtok(NULL, ",");
-    // printf("str_base_production - %s\n", str_base_production);
+    printf("str_base_production - %s\n", str_base_production);
     int base_production = strtol(str_base_production, NULL, 10);
 
-    printf("name, base_production - %s, %d\n", name, base_production);
+    printf("name, production type, base_production - %s, %s, %d\n", name, production_type, base_production);
 
     struct BuildingType* new_building_type = malloc(sizeof(struct BuildingType));
 
@@ -87,7 +87,9 @@ int get_building_type_id_from_name(const char * name, struct BuildingType buildi
             return building_types[i].id;
         }
     }
-    return -1;
+    printf("Could not find building type in for %s", name);
+    getchar();
+    abort();
 }
 
 int get_item_type(const char *type, struct NaturalResource natural_resources[], const int natural_resources_num) {

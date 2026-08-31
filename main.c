@@ -86,9 +86,6 @@ int main()
   // Initialise items in building types
   for (int i = 0; i < building_types_num; i++) {
     const int type_id = get_item_type(building_types[i].production_type, nr_types, nr_types_num);
-    // if (DEBUG == true) {
-    printf("type_id - %d\n", type_id);
-    // }
     building_types[i].production_type_id = type_id;
   }
 
@@ -168,7 +165,7 @@ int main()
   const clock_t sim_begin = clock();
 
   // Run simulation
-  const int sim_days = SIM_DAYS;
+  const int sim_days = (BASE_END_YEAR - YEAR) * 365;
 
   run_simulation(
     sim_days,
@@ -180,7 +177,8 @@ int main()
   const double sim_time_spent = (double)(sim_end - sim_begin) / CLOCKS_PER_SEC;
 
   // Print simulation results
-  printf("AFTER %d DAYS\n", sim_days);
+  int years_passed = world_time.year - world_time.start_year;
+  printf("AFTER %d DAYS\n", years_passed * 365);
   printf("Day %d, year %d.\n", world_time.day, world_time.year);
   // print_province_data(provinces, provinces_num, populations, populations_num, building_types, units, units_num);
   print_province(0, provinces, populations, populations_num, building_types, units, units_num);

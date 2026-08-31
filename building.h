@@ -30,19 +30,14 @@ struct BuildingsList {
 
 struct BuildingsList initialise_buildings(FILE * file);
 
-void initialise_building_data(FILE * file, struct Province provinces[], int provinces_size,
-    struct BuildingType building_types[], size_t building_types_size);
+// Initialisation
+void initialise_building_data(FILE * file, struct Province provinces[], int provinces_size, struct BuildingType building_types[], size_t building_types_size);
+void read_building_data(char *line, struct Province provinces[], int provinces_size, struct BuildingType building_types[], size_t building_types_size);
 
-void read_building_data(char *line, struct Province provinces[], int provinces_size,
-    struct BuildingType building_types[], size_t building_types_size);
-
-void update_buildings(struct Building buildings[], const int buildings_num, struct BuildingType building_types[],
-    struct Item items[]);
-
-void calc_levels_needed_for_produced_item_surplus(struct Building buildings[], const int buildings_num, struct BuildingType building_types[],
-    struct Item items[]);
-
-void take_demand_from_item_supplies(struct Building buildings[], const int buildings_num, struct BuildingType building_types[],
-    struct Item items[]);
+// Simulation
+void update_buildings(struct Building buildings[], int b_num, struct BuildingType building_types[], struct Item items[]);
+void calc_levels_needed_for_produced_item_surplus(struct Building buildings[], int b_num, struct BuildingType b_types[], struct Item items[]);
+void update_building_levels(struct Building buildings[], int b_num);
+void take_demand_from_item_supplies(struct Province* p, struct Building buildings[], int b_num, struct BuildingType b_types[], struct Item items[]);
 
 #endif //WORLD_SIM_BUILDING_H

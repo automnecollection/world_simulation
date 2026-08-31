@@ -65,57 +65,88 @@ void read_building_data(char *line, struct Province provinces[], const int provi
     // printf("str_production_type_token - %s\n", str_production_type_token);
     char *building_type_name = STR_ALLOC(building_type_token);
     strcpy(building_type_name, building_type_token);
-
     int building_type_id = get_building_type_id_from_name(building_type_name, building_types, building_types_size);
 
     const char *level_token = NEXT_TOKEN(",");
     const int level = STR_INT(level_token);
 
-    struct Building *building = &provinces[province_id].buildings[building_type_id];
-    building->level = level;
+    struct Building *b = &provinces[province_id].buildings[building_type_id];
+    b->level = level;
 }
 
-void update_buildings(struct Building buildings[], const int buildings_num, struct BuildingType building_types[],
-    struct Item items[]) {
-    LOOP(i, buildings_num) {
-        if ( buildings[i].level > 0) { if ( building_types[buildings[i].id].production_type_id != -1) {
-                const float production_amount = (float)building_types[buildings[i].id].base_production * (float)buildings[i].level;
-                items[building_types[buildings[i].id].production_type_id].supply_amount += production_amount;
-                buildings[i].last_supply = production_amount;
+void update_buildings(struct Building buildings[], const int b_num, struct BuildingType building_types[], struct Item items[]) {
+    LOOP(b_index, b_num) {
+        if (buildings[b_index].level > 0) {
+            if (building_types[buildings[b_index].id].production_type_id != -1) {
+                const float production_amount = (float)building_types[buildings[b_index].id].base_production * (float)buildings[b_index].level;
+                if (buildings[b_index].id == 1)
+                {
+                    items[building_types[buildings[b_index].id].production_type_id].supply_amount = production_amount;
+                    buildings[b_index].last_supply = production_amount;
+                }
+                else
+                {
+                    items[building_types[buildings[b_index].id].production_type_id].supply_amount += production_amount;
+                    buildings[b_index].last_supply = production_amount;
+                }
             }
         }
     }
 }
 
-void calc_levels_needed_for_produced_item_surplus(struct Building buildings[], const int buildings_num, struct BuildingType building_types[],
-    struct Item items[]) {
-    LOOP(i, buildings_num) {
-        struct Building* b = &buildings[i];
-        const struct BuildingType* b_type = &building_types[b->id];
-        if (b->level > 0) { if (b_type->production_type_id != -1) {
+void calc_levels_needed_for_produced_item_surplus(struct Building buildings[], const int b_num, struct BuildingType b_types[], struct Item items[]) {
+    LOOP(b_index, b_num) {
+        struct Building* b = &buildings[b_index];
+        const struct BuildingType* b_type = &b_types[b->id];
+        if (b->level > 0) {
+            if (b_type->production_type_id != -1) {
                 const struct Item* i = &items[b_type->production_type_id];
                 if (i->supply_amount > i->demand_amount) {
                     b->levels_for_surplus = 0.0f;
                 }
                 else {
-                    b->levels_for_surplus = fabsf(i->supply_min_demand)/(float)b_type->base_production;
+                    float stockpiles_div_prod = i->stockpile_amount / (float)b_type->base_production;
+                    if (stockpiles_div_prod < 0.0) {
+                        stockpiles_div_prod = 0.0f;
+                    }
+                    b->levels_for_surplus = (fabsf(i->supply_min_demand)/(float)b_type->base_production) - stockpiles_div_prod;
+                    if (b->levels_for_surplus < 0.0f) {
+                        b->levels_for_surplus = 0.0f;
+                    }
                 }
             }
         }
     }
 }
 
-void take_demand_from_item_supplies(struct Building buildings[], const int buildings_num, struct BuildingType building_types[],
-    struct Item items[]) {
-    LOOP(building_index, buildings_num) {
-        const struct BuildingType* b_type = &building_types[building_index];
-        if (buildings[building_index].level > 0) { if (b_type->production_type_id != -1) {
+void update_building_levels(struct Building buildings[], const int b_num) {
+    LOOP(b_index, b_num) {
+        struct Building* b = &buildings[b_index];
+        b->level += b->levels_for_surplus;
+    }
+}
+
+void take_demand_from_item_supplies(struct Province* p, struct Building buildings[], const int b_num, struct BuildingType b_types[], struct Item items[]) {
+    LOOP(b_index, b_num) {
+        const struct BuildingType* b_type = &b_types[b_index];
+
+        if (buildings[b_index].level > 0) {
+            if (b_type->production_type_id != -1) {
                 struct Item* i = &items[b_type->production_type_id];
+
+                i->demand_amount -= i->stockpile_amount;
+                if (i->demand_amount < 0.0f) {
+                    i->demand_amount = 0.0f;
+                }
                 i->supply_before_demand = i->supply_amount;
+                if (i->supply_before_demand < 0.0f) {
+                    i->supply_before_demand = 0.0f;
+                }
                 i->supply_amount -= i->demand_amount;
                 if (i->supply_amount < 0.0f) {
                     i->supply_amount = 0.0f;
                 }
+                p->private_currency_ownership += (i->supply_before_demand - i->supply_amount) * i->cost;
             }
         }
     }

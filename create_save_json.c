@@ -20,22 +20,18 @@ void save_world_json(
     if (world_save_file == NULL) {
         perror("Error opening file country result\n");
     }
-    char * indent = "  ";
-    char * scnd_indent = "    ";
-    char * thrd_indent = "      ";
-    char * frth_indent = "        ";
 
     fprintf(world_save_file, "{\n");
-    fprintf(world_save_file, "%s\"countries\":\n", indent);
+    push_json(world_save_file, indent, "countries", NULL);
     fprintf(world_save_file, "%s{\n", indent);
     LOOP(c_index, countries_num) {
-        fprintf(world_save_file, "%s\"%s\":\n", scnd_indent, countries[c_index].tag);
+        push_json(world_save_file, scnd_indent, countries[c_index].tag, NULL);
         fprintf(world_save_file, "%s{\n", scnd_indent);
-        fprintf(world_save_file, "%s\"name\": \"%s\",\n", thrd_indent, countries[c_index].name);
-        fprintf(world_save_file, "%s\"total_population\":\n", thrd_indent);
+        push_json(world_save_file, thrd_indent, "name", countries[c_index].name);
+        push_json(world_save_file, thrd_indent, "total_population", NULL);
         fprintf(world_save_file, "%s{\n", thrd_indent);
-        fprintf(world_save_file, "%s\"1950\": %f,\n", frth_indent, countries[c_index].start_total_population);
-        fprintf(world_save_file, "%s\"2026\": %f\n", frth_indent, countries[c_index].total_population);
+        push_json_num(world_save_file, frth_indent, "1950", countries[c_index].start_total_population);
+        fprintf(world_save_file, "%s\"%d\": %f\n", frth_indent, world_time->year, countries[c_index].total_population);
         fprintf(world_save_file, "%s}\n", thrd_indent);
         if (c_index == countries_num - 1) {
             fprintf(world_save_file, "%s}\n", scnd_indent);
@@ -46,4 +42,18 @@ void save_world_json(
     fprintf(world_save_file, "%s}\n", indent);
     fprintf(world_save_file, "}\n");
     fclose(world_save_file);
+}
+
+void push_json(FILE *json_file, char * indent_num, char *var_str, char *val_str) {
+    if (val_str) {
+        fprintf(json_file, "%s\"%s\": \"%s\",\n", indent_num, var_str, val_str);
+    }
+    else
+    {
+        fprintf(json_file, "%s\"%s\":\n", indent_num, var_str);
+    }
+}
+
+void push_json_num(FILE *json_file, char * indent_num, char * var_str, float val_str) {
+    fprintf(json_file, "%s\"%s\": %f,\n", indent_num, var_str, val_str);
 }

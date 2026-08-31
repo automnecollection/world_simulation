@@ -39,8 +39,6 @@ if __name__ == '__main__':
         countries=countries
     )
 
-    print(countries)
-
     average_real_accuracy = 0.0
     c_num = 0
     for c in countries:

@@ -27,8 +27,6 @@ add_executable(
         building.h
         save_analysis.c
         save_analysis.h
-        read_data.c
-        read_data.h
         config.h
         language.h
         simulation.c

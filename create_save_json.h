@@ -15,4 +15,7 @@ void save_world_json(
     struct BuildingType building_types[], int building_types_num,
     const struct WorldTime *world_time);
 
+void push_json(FILE *json_file, char * indent_num, char * var_str, char *val_str);
+void push_json_num(FILE *json_file, char * indent_num, char * var_str, float val_str);
+
 #endif //WORLD_SIM_CREATE_SAVE_JSON_H

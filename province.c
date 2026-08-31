@@ -152,14 +152,16 @@ void print_province(const int i, struct Province p[],
     }
     printf("    Items:\n");
     LOOP(k, p[i].items_num) {
-        printf("        %s - DEMAND: %f, SUPPLY: %f, SUP_B4_DEM: %f\n",
+        printf("        %s - DEMAND: %f, SUPPLY: %f, SUP_B4_DEM: %f, STOCKPILES: %f\n",
             p[i].items[k].name, p[i].items[k].demand_amount, p[i].items[k].supply_amount,
-            p[i].items[k].supply_before_demand);
+            p[i].items[k].supply_before_demand, p[i].items[k].stockpile_amount);
         printf("                  DEM_SUP_RATIO: %f, COST_MULTIPLIER: %f, COST: %f\n",
             p[i].items[k].dem_sup_ratio, p[i].items[k].cost_ratio, p[i].items[k].cost);
         printf("                  MONEY_SPENT_ON LAST TICK: %f\n",
             p[i].items[k].money_spent_on);
     }
+    printf("    Economic Stats:\n");
+    printf("        PRIVATE CURRENCY OWNERSHIP: %f\n", p[i].private_currency_ownership);
     print_units_for_province(i, units, units_num);
     printf("\n");
 }
@@ -204,6 +206,11 @@ void calc_country_total_population(struct Country *c, struct Province provinces[
             c->total_population += p->total_population;
         }
     }
+}
+
+void impose_government_taxes(struct Country* c, struct Province* p) {
+    c->government_currency_ownership += p->private_currency_ownership * 0.2f;
+    p->private_currency_ownership = p->private_currency_ownership * 0.8f;
 }
 
 void free_provinces(struct Province p[], const int provinces_num) {

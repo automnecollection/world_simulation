@@ -35,20 +35,16 @@ def parse_list(wrld_file, read_func, **kwargs):
     for line in file:
         if line == "" or line.__contains__("#"):
             continue
-        parsed_object = read_func(line, **kwargs)
-        if parsed_object is not None:
-            parsed_objects.append(parsed_object)
+        new_obj = read_func(line, **kwargs)
+        if new_obj is not None:
+            parsed_objects.append(new_obj)
         else:
             print("ERROR: parsed object is None")
             exit()
-    if parsed_objects is not None:
-        for obj in parsed_objects:
-            if obj is None:
-                parsed_objects.remove(obj)
+    for obj in parsed_objects:
+        if obj is None:
+            parsed_objects.remove(obj)
         return parsed_objects
-    else:
-        print("ERROR: parsed_objects is None")
-        return None
 
 def get_list_data_tag(wrld_file, read_data_func, data_list):
     file = open(wrld_file, "r")

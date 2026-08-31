@@ -43,7 +43,8 @@ struct Province {
     float lit_tick;
     float sec_tick;
 
-    char populations[];
+    // Economy
+    float private_currency_ownership;
 };
 
 struct ProvinceParserCtx {
@@ -70,6 +71,7 @@ void read_province_data(char *line, struct Province provinces[], int provinces_n
 void free_provinces(struct Province provinces[], int provinces_num);
 void increase_data_ticks(struct Province prov);
 void calc_country_total_population(struct Country *c, struct Province provinces[], int provinces_num);
+void impose_government_taxes(struct Country* c, struct Province* p);
 
 // Sim helpers
 void print_province_data(struct Province p[], int provinces_num,

@@ -3,6 +3,7 @@
 
 #include "natural_resource.h"
 #include "population.h"
+#include "province.h"
 
 #ifndef WORLD_SIM_ITEM_H
 #define WORLD_SIM_ITEM_H
@@ -13,6 +14,7 @@ struct Item {
     float cost;
     float demand_amount;
     float supply_amount;
+    float stockpile_amount;
     float supply_before_demand;
     bool has_deposits;
     int deposits_amount;
@@ -24,8 +26,10 @@ struct Item {
 };
 
 // Simulation
-void update_item_demand(struct Item items[], struct Population populations[], int populations_num, int province_id);
+void update_item_demand(struct Item items[], struct Population populations[], const int populations_num, const int province_id, float province_total_population);
 void calc_item_surplus_or_deficit(struct Item items[], int items_num);
 void calc_item_cost(struct Item items[], int items_num, struct NaturalResource nrs[]);
+void increase_item_stockpiles(struct Item items[], int items_num);
+void decrease_stockpiles(struct Item items[], int items_num);
 
 #endif //WORLD_SIM_ITEM_H

@@ -4,6 +4,11 @@
 #define or ||
 #define and &&
 
+#define indent      "  "
+#define scnd_indent "    "
+#define thrd_indent "      "
+#define frth_indent "        "
+
 // General functions
 #define LOOP(x, y) for (int x = 0; x < y; x++)      // Loop a set amount of times
 #define MATCH(x, y) strcmp(x, y) == 0               // Check if two strings are the same
