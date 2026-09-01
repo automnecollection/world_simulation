@@ -88,5 +88,5 @@ void decrease_stockpiles(struct Item items[], int items_num) {
     // Refined Oil
     items[3].stockpile_amount *= 0.3f;
     // Housing
-    items[5].stockpile_amount *= 0.9999f;
+    items[5].stockpile_amount *= 0.9f;
 }

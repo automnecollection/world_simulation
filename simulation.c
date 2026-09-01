@@ -22,7 +22,7 @@ void run_simulation(int sim_days, struct Province provinces[], int provinces_num
         countries[country_index].start_total_population = countries[country_index].total_population;
     }
 
-    sim_days = 1;
+    sim_days = 365;
 
     LOOP(day, sim_days) {
         // printf("day: %d, year: %d\n", world_time->day, world_time->year);
